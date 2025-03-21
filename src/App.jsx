@@ -11,9 +11,9 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-height-screen bg-gray-100">
         <Navbar />  {/* Navbar is always visible */}
-        <div className="container mx-auto p-4">
+        <div className="w-full p-4">
           <Routes>
             <Route path="/meeting" element={<Meeting />} />
             <Route path="/interview" element={<Interview />} />

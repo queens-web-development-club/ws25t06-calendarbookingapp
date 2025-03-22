@@ -16,7 +16,7 @@ function Interview() {
 
     {/* Main Content - 2 Columns */}
     <div className="col-span-2 p-6 bg-gray-200" >
-      <h2 className="text-xl font-bold">Create Meeting</h2>
+      <h2 className="text-xl font-bold">Meeting Form Temp</h2>
       <Calendar />
     </div>
   </div>

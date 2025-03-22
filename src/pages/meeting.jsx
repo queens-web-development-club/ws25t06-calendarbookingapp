@@ -8,9 +8,14 @@ function Meeting() {
   const [count, setCount] = useState(0)
 
   return (
-    <div>
-      <Calendar/>
-
+    <div className="grid grid-cols-3 min-w-full h-screen">
+       {/* Sidebar - 1 Column */}
+       <div className="col-span-1 bg-gray-300 p-4">Previous Bookings</div>
+   
+       {/* Main Content - 2 Columns */}
+       <div className="col-span-2 p-6 bg-gray-200" >
+         <Calendar />
+       </div>
     </div>
 
   )

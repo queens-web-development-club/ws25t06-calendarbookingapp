@@ -4,7 +4,8 @@ import viteLogo from '/vite.svg'
 import '../App.css'
 import Calendar from "../components/Calendar.jsx";
 import { Text, Button, Card } from "@radix-ui/themes";
-import BookingCard from "../components/BookingCard.jsx"
+import BookingCard from "../components/BookingCard.jsx";
+import TimePicker from "../components/TimePicker.jsx";
 
 function Meeting() {
   const [count, setCount] = useState(0)
@@ -21,8 +22,9 @@ function Meeting() {
           <div className="flex justify-end">
             <Button variant='soft'>Create New</Button>
           </div>
-          
+          <div className="grid grid-rows-2 min-w-full"></div>
           <Calendar />
+          <TimePicker/>
        </div>
     </div>
 

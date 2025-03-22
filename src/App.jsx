@@ -10,6 +10,7 @@ import Interview from "./pages/interview.jsx";
 function App() {
 
   return (
+    <div>
     <Router>
       <div className="min-height-screen bg-gray-100">
         <Navbar />  {/* Navbar is always visible */}
@@ -21,7 +22,12 @@ function App() {
         </div>
       </div>
     </Router>
-
+    
+      <h1>Testing</h1>
+      <div>
+        
+      </div>
+    </div>
   )
 }
 

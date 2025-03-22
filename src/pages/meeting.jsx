@@ -3,6 +3,7 @@ import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
 import '../App.css'
 import Calendar from "../components/Calendar.jsx";
+import { Text, Button } from "@radix-ui/themes";
 
 function Meeting() {
   const [count, setCount] = useState(0)
@@ -14,7 +15,11 @@ function Meeting() {
    
        {/* Main Content - 2 Columns */}
        <div className="col-span-2 p-6 bg-gray-200" >
-         <Calendar />
+          <div className="flex justify-end">
+            <Button variant='soft'>Create New</Button>
+          </div>
+          
+          <Calendar />
        </div>
     </div>
 

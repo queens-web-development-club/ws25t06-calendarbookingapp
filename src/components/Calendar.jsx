@@ -1,14 +1,23 @@
 import React, { useState } from "react";
-import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addMonths, subMonths, eachDayOfInterval } from "date-fns";
+import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addMonths, subMonths, eachDayOfInterval, isSameDay } from "date-fns";
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedDates, setSelectedDates] = useState([]);
 
   const days = eachDayOfInterval({
     start: startOfWeek(startOfMonth(currentMonth)),
     end: endOfWeek(endOfMonth(currentMonth)),
   });
+
+  const toggleDate = (date) => {
+    setSelectedDates((prevSelected) => {
+      const isAlreadySelected = prevSelected.some((d) => isSameDay(d, date));
+      return isAlreadySelected 
+        ? prevSelected.filter((d) => !isSameDay(d, date)) // Remove if selected
+        : [...prevSelected, date]; // Add if not selected
+    });
+  };
 
   return (
     
@@ -22,16 +31,21 @@ const Calendar = () => {
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <div key={day} className="font-bold text-gray-700">{day}</div>
           ))}
-          {days.map((day) => (
-            <button
-              key={day}
-              onClick={() => setSelectedDate(day)}
-              className={`p-2 rounded-full ${format(day, "yyyy-MM-dd") === format(selectedDate, "yyyy-MM-dd") 
-                ? "bg-blue-500" : "hover:bg-gray-200"}`}
-            >
-              {format(day, "d")}
-            </button>
-          ))}
+          {days.map((day) => {
+            const isSelected = selectedDates.some((d) => isSameDay(d, day));
+
+            return (
+              <button
+                key={day}
+                onClick={() => toggleDate(day)}
+                className={`p-2 rounded-full transition ${
+                  isSelected ? "bg-blue-500 text-white" : "hover:bg-gray-200"
+                }`}
+              >
+                {format(day, "d")}
+              </button>
+            );
+          })};
         </div>
       </div>
       

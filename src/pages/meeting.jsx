@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import Calendar from "../components/Calendar.jsx";
-import { Button } from "@radix-ui/themes";
+import { Button, Flex} from "@radix-ui/themes";
 import BookingCard from "../components/BookingCard.jsx";
 import TimePicker from "../components/TimePicker.jsx";
+import MeetingForm from "./MeetingForm.jsx";
 
 function Meeting() {
   const [selectedDates, setSelectedDates] = useState([]); // State for selected dates
+  const [showForm, setShowForm] = useState(false); // State for selected dates
 
   const handleCreateNew = () => {
     console.log("Selected Dates:", selectedDates.map(date => date.toDateString())); // Log readable dates
+    setShowForm(true);
   };
 
   return (
@@ -20,13 +23,22 @@ function Meeting() {
 
       {/* Main Content - 2 Columns */}
       <div className="col-span-2 p-6 bg-gray-200">
-        <div className="flex justify-end">
-          <Button variant="soft" onClick={handleCreateNew} disabled={selectedDates.length === 0}>
-            Create New
-          </Button>
-        </div>
-        <Calendar setSelectedDates={setSelectedDates} /> {/* Pass state setter to Calendar */}
-        <TimePicker />
+
+        {
+          showForm ? (<MeetingForm/>) : (
+            <Flex direction="column">
+              <div className="flex justify-end">
+                <Button variant="soft" onClick={handleCreateNew} disabled={selectedDates.length === 0}>
+                  Create New
+                </Button>
+              </div>
+              <Calendar setSelectedDates={setSelectedDates} /> {/* Pass state setter to Calendar */}
+              <TimePicker />
+            </Flex>
+          )
+        }
+
+
       </div>
     </div>
   );

@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addMonths, subMonths, eachDayOfInterval, isSameDay } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const Calendar = () => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedDates, setSelectedDates] = useState([]);
+  const navigate = useNavigate();
 
   const days = eachDayOfInterval({
     start: startOfWeek(startOfMonth(currentMonth)),
@@ -13,6 +15,10 @@ const Calendar = () => {
   const toggleDate = (date) => {
     setSelectedDates((prevSelected) => {
       const isAlreadySelected = prevSelected.some((d) => isSameDay(d, date));
+
+      const formattedDate = format(date, "yyyy-MM-dd");
+      navigate('/meeting-form/${formattedDate}')
+
       return isAlreadySelected 
         ? prevSelected.filter((d) => !isSameDay(d, date)) // Remove if selected
         : [...prevSelected, date]; // Add if not selected
@@ -22,15 +28,18 @@ const Calendar = () => {
   return (
     
       <div className="w-full row-span-1 mx-auto p-4 bg-white shadow-lg rounded-lg">
+
         <div className="flex justify-between items-center mb-4">
           <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-2 bg-gray-200 rounded">◀</button>
           <h2 className="text-lg font-bold">{format(currentMonth, "MMMM yyyy")}</h2>
           <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-2 bg-gray-200 rounded">▶</button>
         </div>
+
         <div className="grid grid-cols-7 gap-1 text-center">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <div key={day} className="font-bold text-gray-700">{day}</div>
           ))}
+          
           {days.map((day) => {
             const isSelected = selectedDates.some((d) => isSameDay(d, day));
 

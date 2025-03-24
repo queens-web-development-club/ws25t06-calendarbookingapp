@@ -5,9 +5,11 @@ import '../App.css'
 import { useParams } from "react-router-dom";
 import { Heading, Flex, Button, Box, TextArea, Select, TextField, } from "@radix-ui/themes";
 import { format } from "date-fns";
+import { useNavigate } from 'react-router-dom';
 
-const CreateMeetingForm = () => {
+const CreateMeetingForm = ({ selectedDates }) => {
   const { date } = useParams();
+  const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -24,16 +26,19 @@ const CreateMeetingForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = {
-      title,
-      description,
-      date,
-      startTime,
-      endTime,
-      meetingType,
-    };
-    console.log("Meeting Created:", formData);
-    // TODO: Send to backend or context/store
+
+    const formattedDates = selectedDates.map((date) => format(new Date(date), "yyyy-MM-dd"));
+
+    navigate("/meeting-summary", {
+      state: {
+        title, 
+        description,
+        meetingType,
+        selectedDates: formattedDates,
+      },
+    });
+
+
   };
 
   return (

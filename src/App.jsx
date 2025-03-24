@@ -7,6 +7,7 @@ import Navbar from "./components/Navbar.jsx";
 import Meeting from "./pages/meeting.jsx";
 import Interview from "./pages/interview.jsx";
 import MeetingForm from "./components/MeetingForm.jsx";
+import MeetingSummary from "./components/MeetingSummary.jsx";
 
 function App() {
   const [randomLink, setRandomLink] = useState("");
@@ -27,6 +28,7 @@ function App() {
               <Route path="/meeting" element={<Meeting />} />
               <Route path="/interview" element={<Interview />} />
               <Route path="/meeting-form/:date" element={<MeetingForm/>} />
+              <Route path="/meeting-summary" element={<MeetingSummary/>} />
             </Routes>
           </div>
         </div>

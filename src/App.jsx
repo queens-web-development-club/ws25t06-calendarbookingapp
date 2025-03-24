@@ -6,7 +6,7 @@ import "./App.css";
 import Navbar from "./components/Navbar.jsx";
 import Meeting from "./pages/meeting.jsx";
 import Interview from "./pages/interview.jsx";
-import MeetingForm from "./pages/MeetingForm.jsx";
+import MeetingForm from "./components/MeetingForm.jsx";
 
 function App() {
   const [randomLink, setRandomLink] = useState("");

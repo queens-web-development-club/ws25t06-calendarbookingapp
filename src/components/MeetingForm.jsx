@@ -3,7 +3,7 @@ import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
 import '../App.css'
 import { useParams } from "react-router-dom";
-import { Heading, Flex, Button, Box, TextField, TextArea, Select, } from "@radix-ui/themes";
+import { Heading, Flex, Button, Box, TextArea, Select, TextField, } from "@radix-ui/themes";
 import { format } from "date-fns";
 
 const CreateMeetingForm = () => {
@@ -39,11 +39,23 @@ const CreateMeetingForm = () => {
   return (
     <Box className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
       <Heading size="5" mb="4">
-        Create Meeting for {date}
+        Create Meeting
       </Heading>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         
+        {/*Meeting Title*/}
+
+        <div>
+          <label className="font-medium min-w-[100px] text-left">Meeting Title:</label>
+          <TextField.Root
+            placeholder="Enter a title for your meeting"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+            classNAme="flex-1"
+          />
+        </div>
 
         {/* Description */}
         <div>
@@ -54,37 +66,6 @@ const CreateMeetingForm = () => {
             size="3"
           />
         </div>
-
-        {/* Time Selection */}
-        <Flex gap="4">
-          <div className="w-full">
-            <label className="block mb-1 font-medium">Start Time</label>
-            <Select.Root value={startTime} onValueChange={setStartTime}>
-              <Select.Trigger placeholder="Select start time" />
-              <Select.Content>
-                {timeOptions.map((time) => (
-                  <Select.Item key={time} value={time}>
-                    {time}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select.Root>
-          </div>
-
-          <div className="w-full">
-            <label className="block mb-1 font-medium">End Time</label>
-            <Select.Root value={endTime} onValueChange={setEndTime}>
-              <Select.Trigger placeholder="Select end time" />
-              <Select.Content>
-                {timeOptions.map((time) => (
-                  <Select.Item key={time} value={time}>
-                    {time}
-                  </Select.Item>
-                ))}
-              </Select.Content>
-            </Select.Root>
-          </div>
-        </Flex>
 
         {/* Meeting Type */}
         <div>

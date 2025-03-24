@@ -3,7 +3,7 @@ import Calendar from "../components/Calendar.jsx";
 import { Button, Flex} from "@radix-ui/themes";
 import BookingCard from "../components/BookingCard.jsx";
 import TimePicker from "../components/TimePicker.jsx";
-import MeetingForm from "./MeetingForm.jsx";
+import MeetingForm from "../components/MeetingForm.jsx";
 
 function Meeting() {
   const [selectedDates, setSelectedDates] = useState([]); // State for selected dates

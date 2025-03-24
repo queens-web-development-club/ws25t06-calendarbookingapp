@@ -98,10 +98,6 @@ const CreateMeetingForm = () => {
           </Select.Root>
         </div>
 
-        {/* Submit Button */}
-        <Button type="submit" color="green" className="mt-4">
-          Create Meeting
-        </Button>
       </form>
     </Box>
   );

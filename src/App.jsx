@@ -26,7 +26,7 @@ function App() {
             <Routes>
               <Route path="/meeting" element={<Meeting />} />
               <Route path="/interview" element={<Interview />} />
-              <Route path="/meeting-form" element={<MeetingForm/>} />
+              <Route path="/meeting-form/:date" element={<MeetingForm/>} />
             </Routes>
           </div>
         </div>

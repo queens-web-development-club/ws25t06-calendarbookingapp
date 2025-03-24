@@ -15,7 +15,7 @@ function Meeting() {
   };
 
   return (
-    <div className="grid grid-cols-3 min-w-full h-screen">
+    <div className="grid grid-cols-3 min-w-full h-full">
       {/* Sidebar - 1 Column */}
       <div className="col-span-1 bg-gray-300 p-4">
         <BookingCard />

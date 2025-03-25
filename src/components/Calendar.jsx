@@ -25,14 +25,14 @@ const Calendar = ({ setSelectedDates }) => { // Accept setSelectedDates as prop
   };
 
   return (
-    <div className="w-full row-span-1 mx-auto p-4 bg-white shadow-lg rounded-lg">
+    <div className="w-full h-full mx-auto p-4 bg-white shadow-lg rounded-lg flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-2 bg-gray-200 rounded">◀</button>
         <h2 className="text-lg font-bold">{format(currentMonth, "MMMM yyyy")}</h2>
         <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-2 bg-gray-200 rounded">▶</button>
       </div>
 
-      <div className="grid grid-cols-7 gap-1 text-center">
+      <div className="flex-1 grid grid-cols-7 gap-1 text-center">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
           <div key={day} className="font-bold text-gray-700">{day}</div>
         ))}
@@ -44,7 +44,7 @@ const Calendar = ({ setSelectedDates }) => { // Accept setSelectedDates as prop
             <button
               key={day}
               onClick={() => toggleDate(day)}
-              className={`p-2 rounded-full transition ${
+              className={`p-4 h-full w-full rounded-full transition ${
                 isSelected ? "bg-blue-500 text-white" : "hover:bg-gray-200"
               }`}
             >

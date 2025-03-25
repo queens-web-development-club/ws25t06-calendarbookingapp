@@ -14,9 +14,8 @@ import LoginPage from "./pages/LoginPage.jsx"; // 🆕 import LoginPage
 
 function App() {
   return (
-    <Box height="89vh" maxHeight="89vh">
+    <Box height="89vh" maxHeight="89vh" className="">
       <Router>
-        <div className="bg-gray-100 h-full">
           <Navbar /> {/* Navbar is always visible */}
           <Routes>
             <Route path="/meeting" element={<Meeting />} />
@@ -25,7 +24,6 @@ function App() {
             <Route path="/meeting-summary" element={<MeetingSummary />} />
             <Route path="/login" element={<LoginPage />} /> {/* 🆕 login route */}
           </Routes>
-        </div>
       </Router>
     </Box>
   );

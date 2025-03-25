@@ -12,15 +12,15 @@ function Meeting() {
   const [meetingData, setMeetingData] = useState(null);
 
   return (
-    <Flex className="max-w-screen mx-auto h-full" direction="row">
+    <Flex className="max-w-full mx-auto h-full bg-gray-500" direction="row">
       
       {/* Sidebar - 1 Column */}
-      <Box className="bg-gray-300 p-4 w-1/3 max-h-full overflow-auto">
+      <Box width="33.33%" height="100%"className="bg-gray-200 p-4">
         <BookingCard meetingData={meetingData} />
       </Box>
 
       {/* Main Content - 2 Columns */}
-      <Box className="bg-gray-200 flex-1 h-full">
+      <Box height="100%" className="bg-gray-300">
         <Flex justify="between" className="">
           
           {step > 0 && (
@@ -37,11 +37,11 @@ function Meeting() {
 
         {/* Content Switching */}
         {step === 0 && (
-          <Flex direction="column" className="h-full">
-            <Box flexGrow={3} className="overflow-auto">
+          <Flex direction="column" height="90%" className="">
+            <Box height="80%">
               <Calendar setSelectedDates={setSelectedDates} />
             </Box>
-            <Box flexGrow={1} className="overflow-auto">
+            <Box height="20%">
               <TimePicker />
             </Box>
           </Flex>

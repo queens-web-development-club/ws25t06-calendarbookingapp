@@ -1,55 +1,54 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Calendar from "../components/Calendar.jsx";
-import { Button, Flex, Box} from "@radix-ui/themes";
+import { Button, Flex, Box } from "@radix-ui/themes";
 import BookingCard from "../components/BookingCard.jsx";
 import TimePicker from "../components/TimePicker.jsx";
 import MeetingForm from "../components/MeetingForm.jsx";
-import { useRef } from 'react';
 
 function Meeting() {
-  const [selectedDates, setSelectedDates] = useState([]); // State for selected dates
-  const [step, setStep] = useState(0); // State for selected dates
-  const formRef = useRef(null)
-  const [meetingData, setMeetingData] = useState(null)
-
-  const handleCreateNew = () => {
-    console.log("Selected Dates:", selectedDates.map(date => date.toDateString())); // Log readable dates
-    setShowForm(true);
-  };
+  const [selectedDates, setSelectedDates] = useState([]);
+  const [step, setStep] = useState(0);
+  const formRef = useRef(null);
+  const [meetingData, setMeetingData] = useState(null);
 
   return (
-    <Flex className="max-h-full min-w-full h-full" direction="row">
+    <Flex className="max-w-screen mx-auto h-full" direction="row">
+      
       {/* Sidebar - 1 Column */}
-      <Box className="bg-gray-300 p-4 w-1/3">
-        <BookingCard meetingData={meetingData}/>
+      <Box className="bg-gray-300 p-4 w-1/3 max-h-full overflow-auto">
+        <BookingCard meetingData={meetingData} />
       </Box>
 
       {/* Main Content - 2 Columns */}
-      <Box className="p-6 bg-gray-200 flex-1">
-        <Flex justify="between">
-        
+      <Box className="bg-gray-200 flex-1 h-full">
+        <Flex justify="between" className="">
+          
           {step > 0 && (
-            <Button variant="soft" className="flex justify-left" onClick={() => setStep(step - 1)}>Back</Button>
+            <Button variant="soft" onClick={() => setStep(step - 1)}>Back</Button>
           )}
           <div className="ml-auto">
             {step < 1 ? (
-              <Button className="" variant="soft" onClick={() => setStep(step + 1)}>Next</Button>
-            ) : (<Button onClick={() => formRef.current?.requestSubmit()}>Create</Button>)}
+              <Button variant="soft" onClick={() => setStep(step + 1)}>Next</Button>
+            ) : (
+              <Button onClick={() => formRef.current?.requestSubmit()}>Create</Button>
+            )}
           </div>
         </Flex>
 
-        {step == 0 && (
-          <Flex direction="column" height={"97%"}>
-            <Calendar setSelectedDates={setSelectedDates} />
-            <TimePicker />
+        {/* Content Switching */}
+        {step === 0 && (
+          <Flex direction="column" className="h-full">
+            <Box flexGrow={3} className="overflow-auto">
+              <Calendar setSelectedDates={setSelectedDates} />
+            </Box>
+            <Box flexGrow={1} className="overflow-auto">
+              <TimePicker />
+            </Box>
           </Flex>
         )}
-        {step == 1 && (
+        {step === 1 && (
           <MeetingForm selectedDates={selectedDates} formRef={formRef} setMeetingData={setMeetingData}/>
         )}
-        
-        
-
       </Box>
     </Flex>
   );

@@ -14,7 +14,6 @@ import LoginPage from "./pages/LoginPage.jsx"; // 🆕 import LoginPage
 
 function App() {
   return (
-    <Box height="89vh" maxHeight="89vh" className="">
       <Router>
           <Navbar /> {/* Navbar is always visible */}
           <Routes>
@@ -25,7 +24,6 @@ function App() {
             <Route path="/login" element={<LoginPage />} /> {/* 🆕 login route */}
           </Routes>
       </Router>
-    </Box>
   );
 }
 

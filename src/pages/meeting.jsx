@@ -12,7 +12,7 @@ function Meeting() {
   const [meetingData, setMeetingData] = useState(null);
 
   return (
-    <Flex className="max-w-full mx-auto h-full bg-gray-500" direction="row">
+    <Flex height="90vh"className="max-w-full mx-auto h-full bg-gray-500" direction="row">
       
       {/* Sidebar - 1 Column */}
       <Box width="33.33%" height="100%"className="bg-gray-200 p-4">
@@ -20,7 +20,8 @@ function Meeting() {
       </Box>
 
       {/* Main Content - 2 Columns */}
-      <Box height="100%" className="bg-gray-300">
+      <Box width="66.66%" height="100%" className="bg-gray-300">
+      <Flex direction="column" height="100%" className="">
         <Flex justify="between" className="">
           
           {step > 0 && (
@@ -37,18 +38,21 @@ function Meeting() {
 
         {/* Content Switching */}
         {step === 0 && (
-          <Flex direction="column" height="90%" className="">
+          
+          <Box height="100%">
             <Box height="80%">
               <Calendar setSelectedDates={setSelectedDates} />
             </Box>
-            <Box height="20%">
+            <Box height="20%" className="flex items-center justify-center" >
               <TimePicker />
             </Box>
-          </Flex>
+            </Box>
+          
         )}
         {step === 1 && (
           <MeetingForm selectedDates={selectedDates} formRef={formRef} setMeetingData={setMeetingData}/>
         )}
+        </Flex>
       </Box>
     </Flex>
   );

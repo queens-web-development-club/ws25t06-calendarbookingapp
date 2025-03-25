@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { TextField, Heading, Flex, Select, ScrollArea, RadioCards } from "@radix-ui/themes";
 import { format } from "date-fns";
-import IntervalPicker from "./IntervalPicker.jsx";
 
 function TimePicker() {
   const [selectedTime, setSelectedTime] = useState("");
@@ -17,10 +16,13 @@ function TimePicker() {
   });
 
   return (
-    <Flex flexGrow="1"  className="w-full p-6 bg-white shadow-lg rounded-lg overflow-hidden" 
+    <Flex flexGrow="1" justify="center" className="w-full h-full p-6 bg-white shadow-lg rounded-lg overflow-hidden" 
     align="center" direction="column" gap="2">
+
+
+
       <h2 className="text-lg font-semibold mb-4">Enter Time</h2>
-      <Flex gap="4" align="center" className="w-full text-4xl font-bold">
+      <Flex gap="4" align="center" justify="center" className="w-full text-4xl font-bold">
         <input
           type="text"
           value={hour}

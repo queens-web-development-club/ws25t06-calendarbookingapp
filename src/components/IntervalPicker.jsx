@@ -9,7 +9,7 @@ export default function TimeIntervalPicker() {
   return (
     <div className="flex flex-col items-center bg-white p-6 rounded-lg w-full">
       <h2 className="text-lg font-semibold mb-4">Enter Time</h2>
-      <div className="flex items-center gap-4 w-full text-4xl font-bold">
+      <Flex gap="4" align="center" className="w-full text-4xl font-bold">
         <input
           type="text"
           value={hour}
@@ -53,7 +53,7 @@ export default function TimeIntervalPicker() {
                 <RadioCards.Item value="2">PM</RadioCards.Item>
             </RadioCards.Root>
         </Flex>
-      </div>
+      </Flex>
       
     </div>
   );

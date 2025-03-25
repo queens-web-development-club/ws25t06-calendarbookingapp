@@ -14,7 +14,7 @@ import LoginPage from "./pages/LoginPage.jsx"; // 🆕 import LoginPage
 
 function App() {
   return (
-    <Box height="89vh">
+    <Box maxHeight="89vh">
       <Router>
         <div className="bg-gray-100 h-full">
           <Navbar /> {/* Navbar is always visible */}

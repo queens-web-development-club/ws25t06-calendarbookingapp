@@ -14,7 +14,8 @@ function TimePicker() {
   });
 
   return (
-    <Flex className="flex items-center gap-4 w-full h-full p-4 border rounded-lg bg-white">
+    <Flex align="center" direction="column" gap="4" className="w-full h-full p-4 border rounded-lg bg-white">
+      <IntervalPicker/>
       <IntervalPicker/>
     </Flex>
     // Root, Trigger, Content, Viewport, Item

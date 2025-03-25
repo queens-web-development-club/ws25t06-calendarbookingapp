@@ -11,8 +11,6 @@ import MeetingForm from "./components/MeetingForm.jsx";
 import MeetingSummary from "./components/MeetingSummary.jsx";
 
 function App() {
-
-
   return (
     <Box height="85vh">
       <Router>
@@ -26,7 +24,6 @@ function App() {
             </Routes>
         </div>
       </Router>
-
     </Box>
   );
 }

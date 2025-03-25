@@ -7,27 +7,45 @@ import Interview from "../pages/interview.jsx";
 import { Flex, Text, Button, Card, Heading, Separator, Link } from "@radix-ui/themes";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-function BookingCard() {
-    const [count, setCount] = useState(0)
-  
-    return (
-        <Card size="5" className="">
-            <Flex direction={"column"} gap="2">
-                <Heading className="mb-10">Booking #1</Heading>
-                <Text className="mb-2 text-gray-700">30 Min Meeting At Loco</Text>
-                    <Link className="" href="#">
-                        View Booking Page
-                    </Link>
-
-
-
-                
-                
-                <Separator my="3" size="4" />
-                <Link href="#">Copy Link</Link>
+function BookingCard(meetingData) {
+    if (!meetingData) {
+        return (
+          <Card size="5">
+            <Flex direction="column" gap="2">
+              <Heading className="mb-10">Booking #1</Heading>
+              <Text>No meeting created yet.</Text>
             </Flex>
+          </Card>
+        );
+      }
+
+    const { title, description, meetingType, selectedDates, duration } = meetingData;
+
+    return (
+        <Card size="5">
+          <Flex direction="column" gap="2">
+            <Heading className="mb-4">{title}</Heading>
+            <Text className="text-gray-700">{description}</Text>
+            <Text className="text-sm"><strong>Type:</strong> {meetingType}</Text>
+            <Text className="text-sm"><strong>Duration:</strong> {duration} minutes</Text>
+    
+        {Array.isArray(selectedDates) && selectedDates.length > 0 ? (
+            <ul className="list-disc ml-5 text-sm">
+                {selectedDates.map((date, i) => (
+                <li key={i}>{date}</li>
+                ))}
+            </ul>
+            ) : (
+            <Text className="text-sm text-gray-500">No dates selected.</Text>
+        )}
+    
+            <Separator my="3" size="4" />
+    
+            <Link href="#" className="text-sm">View Booking Page</Link>
+            <Link href="#" className="text-sm">Copy Link</Link>
+          </Flex>
         </Card>
-    )
-  }
+      );
+    }
   
   export default BookingCard

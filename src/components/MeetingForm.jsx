@@ -7,7 +7,7 @@ import { Heading, Flex, Button, Box, TextArea, Select, TextField, } from "@radix
 import { format } from "date-fns";
 import { useNavigate } from 'react-router-dom';
 
-const CreateMeetingForm = ({ selectedDates }) => {
+const CreateMeetingForm = ({ selectedDates, formRef, setMeetingData, }) => {
   const { date } = useParams();
   const navigate = useNavigate();
 
@@ -30,6 +30,14 @@ const CreateMeetingForm = ({ selectedDates }) => {
 
     const formattedDates = selectedDates.map((date) => format(new Date(date), "yyyy-MM-dd"));
 
+    setMeetingData({
+      title,
+      description,
+      meetingType,
+      selectedDates: formattedDates,
+      duration,
+    })
+
     navigate("/meeting-summary", {
       state: {
         title, 
@@ -48,7 +56,7 @@ const CreateMeetingForm = ({ selectedDates }) => {
         Create Meeting
       </Heading>
 
-      <form onSubmit={handleSubmit} className="space-y-4 text-left">
+      <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 text-left">
         
         {/*Meeting Title*/}
 

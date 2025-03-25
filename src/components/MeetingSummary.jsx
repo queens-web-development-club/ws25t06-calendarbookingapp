@@ -2,7 +2,7 @@ import { useState } from 'react'
 import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
 import '../App.css'
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
     Box,
     Heading,
@@ -14,8 +14,9 @@ import {
 
 const MeetingSummary = () => {
     const { state } = useLocation();
-    const { title, description, meetingType, selectedDates } = state || {};
-    
+    const { title, description, meetingType, selectedDates, duration, } = state || {};
+    const navigate = useNavigate();
+
     const shareLink = `https://example.com/share/${Math.random()
         .toString(36)
         .substring(2, 8)}`;
@@ -25,34 +26,72 @@ const MeetingSummary = () => {
         alert("Link copied to clipboard!");
     };
 
+    const handleDelete = () => {
+        const confirm = window.confirm("Are you sure you want to delete this meeting?");
+        if (confirm) {
+          alert("Meeting deleted.");
+          navigate("/meeting");
+        }
+      };
+      
+    if (!state) {
+        return (
+          <Box className="max-w-2xl mx-auto p-6 mt-8">
+            <Heading size="5">No Meeting Data</Heading>
+            <Text>Please go back and create a meeting first.</Text>
+          </Box>
+        );
+    }
+
     return (
         <Box className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-8 space-y-4">
-          <Heading size="5">Meeting Summary</Heading>
+          <Heading size="5" className="text-center">Meeting Summary</Heading>
           <Separator my="3" />
     
-          <Text><strong>Title:</strong> {title}</Text>
-          <Text><strong>Description:</strong> {description}</Text>
-          <Text><strong>Meeting Type:</strong> {meetingType}</Text>
+          <div className="space-y-2">
+            <Flex gap="2">
+              <Text className="font-semibold">Title:</Text>
+              <Text>{title}</Text>
+            </Flex>
     
-          <Box>
-            <Text className="font-semibold mt-4 mb-1">Selected Date(s):</Text>
-            {selectedDates && selectedDates.length > 0 ? (
-              <ul className="list-disc ml-6">
-                {selectedDates.map((date, idx) => (
-                  <li key={idx}>{date}</li>
-                ))}
-              </ul>
-            ) : (
-              <Text>No dates selected.</Text>
-            )}
-          </Box>
+            <Flex gap="2">
+              <Text className="font-semibold">Description:</Text>
+              <Text>{description}</Text>
+            </Flex>
+    
+            <Flex gap="2">
+              <Text className="font-semibold">Meeting Type:</Text>
+              <Text>{meetingType}</Text>
+            </Flex>
 
-          <Text><strong>Duration:</strong> {duration} minutes</Text>
+            <Flex gap="2">
+                <div>
+                <Text className="font-semibold">Selected Date(s):</Text>
+                <ul className="list-disc ml-6 mt-1">
+                    {selectedDates.map((date, idx) => (
+                    <li key={idx} className="text-gray-800">{date}</li>
+                    ))}
+                </ul>
+                </div>
+            </Flex>
+            
+    
+            <Flex gap="2">
+              <Text className="font-semibold">Duration:</Text>
+              <Text>{duration} minutes</Text>
+            </Flex>
+          </div>
+    
+          <Separator my="3" />
     
           <Flex justify="between" align="center" className="mt-6">
             <Text className="text-sm text-gray-500">{shareLink}</Text>
             <Button onClick={handleCopy}>Copy Share Link</Button>
           </Flex>
+
+          <div className='flex justify-end mt-4'>
+            <Button color="red" variant="soft" onClick={handleDelete}>Delete Meeting</Button>
+          </div>
         </Box>
       );
     };

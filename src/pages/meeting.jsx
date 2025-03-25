@@ -39,7 +39,7 @@ function Meeting() {
         </div>
 
         {step == 0 && (
-          <Flex direction="column">
+          <Flex direction="column" height={"97%"}>
             <Calendar setSelectedDates={setSelectedDates} />
             <TimePicker />
           </Flex>

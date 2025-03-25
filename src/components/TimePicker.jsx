@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Heading, Flex, Select, ScrollArea } from "@radix-ui/themes";
 import { format } from "date-fns";
+import IntervalPicker from "./IntervalPicker.jsx";
 
 function TimePicker() {
   const [selectedTime, setSelectedTime] = useState("");
@@ -13,24 +14,9 @@ function TimePicker() {
   });
 
   return (
-    <div className="row-span-1 bg-gray-300 p-4">
-      <Heading>Add Interval</Heading>
-      <Flex gap="2">
-      <Select.Root size="3" value={selectedTime} onValueChange={setSelectedTime}>
-          <Select.Trigger className="p-2 border rounded w-40">
-            {selectedTime || "Select a time"}
-          </Select.Trigger>
-          <Select.Content className="max-h-2 overflow-y-hidden" position="popper" >
-            {/* Custom div wrapper to apply Tailwind styling correctly */}
-              {timeOptions.map((time) => (
-                <Select.Item key={time} value={time} className="p-2 hover:bg-gray-100 cursor-pointer">
-                  {time}
-                </Select.Item>
-              ))}
-          </Select.Content>
-        </Select.Root>
-      </Flex>
-    </div>
+    <Flex className="flex items-center gap-4 w-full h-full p-4 border rounded-lg bg-white">
+      <IntervalPicker/>
+    </Flex>
     // Root, Trigger, Content, Viewport, Item
   );
 }

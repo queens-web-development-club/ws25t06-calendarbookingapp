@@ -15,9 +15,15 @@
   -moz-osx-font-smoothing: grayscale;
 
   height: 100%;
-  overflow: hidden;
+  
+  
   
 }
+
+.radix-select-root {
+  height: 150px !important; /* Force height */
+}
+
 
 a {
   font-weight: 500;

@@ -16,6 +16,7 @@ const CreateMeetingForm = ({ selectedDates }) => {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [meetingType, setMeetingType] = useState("");
+  const [duration, setDuration] = useState("")
 
   // Generate time options (30-minute intervals)
   const timeOptions = Array.from({ length: 48 }, (_, i) => {
@@ -35,9 +36,9 @@ const CreateMeetingForm = ({ selectedDates }) => {
         description,
         meetingType,
         selectedDates: formattedDates,
+        duration,
       },
     });
-
 
   };
 
@@ -47,7 +48,7 @@ const CreateMeetingForm = ({ selectedDates }) => {
         Create Meeting
       </Heading>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-4 text-left">
         
         {/*Meeting Title*/}
 
@@ -58,7 +59,7 @@ const CreateMeetingForm = ({ selectedDates }) => {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            classNAme="flex-1"
+            className="flex-1"
           />
         </div>
 
@@ -72,9 +73,23 @@ const CreateMeetingForm = ({ selectedDates }) => {
           />
         </div>
 
+        {/* Duration */}
+        <div className="flex items-center gap-4">
+          <label className="w-[130px] font-medium">Duration:</label>
+          <Select.Root value={duration} onValueChange={setDuration}>
+            <Select.Trigger placeholder="Select duration" />
+            <Select.Content>
+            <Select.Item value="30">30 minutes</Select.Item>              
+            <Select.Item value="60">1 hour</Select.Item>
+            <Select.Item value="90">1 hour 30 minutes</Select.Item>
+            <Select.Item value="120">2 hours</Select.Item>
+            </Select.Content>
+          </Select.Root>
+        </div>
+
         {/* Meeting Type */}
-        <div>
-          <label className="block mb-1 font-medium">Meeting Type</label>
+        <div className="flex items-center gap-4">
+          <label className="w-[130px] font-medium">Meeting Type:</label>
           <Select.Root value={meetingType} onValueChange={setMeetingType}>
             <Select.Trigger placeholder="Choose meeting type" />
             <Select.Content>

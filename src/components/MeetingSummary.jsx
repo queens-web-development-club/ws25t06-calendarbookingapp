@@ -46,6 +46,8 @@ const MeetingSummary = () => {
               <Text>No dates selected.</Text>
             )}
           </Box>
+
+          <Text><strong>Duration:</strong> {duration} minutes</Text>
     
           <Flex justify="between" align="center" className="mt-6">
             <Text className="text-sm text-gray-500">{shareLink}</Text>

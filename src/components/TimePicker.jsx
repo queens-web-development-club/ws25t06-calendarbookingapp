@@ -50,14 +50,6 @@ function TimePicker() {
   
   };
 
-  const handleBlur = (setter) => (e) => {
-    if (e.target.value.length == 0) {
-      setter("00") // Adds 00 if user deletes all characters
-    }
-    else if (e.target.value.length == 1) {
-      setter(e.target.value + "0") // Pads with 0 if user enters a single digit
-    }
-  }
 
   return (
     <Flex flexGrow="1" justify="center" className="w-full h-full p-6 bg-white shadow-lg rounded-lg overflow-hidden" 

@@ -23,8 +23,8 @@ function TimePicker() {
 
       <h2 className="text-lg font-semibold mb-2">Enter Time</h2>
       <Flex gap="4" align="center" justify="center" className="w-full text-4xl font-bold">
-        <Flex direction="column">
-          <span className="text-xs">Hours</span>
+        <Flex direction="column" align="center" className="mb-4">
+          <span className="text-xs text-center block">Hours</span>
             <input
           type="text"
           value={hour}
@@ -34,8 +34,8 @@ function TimePicker() {
         />
         </Flex>
         <span>:</span>
-        <Flex direction="column">
-          <span className="text-xs">Minutes</span>
+        <Flex direction="column" align="center" className="mb-4">
+          <span className="text-xs text-center block">Minutes</span>
           <input
           type="text"
           value={minute}
@@ -45,7 +45,7 @@ function TimePicker() {
         />
         </Flex>
         
-        <Flex direction="column">
+        <Flex direction="column" align="center">
             <RadioCards.Root className=""size="1" gap="0">
                 <RadioCards.Item value="1" className="">AM</RadioCards.Item>
                 <RadioCards.Item value="2">PM</RadioCards.Item>
@@ -53,8 +53,8 @@ function TimePicker() {
         </Flex>
         <span> to </span>
 
-        <Flex direction="column">
-          <span className="text-xs">Hours</span>
+        <Flex direction="column" align="center" className="mb-4">
+          <span className="text-xs text-center block">Hours</span>
           <input
           type="text"
           value={hour}
@@ -67,8 +67,8 @@ function TimePicker() {
 
 
         <span>:</span>
-        <Flex direction="column">
-          <span className="text-xs">Minutes</span>
+        <Flex direction="column" align="center" className="mb-4">
+          <span className="text-xs text-center block">Minutes</span>
           <input
           type="text"
           value={minute}
@@ -78,7 +78,7 @@ function TimePicker() {
         />
         </Flex>
 
-        <Flex direction="column">
+        <Flex direction="column" align="center">
             <RadioCards.Root className=""size="1" gap="0">
                 <RadioCards.Item value="1" className="">AM</RadioCards.Item>
                 <RadioCards.Item value="2">PM</RadioCards.Item>

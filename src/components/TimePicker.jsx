@@ -21,23 +21,30 @@ function TimePicker() {
 
 
 
-      <h2 className="text-lg font-semibold mb-4">Enter Time</h2>
+      <h2 className="text-lg font-semibold mb-2">Enter Time</h2>
       <Flex gap="4" align="center" justify="center" className="w-full text-4xl font-bold">
-        <input
+        <Flex direction="column">
+          <span className="text-xs">Hours</span>
+            <input
           type="text"
           value={hour}
           onChange={(e) => setHour(e.target.value)}
           className="w-20 h-20 text-center bg-gray-200 rounded-md"
           maxLength={2}
         />
+        </Flex>
         <span>:</span>
-        <input
+        <Flex direction="column">
+          <span className="text-xs">Minutes</span>
+          <input
           type="text"
           value={minute}
           onChange={(e) => setMinute(e.target.value)}
           className="w-20 h-20 text-center bg-gray-200 rounded-md"
           maxLength={2}
         />
+        </Flex>
+        
         <Flex direction="column">
             <RadioCards.Root className=""size="1" gap="0">
                 <RadioCards.Item value="1" className="">AM</RadioCards.Item>
@@ -45,21 +52,32 @@ function TimePicker() {
             </RadioCards.Root>
         </Flex>
         <span> to </span>
-        <input
+
+        <Flex direction="column">
+          <span className="text-xs">Hours</span>
+          <input
           type="text"
           value={hour}
           onChange={(e) => setHour(e.target.value)}
           className="w-20 h-20 text-center bg-gray-200 rounded-md"
           maxLength={2}
         />
+        </Flex>
+
+
+
         <span>:</span>
-        <input
+        <Flex direction="column">
+          <span className="text-xs">Minutes</span>
+          <input
           type="text"
           value={minute}
           onChange={(e) => setMinute(e.target.value)}
           className="w-20 h-20 text-center bg-gray-200 rounded-md"
           maxLength={2}
         />
+        </Flex>
+
         <Flex direction="column">
             <RadioCards.Root className=""size="1" gap="0">
                 <RadioCards.Item value="1" className="">AM</RadioCards.Item>

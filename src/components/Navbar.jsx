@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function Navbar() {
   return (
-    <nav className="bg-blue-600 p-4 shadow-lg">
+    <nav className="bg-blue-600 p-3 h-20 flex items-center shadow-lg">
       <div className="container mx-auto flex justify-between items-center">
         <h1 className="text-white text-xl font-bold">QWeb Booking</h1>
         <div className="space-x-6">

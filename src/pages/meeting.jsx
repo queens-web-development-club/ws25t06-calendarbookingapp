@@ -12,7 +12,7 @@ function Meeting() {
   const [meetingData, setMeetingData] = useState(null);
 
   return (
-    <Flex height="90vh"className="max-w-full mx-auto h-full bg-gray-500" direction="row">
+    <Flex className="max-w-full mx-auto h-[calc(100vh-5rem)] bg-gray-500" direction="row">
       
       {/* Sidebar - 1 Column */}
       <Box width="33.33%" height="100%"className="bg-gray-200 p-4">

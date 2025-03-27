@@ -15,12 +15,12 @@ function Meeting() {
     <Flex className="max-w-full mx-auto h-[calc(100vh-5rem)] bg-gray-500" direction="row">
       
       {/* Sidebar - 1 Column */}
-      <Box width="33.33%" height="100%"className="bg-gray-200 p-4">
+      <Box width="30%" height="100%"className="bg-gray-200 p-4">
         <BookingCard meetingData={meetingData} />
       </Box>
 
       {/* Main Content - 2 Columns */}
-      <Box width="66.66%" height="100%" className="bg-gray-300">
+      <Box width="70%" height="100%" className="bg-white">
       <Flex direction="column" height="100%" className="">
         <Flex justify="between" className="">
           
@@ -40,10 +40,10 @@ function Meeting() {
         {step === 0 && (
           
           <Box height="100%">
-            <Box height="80%">
+            <Box height="70%">
               <Calendar setSelectedDates={setSelectedDates} />
             </Box>
-            <Box height="20%" className="flex items-center justify-center" >
+            <Box height="30%" className="flex items-center justify-center" >
               <TimePicker />
             </Box>
             </Box>

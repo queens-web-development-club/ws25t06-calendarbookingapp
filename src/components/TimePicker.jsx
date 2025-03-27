@@ -52,7 +52,7 @@ function TimePicker() {
 
 
   return (
-    <Flex flexGrow="1" justify="center" className="w-full h-full p-6 bg-white shadow-lg rounded-lg overflow-hidden" 
+    <Flex flexGrow="1" justify="center" className="w-full h-full p-6 bg-white shadow-lg rounded-lg" 
     align="center" direction="column" gap="2">
 
       <h2 className="text-lg font-semibold mt-2">Enter Time</h2>

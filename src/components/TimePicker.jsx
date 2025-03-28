@@ -4,6 +4,7 @@ import { format } from "date-fns";
 
 function TimePicker() {
   const [selectedTime, setSelectedTime] = useState("");
+  const [error, setError] = useState("");
 
   const [startHour, setStartHour] = useState("00");
   const [startMin, setStartMin] = useState("00");
@@ -50,7 +51,32 @@ function TimePicker() {
   
   };
   
+  const convertTo24Hour = (hour, period) => {
+    let h = parseInt(hour, 10);
+    if (period === "PM" && h !== 12) h += 12;
+    if (period === "AM" && h === 12) h = 0;
+    return h.toString().padStart(2, "0");
+  };
+
   const handleSubmit = () => {
+    // Check for empty values
+    if ([startHour, endHour].includes("00")) {
+      setError("Time cannot be 00 in any spot.");
+      console.log("ERROR 1")
+      return;
+    }
+
+    // Convert to 24-hour format for comparison
+    const startTime = `${convertTo24Hour(startHour, startPeriod)}:${startMin}`;
+    const endTime = `${convertTo24Hour(endHour, endPeriod)}:${endMin}`;
+
+    if (startTime >= endTime) {
+      setError("Start time must be before end time.");
+      console.log("ERROR 2")
+      return;
+    }
+
+    setError(""); // Clear error if validation passes
     const formattedTime = `${startHour}:${startMin} ${startPeriod} - ${endHour}:${endMin} ${endPeriod}`;
     setSelectedTime(formattedTime);
     console.log("Selected Time Interval:", formattedTime);
@@ -89,7 +115,7 @@ function TimePicker() {
         </Flex>
         
         <Flex direction="column" align="center">
-            <RadioCards.Root className="w-[5vw]"size="1" gap="0" onValueChange={setStartPeriod}>
+            <RadioCards.Root className="w-[5vw]"size="1" gap="0" defaultValue="AM" onValueChange={setStartPeriod}>
                 <RadioCards.Item value="AM" className="">AM</RadioCards.Item>
                 <RadioCards.Item value="PM">PM</RadioCards.Item>
             </RadioCards.Root>
@@ -124,7 +150,7 @@ function TimePicker() {
         </Flex>
 
         <Flex direction="column" width="8%"align="center">
-            <RadioCards.Root className="w-[5vw]"size="1" gap="0" onValueChange={setEndPeriod}>
+            <RadioCards.Root className="w-[5vw]"size="1" gap="0" defaultValue="PM" onValueChange={setEndPeriod}>
                 <RadioCards.Item value="AM" className="">AM</RadioCards.Item>
                 <RadioCards.Item value="PM">PM</RadioCards.Item>
             </RadioCards.Root>

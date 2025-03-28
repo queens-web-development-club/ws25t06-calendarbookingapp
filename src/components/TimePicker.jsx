@@ -49,6 +49,13 @@ function TimePicker() {
     }
   
   };
+  
+  const handleSubmit = () => {
+    const formattedTime = `${startHour}:${startMin} ${startPeriod} - ${endHour}:${endMin} ${endPeriod}`;
+    setSelectedTime(formattedTime);
+    console.log("Selected Time Interval:", formattedTime);
+  };
+ 
 
 
   return (
@@ -82,9 +89,9 @@ function TimePicker() {
         </Flex>
         
         <Flex direction="column" align="center">
-            <RadioCards.Root className="w-[5vw]"size="1" gap="0">
-                <RadioCards.Item value="1" className="">AM</RadioCards.Item>
-                <RadioCards.Item value="2">PM</RadioCards.Item>
+            <RadioCards.Root className="w-[5vw]"size="1" gap="0" onValueChange={setStartPeriod}>
+                <RadioCards.Item value="AM" className="">AM</RadioCards.Item>
+                <RadioCards.Item value="PM">PM</RadioCards.Item>
             </RadioCards.Root>
         </Flex>
         <span className="mr-2 ml-2 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl"> to </span>
@@ -117,13 +124,13 @@ function TimePicker() {
         </Flex>
 
         <Flex direction="column" width="8%"align="center">
-            <RadioCards.Root className="w-[5vw]"size="1" gap="0">
-                <RadioCards.Item value="1" className="">AM</RadioCards.Item>
-                <RadioCards.Item value="2">PM</RadioCards.Item>
+            <RadioCards.Root className="w-[5vw]"size="1" gap="0" onValueChange={setEndPeriod}>
+                <RadioCards.Item value="AM" className="">AM</RadioCards.Item>
+                <RadioCards.Item value="PM">PM</RadioCards.Item>
             </RadioCards.Root>
         </Flex>
         <Box className="flex justify-center items-center">
-          <button className="text-2xl w-full h-[6vw] flex items-center justify-center bg-red-500 text-red rounded-lg">
+          <button onClick={handleSubmit} className="text-2xl w-full h-[6vw] flex items-center justify-center bg-red-500 text-red rounded-lg">
             ✓
           </button>
         </Box>

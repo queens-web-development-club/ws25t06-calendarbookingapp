@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TextField, Heading, Flex, Select, ScrollArea, RadioCards } from "@radix-ui/themes";
+import { TextField, Heading, Flex, Select, Box, ScrollArea, RadioCards } from "@radix-ui/themes";
 import { format } from "date-fns";
 
 function TimePicker() {
@@ -56,47 +56,47 @@ function TimePicker() {
     align="center" direction="column" gap="2">
 
       <h2 className="text-lg font-semibold mt-2">Enter Time</h2>
-      <Flex gap="4" align="center" justify="center" className="w-full text-4xl font-bold">
-        <Flex direction="column" align="center" className="mb-4">
+      <Flex gap="3" align="center" justify="center" className="max-w-full h-full ml-auto mr-auto text-4xl font-bold">
+        <Flex direction="column" align="center" width="10%"className=" mb-4">
           <span className="text-xs text-center block">Hours</span>
-            <input
+          <input
           type="text"
           value={startHour}
           onChange={handleNumberChange(setStartHour)}
           onBlur={handleHourBlur(setStartHour)}
-          className="w-20 h-20 text-center bg-gray-200 rounded-md"
+          className="w-full h-[6vw] text-[4vw] text-center bg-gray-200 rounded-md"
           maxLength={2}
-        />
+          />
         </Flex>
-        <span>:</span>
-        <Flex direction="column" align="center" className="mb-4">
+        <span className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl">:</span>
+        <Flex direction="column" align="center" width="10%" className=" mb-4">
           <span className="text-xs text-center block">Minutes</span>
           <input
           type="text"
           value={startMin}
           onChange={handleNumberChange(setStartMin)}
           onBlur={handleMinBlur(setStartMin)}
-          className="w-20 h-20 text-center bg-gray-200 rounded-md"
+          className="w-full h-[6vw] text-[4vw] text-center bg-gray-200 rounded-md"
           maxLength={2}
         />
         </Flex>
         
         <Flex direction="column" align="center">
-            <RadioCards.Root className=""size="1" gap="0">
+            <RadioCards.Root className="w-[5vw]"size="1" gap="0">
                 <RadioCards.Item value="1" className="">AM</RadioCards.Item>
                 <RadioCards.Item value="2">PM</RadioCards.Item>
             </RadioCards.Root>
         </Flex>
-        <span> to </span>
+        <span className="mr-2 ml-2 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl"> to </span>
 
-        <Flex direction="column" align="center" className="mb-4">
+        <Flex direction="column"width="10%" align="center" className=" mb-4">
           <span className="text-xs text-center block">Hours</span>
           <input
           type="text"
           value={endHour}
           onChange={handleNumberChange(setEndHour)}
           onBlur={handleHourBlur(setEndHour)}
-          className="w-20 h-20 text-center bg-gray-200 rounded-md"
+          className="w-full h-[6vw] text-[4vw] text-center bg-gray-200 rounded-md"
           maxLength={2}
         />
         </Flex>
@@ -104,27 +104,30 @@ function TimePicker() {
 
 
         <span>:</span>
-        <Flex direction="column" align="center" className="mb-4">
+        <Flex direction="column"  width="10%"align="center" className=" mb-4">
           <span className="text-xs text-center block">Minutes</span>
           <input
           type="text"
           value={endMin}
           onChange={handleNumberChange(setEndMin)}
           onBlur={handleMinBlur(setEndMin)}
-          className="w-20 h-20 text-center bg-gray-200 rounded-md"
+          className="w-full h-[6vw] text-[4vw] text-center bg-gray-200 rounded-md"
           maxLength={2}
         />
         </Flex>
 
-        <Flex direction="column" align="center">
-            <RadioCards.Root className=""size="1" gap="0">
+        <Flex direction="column" width="8%"align="center">
+            <RadioCards.Root className="w-[5vw]"size="1" gap="0">
                 <RadioCards.Item value="1" className="">AM</RadioCards.Item>
                 <RadioCards.Item value="2">PM</RadioCards.Item>
             </RadioCards.Root>
         </Flex>
-        <button className="text-2xl h-20 bg-red-500 text-red rounded-lg hover:bg-red-700">
-          ✓
-        </button>
+        <Box className="flex justify-center items-center">
+          <button className="text-2xl w-full h-[6vw] flex items-center justify-center bg-red-500 text-red rounded-lg">
+            ✓
+          </button>
+        </Box>
+        
       </Flex>
       
     </Flex>

@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { TextField, Heading, Flex, Select, Box, ScrollArea, RadioCards } from "@radix-ui/themes";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 
 function TimePicker() {
   const [selectedTime, setSelectedTime] = useState("");
-  const [error, setError] = useState("");
+  const [isValidTime, setIsValidTime] = useState(false);
 
   const [startHour, setStartHour] = useState("00");
   const [startMin, setStartMin] = useState("00");
@@ -12,7 +12,36 @@ function TimePicker() {
 
   const [endHour, setEndHour] = useState("00");
   const [endMin, setEndMin] = useState("00");
-  const [endPeriod, setEndPeriod] = useState("AM");
+  const [endPeriod, setEndPeriod] = useState("PM");
+
+  const convertTo24Hour = (hour, period) => {
+    let h = parseInt(hour, 10);
+
+    if (h === 0) return "00"
+
+    if (period === "PM" && h !== 12) h += 12;
+    if (period === "AM" && h === 12) h = 0;
+    return h.toString().padStart(2, "0");
+  };
+
+  const verifyTimes = () => {
+    const startTime = `${convertTo24Hour(startHour, startPeriod)}:${startMin}`;
+    const endTime = `${convertTo24Hour(endHour, endPeriod)}:${endMin}`;
+
+    if (startTime == "00" || endTime == "00") {
+      setIsValidTime(false)
+    }
+
+    if (startTime >= endTime) {
+      console.log(startTime + " and then false " + endTime)
+      setIsValidTime(false)
+    }
+    else {
+      console.log(startTime + " and then true " + endTime)
+      setIsValidTime(true)
+    }
+    console.log("TEST")
+  }
 
   const handleNumberChange = (setter) => (e) => {
     let value = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
@@ -28,13 +57,20 @@ function TimePicker() {
   const handleHourBlur = (setter) => (e) => {
     if (e.target.value.length == 0) {
       setter("00") // Adds 00 if user deletes all characters
+      setIsValidTime(false)
     }
     else if (parseInt(e.target.value, 10) > 12) {
       setter("12") // Autocorrects to 12 if a value greater 12 is entered
+      verifyTimes()
     }
     else if (e.target.value.length == 1) {
       setter(e.target.value + "0") // Pads with 0 if user enters a single digit
+      verifyTimes()
     }
+    else {
+      verifyTimes()
+    }
+
   
   };
 
@@ -50,33 +86,8 @@ function TimePicker() {
     }
   
   };
-  
-  const convertTo24Hour = (hour, period) => {
-    let h = parseInt(hour, 10);
-    if (period === "PM" && h !== 12) h += 12;
-    if (period === "AM" && h === 12) h = 0;
-    return h.toString().padStart(2, "0");
-  };
 
   const handleSubmit = () => {
-    // Check for empty values
-    if ([startHour, endHour].includes("00")) {
-      setError("Time cannot be 00 in any spot.");
-      console.log("ERROR 1")
-      return;
-    }
-
-    // Convert to 24-hour format for comparison
-    const startTime = `${convertTo24Hour(startHour, startPeriod)}:${startMin}`;
-    const endTime = `${convertTo24Hour(endHour, endPeriod)}:${endMin}`;
-
-    if (startTime >= endTime) {
-      setError("Start time must be before end time.");
-      console.log("ERROR 2")
-      return;
-    }
-
-    setError(""); // Clear error if validation passes
     const formattedTime = `${startHour}:${startMin} ${startPeriod} - ${endHour}:${endMin} ${endPeriod}`;
     setSelectedTime(formattedTime);
     console.log("Selected Time Interval:", formattedTime);
@@ -115,7 +126,12 @@ function TimePicker() {
         </Flex>
         
         <Flex direction="column" align="center">
-            <RadioCards.Root className="w-[5vw]"size="1" gap="0" defaultValue="AM" onValueChange={setStartPeriod}>
+            <RadioCards.Root className="w-[5vw]"size="1" gap="0" defaultValue="AM" onValueChange={
+            (value) => {
+              setStartPeriod(value);
+              verifyTimes(); // Revalidate time when period changes
+            }
+            }>
                 <RadioCards.Item value="AM" className="">AM</RadioCards.Item>
                 <RadioCards.Item value="PM">PM</RadioCards.Item>
             </RadioCards.Root>
@@ -150,13 +166,19 @@ function TimePicker() {
         </Flex>
 
         <Flex direction="column" width="8%"align="center">
-            <RadioCards.Root className="w-[5vw]"size="1" gap="0" defaultValue="PM" onValueChange={setEndPeriod}>
+            <RadioCards.Root className="w-[5vw]"size="1" gap="0" defaultValue="PM" onValueChange={
+              (value) => {
+                setEndPeriod(value);
+                verifyTimes(); // Revalidate time when period changes
+              }}>
                 <RadioCards.Item value="AM" className="">AM</RadioCards.Item>
                 <RadioCards.Item value="PM">PM</RadioCards.Item>
             </RadioCards.Root>
         </Flex>
         <Box className="flex justify-center items-center">
-          <button onClick={handleSubmit} className="text-2xl w-full h-[6vw] flex items-center justify-center bg-red-500 text-red rounded-lg">
+          <button onClick={handleSubmit} 
+          className={`text-2xl w-full h-[6vw] flex items-center justify-center rounded-lg
+            ${isValidTime ? "bg-gray-200 text-blue-300" : "bg-gray-400 text-gray-600 cursor-not-allowed"}`}>
             ✓
           </button>
         </Box>

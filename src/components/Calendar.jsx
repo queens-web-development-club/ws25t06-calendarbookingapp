@@ -44,8 +44,8 @@ const Calendar = ({ setSelectedDates }) => { // Accept setSelectedDates as prop
             <button
               key={day}
               onClick={() => toggleDate(day)}
-              className={`p-4 h-full w-full rounded-full transition bg-[#f9f9f9] ${
-                isSelected ? "border-[#1E88E5] text-[#1E88E5]" : "hover:bg-gray-200"
+              className={`p-4 h-full w-full rounded-[8px] border-[1px] transition bg-[#f9f9f9] ${
+                isSelected ? "border-[#1E88E5] border-2 text-[#1E88E5] " : "hover:bg-gray-200 border-transparent"
               }`}
             >
               {format(day, "d")}

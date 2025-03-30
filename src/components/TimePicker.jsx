@@ -177,6 +177,7 @@ function TimePicker() {
         </Flex>
         <Box className="flex justify-center items-center">
           <button onClick={handleSubmit} 
+          disabled={!isValidTime}
           className={`text-2xl w-full h-[6vw] flex items-center justify-center rounded-lg
             ${isValidTime ? "bg-gray-200 text-blue-300" : "bg-gray-400 text-gray-600 cursor-not-allowed"}`}>
             ✓

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addMonths, subMonths, eachDayOfInterval, isSameDay } from "date-fns";
-import { Box, Flex, Grid } from "@radix-ui/themes";
+import { Box, Flex, Grid, Button} from "@radix-ui/themes";
 
 
 const Calendar = ({ selectedDates, setSelectedDates }) => { // Accept setSelectedDates as prop
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [localSelectedDates, setLocalSelectedDates] = useState([]); // Local state
+  const [selectedPopupDate, setSelectedPopupDate] = useState(null);
 
   const days = eachDayOfInterval({
     start: startOfWeek(startOfMonth(currentMonth)),
@@ -13,16 +14,24 @@ const Calendar = ({ selectedDates, setSelectedDates }) => { // Accept setSelecte
   });
 
   const toggleDate = (date) => {
-    setLocalSelectedDates((prevSelected) => {
-      const isAlreadySelected = prevSelected.some((d) => isSameDay(d, date));
-      const updatedDates = isAlreadySelected
-        ? prevSelected.filter((d) => !isSameDay(d, date)) // Remove if selected
-        : [...prevSelected, [date]]; // Add if not selected
-      
-      setSelectedDates(updatedDates); // Update parent state in Meeting.jsx
-      console.log(updatedDates)
-      return updatedDates;
-    });
+    const selectedEntry = selectedDates.find((d) => isSameDay(d[0], date));
+    const hasTimeInterval = selectedEntry && selectedEntry[1];
+
+    if (hasTimeInterval) {
+      setSelectedPopupDate(selectedEntry); // Show modal for that date
+    } 
+    else {
+      setLocalSelectedDates((prevSelected) => {
+        const isAlreadySelected = prevSelected.some((d) => isSameDay(d, date));
+        const updatedDates = isAlreadySelected
+          ? prevSelected.filter((d) => !isSameDay(d, date)) // Remove if selected
+          : [...prevSelected, [date]]; // Add if not selected
+        
+        setSelectedDates(updatedDates); // Update parent state in Meeting.jsx
+        console.log(updatedDates)
+        return updatedDates;
+      });
+    }
   };
 
   return (
@@ -57,7 +66,34 @@ const Calendar = ({ selectedDates, setSelectedDates }) => { // Accept setSelecte
           );
         })}
       </div>
+
+      {/* Popup Modal */}
+      {selectedPopupDate && (
+        <div className="absolute inset fixed top-0 left-0 w-full h-full flex items-center justify-center">
+          <Flex direction="column" gap="4" justify="center" className="bg-white p-6 rounded-lg shadow-xl text-center">
+            <h2 className="text-xl font-bold mb-2">
+              Time Interval for {format(selectedPopupDate[0], "MMMM d, yyyy")}
+            </h2>
+            
+            <Flex justify={"center"} gap={"4"}>
+              <p className="text-gray-700 text-[1vw]">{selectedPopupDate[1]}</p>
+              <Button size="1" color="crimson" variant="soft">Delete</Button>
+            </Flex>
+              <Button
+                onClick={() => setSelectedPopupDate(null)} 
+                className="mt-4 px-4 py-2 w-1/2 bg-blue-500 text-white rounded"
+              >
+                Close
+              </Button>
+            
+
+          </Flex>
+        </div>
+      )}  
+
     </div>
+
+    
   );
 };
 

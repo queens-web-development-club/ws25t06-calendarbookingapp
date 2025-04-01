@@ -3,26 +3,33 @@ import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addMonths, su
 import { Box, Flex, Grid } from "@radix-ui/themes";
 
 
-const Calendar = ({ setSelectedDates }) => { // Accept setSelectedDates as prop
+const Calendar = ({ selectMode, setSelectedDates, onDateSelect }) => { // Accept setSelectedDates as prop
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [localSelectedDates, setLocalSelectedDates] = useState([]); // Local state
+  const [selectedDate, setSelectedDate] = useState(null)
 
   const days = eachDayOfInterval({
     start: startOfWeek(startOfMonth(currentMonth)),
     end: endOfWeek(endOfMonth(currentMonth)),
   });
 
-  const toggleDate = (date) => {
-    setLocalSelectedDates((prevSelected) => {
-      const isAlreadySelected = prevSelected.some((d) => isSameDay(d, date));
-      const updatedDates = isAlreadySelected
-        ? prevSelected.filter((d) => !isSameDay(d, date)) // Remove if selected
-        : [...prevSelected, date]; // Add if not selected
-      
-      setSelectedDates(updatedDates); // Update parent state in Meeting.jsx
-      return updatedDates;
-    });
+  const handleClick = (date) => {
+    if (selectMode === "single") {
+      setSelectedDate(date);         // ✅ sets local highlight
+      onDateSelect && onDateSelect(date); // ✅ sends to parent
+    } else {
+      setLocalSelectedDates((prevSelected) => {
+        const isAlreadySelected = prevSelected.some((d) => isSameDay(d, date));
+        const updatedDates = isAlreadySelected
+          ? prevSelected.filter((d) => !isSameDay(d, date))
+          : [...prevSelected, date];
+  
+        setSelectedDates(updatedDates);
+        return updatedDates;
+      });
+    }
   };
+  
 
   return (
     <div className="w-full h-full mx-auto p-4 bg-white shadow-lg rounded-lg flex flex-col">
@@ -38,12 +45,15 @@ const Calendar = ({ setSelectedDates }) => { // Accept setSelectedDates as prop
         ))}
         
         {days.map((day) => {
-          const isSelected = localSelectedDates.some((d) => isSameDay(d, day));
+          const isSelected = selectMode === "single"
+          ? selectedDate && isSameDay(selectedDate, day)
+          : localSelectedDates.some((d) => isSameDay(d, day));
+        
 
           return (
             <button
-              key={day}
-              onClick={() => toggleDate(day)}
+              key={day.toISOString()}
+              onClick={() => handleClick(day)}
               className={`p-4 h-full w-full rounded-[8px] border-[1px] transition bg-[#f9f9f9] ${
                 isSelected ? "border-[#1E88E5] border-2 text-[#1E88E5] " : "hover:bg-gray-200 border-transparent"
               }`}

@@ -15,6 +15,7 @@ import MeetingResponses from "./pages/MeetingResponses.jsx";
 import SignupPage from "./pages/SignupPage.jsx"; // 🆕 Signup Page
 import InterviewForm from "./components/InterviewForm";
 import InterviewSummary from "./components/InterviewSummary.jsx";
+import InterviewAvailability from "./components/InterviewAvailability.jsx"
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/meeting-responses" element={<MeetingResponses/>}/>
             <Route path="/interview-form" element={<InterviewForm/>}/>
             <Route path="/interview-summary" element={<InterviewSummary/>}/>
+            <Route path="/interview-availability" element={<InterviewAvailability/>}/>
           </Routes>
       </Router>
   );

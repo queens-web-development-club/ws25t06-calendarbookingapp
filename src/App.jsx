@@ -13,6 +13,8 @@ import MeetingSummary from "./components/MeetingSummary.jsx";
 import LoginPage from "./pages/LoginPage.jsx"; // 🆕 Login Page
 import MeetingResponses from "./pages/MeetingResponses.jsx";
 import SignupPage from "./pages/SignupPage.jsx"; // 🆕 Signup Page
+import InterviewForm from "./components/InterviewForm";
+import InterviewSummary from "./components/InterviewSummary.jsx";
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
             <Route path="/login" element={<LoginPage />} /> {/* 🆕 Login Route */}
             <Route path="/signup" element={<SignupPage />} /> {/* 🆕 Signup Route */}
             <Route path="/meeting-responses" element={<MeetingResponses/>}/>
+            <Route path="/interview-form" element={<InterviewForm/>}/>
+            <Route path="/interview-summary" element={<InterviewSummary/>}/>
           </Routes>
       </Router>
   );

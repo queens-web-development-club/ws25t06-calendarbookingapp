@@ -15,7 +15,10 @@ function Meeting() {
 
   const addTimeInterval = (timeInterval) => {
     setSelectedDates((prevDates) => {
-      return prevDates.map((date) => [date[0], timeInterval]);
+      return prevDates.map(([d, interval]) => {
+        // Apply the new time interval only to dates that don't have one
+        return interval === null ? [d, timeInterval] : [d, interval]; 
+      });
     });
   };
   

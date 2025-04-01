@@ -3,7 +3,7 @@ import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addMonths, su
 import { Box, Flex, Grid } from "@radix-ui/themes";
 
 
-const Calendar = ({ setSelectedDates }) => { // Accept setSelectedDates as prop
+const Calendar = ({ selectedDates, setSelectedDates }) => { // Accept setSelectedDates as prop
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [localSelectedDates, setLocalSelectedDates] = useState([]); // Local state
 
@@ -17,9 +17,10 @@ const Calendar = ({ setSelectedDates }) => { // Accept setSelectedDates as prop
       const isAlreadySelected = prevSelected.some((d) => isSameDay(d, date));
       const updatedDates = isAlreadySelected
         ? prevSelected.filter((d) => !isSameDay(d, date)) // Remove if selected
-        : [...prevSelected, date]; // Add if not selected
+        : [...prevSelected, [date]]; // Add if not selected
       
       setSelectedDates(updatedDates); // Update parent state in Meeting.jsx
+      console.log(updatedDates)
       return updatedDates;
     });
   };
@@ -38,15 +39,18 @@ const Calendar = ({ setSelectedDates }) => { // Accept setSelectedDates as prop
         ))}
         
         {days.map((day) => {
-          const isSelected = localSelectedDates.some((d) => isSameDay(d, day));
+          const selectedEntry = selectedDates.find((d) => isSameDay(d[0], day));
+          const isSelected = !!selectedEntry;
+          const hasTimeInterval = isSelected && selectedEntry[1];
 
           return (
             <button
               key={day}
               onClick={() => toggleDate(day)}
-              className={`p-4 h-full w-full rounded-[8px] border-[1px] transition bg-[#f9f9f9] ${
-                isSelected ? "border-[#1E88E5] border-2 text-[#1E88E5] " : "hover:bg-gray-200 border-transparent"
-              }`}
+              className={`p-4 h-full w-full rounded-[8px] border-[1px] transition bg-[#f9f9f9] 
+                ${hasTimeInterval ? "bg-sky-300 text-white" : 
+                isSelected ? "border-[#1E88E5] border-2 text-[#1E88E5]" 
+                : "hover:bg-gray-200 border-transparent"}`}
             >
               {format(day, "d")}
             </button>

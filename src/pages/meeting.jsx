@@ -4,12 +4,14 @@ import { Button, Flex, Box } from "@radix-ui/themes";
 import BookingCard from "../components/BookingCard.jsx";
 import TimePicker from "../components/TimePicker.jsx";
 import MeetingForm from "../components/MeetingForm.jsx";
+import MeetingSummary from "../components/MeetingSummary.jsx";
 
 function Meeting() {
   const [selectedDates, setSelectedDates] = useState([]);
   const [step, setStep] = useState(0);
   const formRef = useRef(null);
   const [meetingData, setMeetingData] = useState(null);
+  const [showSummary, setShowSummary] = useState(false);
 
   return (
     <Flex className="max-w-full mx-auto h-[calc(100vh-5rem)] bg-gray-500" direction="row">
@@ -50,8 +52,21 @@ function Meeting() {
           
         )}
         {step === 1 && (
-          <MeetingForm selectedDates={selectedDates} formRef={formRef} setMeetingData={setMeetingData}/>
+          <MeetingForm selectedDates={selectedDates} formRef={formRef} setMeetingData={setMeetingData} setShowSummary={setShowSummary}/>
         )}
+
+        {showSummary && (
+          <div className="absolute top-0 left-0 w-full h-full bg-gray-100 bg-opacity-60 flex items-center justify-center z-50">
+            <div className="bg-white rounded-xl shadow-xl p-6 max-w-xl w-full mx-4">
+              <MeetingSummary
+                meetingData={meetingData}
+                onClose={() => setShowSummary(false)}
+              />
+            </div>
+          </div>
+        )}
+
+
         </Flex>
       </Box>
     </Flex>

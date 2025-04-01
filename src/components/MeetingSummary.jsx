@@ -12,9 +12,8 @@ import {
     Button,
   } from "@radix-ui/themes";
 
-const MeetingSummary = () => {
-    const { state } = useLocation();
-    const { title, description, meetingType, selectedDates, duration, } = state || {};
+const MeetingSummary = ({meetingData, onClose}) => {
+    const { title, description, meetingType, selectedDates, duration, } = meetingData || {};
     const navigate = useNavigate();
 
     const shareLink = `https://example.com/share/${Math.random()
@@ -34,7 +33,7 @@ const MeetingSummary = () => {
         }
       };
       
-    if (!state) {
+    if (!meetingData) {
         return (
           <Box className="max-w-2xl mx-auto p-6 mt-8">
             <Heading size="5">No Meeting Data</Heading>
@@ -92,6 +91,10 @@ const MeetingSummary = () => {
           <div className='flex justify-end mt-4'>
             <Button color="red" variant="soft" onClick={handleDelete}>Delete Meeting</Button>
           </div>
+          
+          <Button onClick={onClose} color="gray" variant="soft">Close</Button>
+
+
         </Box>
       );
     };

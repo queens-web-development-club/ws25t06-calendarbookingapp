@@ -1,18 +1,26 @@
 import React, { useState } from "react";
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addMonths, subMonths, eachDayOfInterval, isSameDay } from "date-fns";
-import { Box, Flex, Grid } from "@radix-ui/themes";
+import { Box, Flex, Grid, Button} from "@radix-ui/themes";
 
 
+<<<<<<< HEAD
 const Calendar = ({ selectMode, setSelectedDates, onDateSelect }) => { // Accept setSelectedDates as prop
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [localSelectedDates, setLocalSelectedDates] = useState([]); // Local state
   const [selectedDate, setSelectedDate] = useState(null)
+=======
+const Calendar = ({ selectedDates, setSelectedDates }) => { // Accept setSelectedDates as prop
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [localSelectedDates, setLocalSelectedDates] = useState([]); // Local state
+  const [selectedPopupDate, setSelectedPopupDate] = useState(null);
+>>>>>>> 45612d3d4a84b5008b6479cf8d344ed495d463d3
 
   const days = eachDayOfInterval({
     start: startOfWeek(startOfMonth(currentMonth)),
     end: endOfWeek(endOfMonth(currentMonth)),
   });
 
+<<<<<<< HEAD
   const handleClick = (date) => {
     if (selectMode === "single") {
       setSelectedDate(date);         // ✅ sets local highlight
@@ -28,6 +36,29 @@ const Calendar = ({ selectMode, setSelectedDates, onDateSelect }) => { // Accept
         return updatedDates;
       });
     }
+=======
+  const toggleDate = (date) => {
+    setSelectedDates((prevSelected) => {
+      const selectedEntry = prevSelected.find(([d]) => isSameDay(d, date));
+      const hasTimeInterval = selectedEntry && selectedEntry[1];
+  
+      if (hasTimeInterval) {
+        setSelectedPopupDate(selectedEntry); // Open modal for that date
+        return prevSelected; // Keep selection unchanged
+      }
+
+      // Ensures popup does not open if new date is selected
+      setSelectedPopupDate(null);
+  
+      // Modify only untagged dates
+      const isAlreadySelected = prevSelected.some(([d, interval]) => isSameDay(d, date) && !interval);
+      const updatedDates = isAlreadySelected
+        ? prevSelected.filter(([d, interval]) => !(isSameDay(d, date) && !interval)) // Remove untagged selection
+        : [...prevSelected, [date, null]]; // Add new date with no interval
+  
+      return updatedDates;
+    });
+>>>>>>> 45612d3d4a84b5008b6479cf8d344ed495d463d3
   };
   
 
@@ -45,6 +76,7 @@ const Calendar = ({ selectMode, setSelectedDates, onDateSelect }) => { // Accept
         ))}
         
         {days.map((day) => {
+<<<<<<< HEAD
           const isSelected = selectMode === "single"
           ? selectedDate && isSameDay(selectedDate, day)
           : localSelectedDates.some((d) => isSameDay(d, day));
@@ -57,13 +89,54 @@ const Calendar = ({ selectMode, setSelectedDates, onDateSelect }) => { // Accept
               className={`p-4 h-full w-full rounded-[8px] border-[1px] transition bg-[#f9f9f9] ${
                 isSelected ? "border-[#1E88E5] border-2 text-[#1E88E5] " : "hover:bg-gray-200 border-transparent"
               }`}
+=======
+          const selectedEntry = selectedDates.find((d) => isSameDay(d[0], day));
+          const isSelected = !!selectedEntry;
+          const hasTimeInterval = isSelected && selectedEntry[1];
+
+          return (
+            <button
+              key={day}
+              onClick={() => toggleDate(day)}
+              className={`p-4 h-full w-full rounded-[8px] border-[1px] transition bg-[#f9f9f9] 
+                ${hasTimeInterval ? "bg-sky-300 text-white" : 
+                isSelected ? "border-[#1E88E5] border-2 text-[#1E88E5]" 
+                : "hover:bg-gray-200 border-transparent"}`}
+>>>>>>> 45612d3d4a84b5008b6479cf8d344ed495d463d3
             >
               {format(day, "d")}
             </button>
           );
         })}
       </div>
+
+      {/* Popup Modal */}
+      {selectedPopupDate && (
+        <div className="absolute inset fixed top-0 left-0 w-full h-full flex items-center justify-center">
+          <Flex direction="column" gap="4" justify="center" className="bg-white p-6 rounded-lg shadow-xl text-center">
+            <h2 className="text-xl font-bold mb-2">
+              Time Interval for {format(selectedPopupDate[0], "MMMM d, yyyy")}
+            </h2>
+            
+            <Flex justify={"center"} gap={"4"}>
+              <p className="text-gray-700 text-[1vw]">{selectedPopupDate[1]}</p>
+              <Button size="1" color="crimson" variant="soft">Delete</Button>
+            </Flex>
+              <Button
+                onClick={() => setSelectedPopupDate(null)} 
+                className="mt-4 px-4 py-2 w-1/2 bg-blue-500 text-white rounded"
+              >
+                Close
+              </Button>
+            
+
+          </Flex>
+        </div>
+      )}  
+
     </div>
+
+    
   );
 };
 

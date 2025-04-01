@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextField, Heading, Flex, Select, Box, ScrollArea, RadioCards } from "@radix-ui/themes";
 import { format, isValid } from "date-fns";
 
-function TimePicker() {
+function TimePicker( {addTimeInterval} ) {
   const [selectedTime, setSelectedTime] = useState("");
   const [isValidTime, setIsValidTime] = useState(false);
 
@@ -40,7 +40,6 @@ function TimePicker() {
       console.log(startTime + " and then true " + endTime)
       setIsValidTime(true)
     }
-    console.log("TEST")
   }
 
   const handleNumberChange = (setter) => (e) => {
@@ -89,7 +88,8 @@ function TimePicker() {
 
   const handleSubmit = () => {
     const formattedTime = `${startHour}:${startMin} ${startPeriod} - ${endHour}:${endMin} ${endPeriod}`;
-    setSelectedTime(formattedTime);
+    //setSelectedTime(formattedTime);
+    addTimeInterval(formattedTime);
     console.log("Selected Time Interval:", formattedTime);
   };
  

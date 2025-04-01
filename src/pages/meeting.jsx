@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Calendar from "../components/Calendar.jsx";
 import { Button, Flex, Box } from "@radix-ui/themes";
 import BookingCard from "../components/BookingCard.jsx";
@@ -12,6 +12,23 @@ function Meeting() {
   const formRef = useRef(null);
   const [meetingData, setMeetingData] = useState(null);
   const [showSummary, setShowSummary] = useState(false);
+
+  const addTimeInterval = (timeInterval) => {
+    setSelectedDates((prevDates) => {
+      return prevDates.map(([d, interval]) => {
+        // Apply the new time interval only to dates that don't have one
+        return interval === null ? [d, timeInterval] : [d, interval]; 
+      });
+    });
+  };
+  
+  // Checks if selectedDates updates correctly (for debugging purposes)
+  useEffect(() => {
+    if (selectedDates.length > 0) {
+      console.log("Updated selectedDates:", selectedDates);
+    }
+    }, [selectedDates]
+  );
 
   return (
     <Flex className="max-w-full mx-auto h-[calc(100vh-5rem)] bg-gray-500" direction="row">
@@ -46,7 +63,7 @@ function Meeting() {
               <Calendar selectMode="multiple" setSelectedDates={setSelectedDates} />
             </Box>
             <Box height="30%" className="flex items-center justify-center" >
-              <TimePicker />
+              <TimePicker addTimeInterval={addTimeInterval} />
             </Box>
             </Box>
           

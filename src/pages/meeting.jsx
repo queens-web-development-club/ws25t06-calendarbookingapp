@@ -60,7 +60,7 @@ function Meeting() {
           
           <Box height="100%">
             <Box height="70%">
-              <Calendar selectMode="multiple" setSelectedDates={setSelectedDates} />
+              <Calendar setSelectedDates={setSelectedDates} />
             </Box>
             <Box height="30%" className="flex items-center justify-center" >
               <TimePicker addTimeInterval={addTimeInterval} />

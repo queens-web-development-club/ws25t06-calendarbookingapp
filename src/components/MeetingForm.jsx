@@ -27,7 +27,7 @@ const CreateMeetingForm = ({ selectedDates, formRef, setMeetingData, setShowSumm
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const formattedDates = selectedDates.map((date) => format(new Date(date), "yyyy-MM-dd"));
+    const formattedDates = selectedDates.map((date) => format(new Date(date[0]), "yyyy-MM-dd") + ": " + date[1]);
 
     setMeetingData({
       title,

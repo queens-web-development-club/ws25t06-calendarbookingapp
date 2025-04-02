@@ -30,6 +30,17 @@ function Meeting() {
     }, [selectedDates]
   );
 
+  const handleCreate = () => {
+    setStep(step + 1);
+    formRef.current?.requestSubmit()
+  }
+
+  const handleFinish = () => {
+    setSelectedDates([])
+    setMeetingData(null);
+    setStep(0)
+  }
+
   return (
     <Flex className="max-w-full mx-auto h-[calc(100vh-5rem)] bg-gray-500" direction="row">
       
@@ -50,7 +61,7 @@ function Meeting() {
             {step < 1 ? (
               <Button variant="soft" onClick={() => setStep(step + 1)}>Next</Button>
             ) : (
-              <Button onClick={() => formRef.current?.requestSubmit()}>Create</Button>
+              <Button onClick={handleCreate}>Create</Button>
             )}
           </div>
         </Flex>
@@ -65,22 +76,20 @@ function Meeting() {
             <Box height="30%" className="flex items-center justify-center" >
               <TimePicker addTimeInterval={addTimeInterval} />
             </Box>
-            </Box>
+          </Box>
           
         )}
         {step === 1 && (
           <MeetingForm selectedDates={selectedDates} formRef={formRef} setMeetingData={setMeetingData} setShowSummary={setShowSummary}/>
         )}
 
-        {showSummary && (
-          <div className="absolute top-0 left-0 w-full h-full bg-gray-100 bg-opacity-60 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow-xl p-6 max-w-xl w-full mx-4">
+        {step === 2 && (
+          <Box className="bg-white rounded-xl shadow-xl p-6 max-w-xl w-full mx-4">
               <MeetingSummary
                 meetingData={meetingData}
-                onClose={() => setShowSummary(false)}
+                onClose={handleFinish}
               />
-            </div>
-          </div>
+          </Box>
         )}
 
 

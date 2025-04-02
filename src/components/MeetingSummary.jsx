@@ -43,7 +43,7 @@ const MeetingSummary = ({meetingData, onClose}) => {
     }
 
     return (
-        <Box className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-8 space-y-4">
+        <Box className="max-w-2xl mx-auto p-6 bg-transparent shadow-md rounded-lg mt-8 space-y-4">
           <Heading size="5" className="text-center">Meeting Summary</Heading>
           <Separator my="3" />
     

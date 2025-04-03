@@ -4,25 +4,34 @@ import { Box, Flex } from "@radix-ui/themes";
 const DayCell = () => {
   const times = [
     "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM"
+    
   ];
 
+
+  const rowHeight = `h-[${100 / times.length + 1}%]`;
   return (
-    <Box className="w-full max-w-md mx-auto border border-gray-300 rounded overflow-hidden">
+    <Flex direction="row" height="100%"className="h-full w-full">
       {/* Header */}
-      <Box className="text-center py-2 border-b border-gray-300 bg-white">
-        <div className="text-xs text-gray-500">EST</div>
-        <div className="text-sm font-semibold">Fri</div>
-        <div className="text-lg font-bold">28</div>
-      </Box>
+      <Flex width="10%" direction="column">
+      <Box className="flex flex-grow items-center justify-center text-sm font-semibold text-gray-500">
+          Time
+        </Box>
+        {times.map((time) => (
+          <Box key={time} className="flex flex-grow items-center justify-center text-sm text-gray-600">
+            {time}
+          </Box>
+        ))}
+      </Flex>
 
       {/* Time Blocks using Radix Flex */}
-      <Flex direction="column">
+      <Flex width="90%" direction="column" height="100%" className="">
+        <Box className="flex flex-grow items-center text-sm ">Fri 28</Box>
         {times.map((time, index) => {
           const isBooked = index >= 1 && index <= 3; // 10 AM - 1 PM
           return (
             <Box
               key={time}
-              className={`h-16 px-4 flex items-center border-b border-gray-200 text-sm ${
+              className={`px-4 flex flex-grow items-center border border-gray-400 text-sm ${
                 isBooked ? "bg-green-200" : "bg-white"
               }`}
             >
@@ -31,7 +40,7 @@ const DayCell = () => {
           );
         })}
       </Flex>
-    </Box>
+    </Flex>
   );
 };
 

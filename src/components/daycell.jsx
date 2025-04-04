@@ -84,19 +84,62 @@ const DayCell = ({ selectedTime }) => {
         </Flex>
         
         {times[day][1].map((time, index) => {
-          const isBooked = index >= 1 && index <= 3; // 10 AM - 1 PM
-          const rowHour = convertTo24Hour(time);
-          const isSelected = startHour !== null && rowHour >= startHour && rowHour < endHour;
+          const slotStart = convertTo24Hour(time);
+          const slotEnd = slotStart + 1;
+
+          let fillType = null; // "top", "bottom", "full"
+          let fillPercent = 0;
+
+          if (startHour !== null && endHour !== null) {
+            const isBeforeStart = slotEnd <= startHour;
+            const isAfterEnd = slotStart >= endHour;
+
+            if (!isBeforeStart && !isAfterEnd) {
+              // Overlapping
+              const overlapStart = Math.max(startHour, slotStart);
+              const overlapEnd = Math.min(endHour, slotEnd);
+              const overlap = Math.max(0, overlapEnd - overlapStart);
+              fillPercent = (overlap / 1) * 100;
+
+              if (fillPercent === 100) {
+                fillType = "full";
+              } else if (startHour > slotStart && endHour >= slotEnd) {
+                fillType = "bottom"; // Partial start
+              } else if (endHour < slotEnd && startHour <= slotStart) {
+                fillType = "top"; // Partial end
+              } else {
+                fillType = "full"; // Safety fallback
+              }
+            }
+          }
+
           return (
             <Box
               key={time}
-              className={`px-4 flex flex-grow items-center border border-gray-400 text-sm ${
-                isSelected ? "bg-green-200" : "bg-white"
-              }`}
+              className="relative px-4 flex flex-grow items-center border border-gray-400 text-sm bg-white h-12"
             >
+              {fillPercent > 0 && (
+                <Box
+                  className={`absolute left-0 w-full bg-green-200 z-0 ${
+                    fillType === "top"
+                      ? "top-0"
+                      : fillType === "bottom"
+                      ? "bottom-0"
+                      : "top-0"
+                  }`}
+                  style={{
+                    height: `${fillPercent}%`,
+                  }}
+                />
+              )}
+              <Box className="relative z-10 w-full h-full" />
             </Box>
           );
         })}
+
+
+
+
       </Flex>
 
     </Flex>

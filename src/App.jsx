@@ -13,7 +13,7 @@ import MeetingSummary from "./components/MeetingSummary.jsx";
 import LoginPage from "./pages/LoginPage.jsx"; // 🆕 Login Page
 import MeetingAvailability from './pages/meeting-availability.jsx';
 import MeetingResponses from "./pages/MeetingResponses.jsx";
-import SignupPage from "./pages/SignupPage.jsx"; // 🆕 Signup Page
+import SignupPage from './pages/SignupPage';
 import InterviewForm from "./components/InterviewForm";
 import InterviewSummary from "./components/InterviewSummary.jsx";
 import InterviewAvailability from "./components/InterviewAvailability.jsx"
@@ -29,8 +29,8 @@ function App() {
             <Route path="/meeting-form/:date" element={<MeetingForm />} />
             <Route path="/meeting-summary" element={<MeetingSummary />} />
             <Route path="/test" element={<MeetingAvailability />}/>
-            <Route path="/login" element={<LoginPage />} /> {/* 🆕 Login Route */}
-            <Route path="/signup" element={<SignupPage />} /> {/* 🆕 Signup Route */}
+            <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
             <Route path="/meeting-responses" element={<MeetingResponses/>}/>
             <Route path="/interview-form" element={<InterviewForm/>}/>
             <Route path="/interview-summary" element={<InterviewSummary/>}/>

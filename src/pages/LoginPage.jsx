@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase'; // adjust the path if needed
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -44,6 +44,13 @@ const Login = () => {
       <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
         Log In
       </button>
+
+      <p className="mt-4 text-sm text-center">
+        Don’t have an account?{' '}
+        <Link to="/signup" className="text-blue-600 underline hover:text-blue-800">
+          Sign up here
+        </Link>
+      </p>
     </form>
   );
 };

@@ -20,7 +20,7 @@ function GetUser( { setStep } ) {
         </Box>
         <Box width="50%">
             <button onClick={handleConfirm} className="p-4 h-full w-full rounded-[8px] bg-sky-300 text-white transition hover:bg-sky-400">
-                Add Availability
+                Confirm Availability
             </button>
         </Box>
         

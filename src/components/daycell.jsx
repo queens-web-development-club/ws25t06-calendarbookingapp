@@ -18,6 +18,8 @@ const DayCell = ({ selectedTime }) => {
     return hours + minutes / 60;
   };
 
+  
+
   const times = [
     ["Sun Apr 06 2025", ["9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM"]],
     ["Wed Apr 16 2025" , ["9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM"]],

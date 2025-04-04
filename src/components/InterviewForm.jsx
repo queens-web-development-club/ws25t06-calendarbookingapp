@@ -28,7 +28,7 @@ const CreateInterviewForm = ({ selectedDates, formRef, setInterviewData, setShow
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const formattedDates = selectedDates.map((date) => format(new Date(date), "yyyy-MM-dd"));
+    const formattedDates = selectedDates.map((date) => format(new Date(date[0]), "yyyy-MM-dd") + ": " + date[1]);
 
     setInterviewData({
       title,

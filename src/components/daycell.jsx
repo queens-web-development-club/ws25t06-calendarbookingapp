@@ -9,9 +9,9 @@ const DayCell = ({ selectedTime }) => {
   const [boxHeight, setBoxHeight] = useState(0);
 
   const times = [
-    ["Sun Apr 06 2025", ["9:30 AM","10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4:40 PM"]],
-    ["Wed Apr 16 2025" , ["9:00 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM"]],
-    ["Thu Apr 24 2025", ["7 AM", "8 AM", "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM"]]
+    ["Sun Apr 06 2025", ["9:30 AM","10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:40 PM"]],
+    ["Wed Apr 16 2025" , ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"]],
+    ["Thu Apr 24 2025", ["7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"]]
   ]
 
   const convertTo24Hour = (timeStr) => {

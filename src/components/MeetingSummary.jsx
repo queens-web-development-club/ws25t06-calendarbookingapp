@@ -16,9 +16,8 @@ const MeetingSummary = ({meetingData, onClose}) => {
     const { title, description, meetingType, selectedDates, duration, } = meetingData || {};
     const navigate = useNavigate();
 
-    const shareLink = `https://example.com/share/${Math.random()
-        .toString(36)
-        .substring(2, 8)}`;
+    const fakeId = Math.random().toString(36).substring(2, 8);
+    const shareLink = `${window.location.origin}/meeting/${fakeId}`;
 
     const handleCopy = () => {
         navigator.clipboard.writeText(shareLink);

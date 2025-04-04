@@ -52,7 +52,7 @@ function Meeting() {
       {/* Main Content - 2 Columns */}
       <Box width="70%" height="100%" className="bg-white">
       <Flex direction="column" height="100%" className="">
-        <Flex justify="between" className="">
+        <Flex  className="">
           
           {step > 0 && (
             <Button variant="soft" onClick={() => setStep(step - 1)}>Back</Button>

@@ -1,7 +1,10 @@
 import React from "react";
-import { Box, Flex, ScrollArea } from "@radix-ui/themes";
+import { Box, Flex, ScrollArea, Button } from "@radix-ui/themes";
+import { useState } from 'react';
 
 const DayCell = ({ selectedTime }) => {
+
+  const [day, setDay] = useState(0)
 
   const convertTo24Hour = (timeStr) => {
     const [time, modifier] = timeStr.split(" ");
@@ -16,9 +19,14 @@ const DayCell = ({ selectedTime }) => {
   };
 
   const times = [
-    "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM"
+    ["Sun Apr 06 2025", ["9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM"]],
+    ["Wed Apr 16 2025" , ["9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM"]],
+    ["Thu Apr 24 2025", ["7 AM", "8 AM", "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM"]]
+  ]
     
-  ];
+  // Fri 28
+
+  let test = times[day][0].slice(0, 3) + times[day][0].slice(8, 10);
 
   let startHour = null;
   let endHour = null;
@@ -29,25 +37,53 @@ const DayCell = ({ selectedTime }) => {
     endHour = convertTo24Hour(endStr);
   }
 
-  const rowHeight = `h-[${100 / times.length + 1}%]`;
+  const handleNextDay = () => {
+    if (day < times.length - 1) {
+      setDay(day + 1);
+    }
+  }
+
+  const handlePrevDay = () => {
+    if (day > 0 ) {
+      setDay(day - 1);
+    }
+  }
+
+  const rowHeight = `h-[${100 / times[day][1].length + 1}%]`;
   return (
-    <Flex direction="row" height="100%"className="h-full w-full">
-      {/* Header */}
+    <Flex direction="row" height="100%"className="h-full w-full pt-4">
+      
+      
+
       <Flex width="10%" direction="column">
-      <Box className="flex flex-grow items-center justify-center text-sm font-semibold text-gray-500">
+        <Box className="mb-4 items-center justify-center text-sm font-semibold text-gray-500">
           Time
         </Box>
-        {times.map((time) => (
-          <Box key={time} className="flex flex-grow items-center justify-center text-sm text-gray-600">
-            {time}
+        {times[day][1].map((time) => (
+          <Box key={time} className="flex flex-grow items-center justify-center text-sm m-btext-gray-600">
+            <span>{time}</span>
           </Box>
         ))}
       </Flex>
 
       {/* Time Blocks using Radix Flex */}
       <Flex width="90%" direction="column" height="100%" className=" ">
-        <Box className="flex flex-grow items-center text-sm ">Fri 28</Box>
-        {times.map((time, index) => {
+        <Flex direction="row" justify="between">
+          <Box className={day === 0 ? "invisible" : ""}>
+            <Button size="1" variant="soft" onClick={handlePrevDay} 
+            disabled={day === 0} >Previous Day</Button>
+          </Box>
+          
+          <Box className="mb-4 items-center justify-center text-sm ">
+            {times[day][0].slice(0, 3) + " " + times[day][0].slice(8, 10)}
+          </Box>
+          <Box className={day == times.length - 1 ? "invisible opacity-0" : ""}>
+            <Button size="1" variant="soft" onClick={handleNextDay} 
+            disabled={day === times.length - 1}>Next Day</Button>
+        </Box>
+        </Flex>
+        
+        {times[day][1].map((time, index) => {
           const isBooked = index >= 1 && index <= 3; // 10 AM - 1 PM
           const rowHour = convertTo24Hour(time);
           const isSelected = startHour !== null && rowHour >= startHour && rowHour < endHour;
@@ -58,11 +94,11 @@ const DayCell = ({ selectedTime }) => {
                 isSelected ? "bg-green-200" : "bg-white"
               }`}
             >
-              <span className="text-gray-700">{time}</span>
             </Box>
           );
         })}
       </Flex>
+
     </Flex>
   );
 };

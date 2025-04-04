@@ -43,11 +43,15 @@ function Meeting() {
                 </Box>
             )
         }
+        { step == 2 && (
+            <Box>
+                <p className='text-sky-400 text-[10vw]'>Everything is done!</p>
+                <p className='text-sky-400 text-[10vw]'>Good job!</p>
+            </Box>
+        )
+            
+        }
         
-        <Box>
-            <p className='text-sky-400 text-[10vw]'>Everything is done!</p>
-            <p className='text-sky-400 text-[10vw]'>Good job!</p>
-        </Box>
     </Flex>
   );
 }

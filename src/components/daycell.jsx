@@ -1,10 +1,18 @@
 import React from "react";
 import { Box, Flex, ScrollArea, Button } from "@radix-ui/themes";
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 const DayCell = ({ selectedTime }) => {
 
   const [day, setDay] = useState(0)
+  const refSlot = useRef(null);
+  const [boxHeight, setBoxHeight] = useState(0);
+
+  const times = [
+    ["Sun Apr 06 2025", ["9:30 AM","10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4:40 PM"]],
+    ["Wed Apr 16 2025" , ["9:00 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM"]],
+    ["Thu Apr 24 2025", ["7 AM", "8 AM", "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM"]]
+  ]
 
   const convertTo24Hour = (timeStr) => {
     const [time, modifier] = timeStr.split(" ");
@@ -18,13 +26,57 @@ const DayCell = ({ selectedTime }) => {
     return hours + minutes / 60;
   };
 
+  // Measure height of first full slot dynamically
+  useEffect(() => {
+    if (!refSlot.current) return;
   
+    const observer = new ResizeObserver((entries) => {
+      for (let entry of entries) {
+        const measured = entry.contentRect.height;
+        setBoxHeight(measured);
+      }
+    });
+  
+    observer.observe(refSlot.current);
+  
+    return () => observer.disconnect();
+  }, [day]);
+  
+  const hourNum = times[day][1].length;
+  let startMod = (convertTo24Hour(times[day][1][0]) - Math.floor(convertTo24Hour(times[day][1][0]))).toFixed(2);
+  let endMod = (convertTo24Hour(times[day][1][hourNum - 1]) - Math.floor(convertTo24Hour(times[day][1][hourNum - 1]))).toFixed(2);
+  if (startMod == 0) {
+    startMod = 1
+  }
+  if (endMod == 0) {
+    endMod = 1
+  }
+  console.log(startMod)
+  console.log("TEST")
+  console.log(endMod)
 
-  const times = [
-    ["Sun Apr 06 2025", ["9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM"]],
-    ["Wed Apr 16 2025" , ["9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM", "5 PM"]],
-    ["Thu Apr 24 2025", ["7 AM", "8 AM", "9 AM", "10 AM", "11 AM", "12 PM", "1 PM", "2 PM", "3 PM", "4 PM"]]
-  ]
+
+
+  // Calculate startMod and endMod when day changes
+  useEffect(() => {
+    if (times[day].length > 1) {
+      const hourNum = times[day][1].length;
+      const start = convertTo24Hour(times[day][1][0]);
+      const end = convertTo24Hour(times[day][1][hourNum - 1]);
+
+      let startMod = (start - Math.floor(start)).toFixed(2);
+      let endMod = (end - Math.floor(end)).toFixed(2);
+
+      if (startMod == 0) {
+        startMod = 1
+      }
+      if (endMod == 0) {
+        endMod = 1
+      }
+
+      console.log("startMod:", startMod, "endMod:", endMod);
+    }
+  }, [day]);
     
   // Fri 28
 
@@ -51,6 +103,8 @@ const DayCell = ({ selectedTime }) => {
     }
   }
 
+  
+  
   const rowHeight = `h-[${100 / times[day][1].length + 1}%]`;
   return (
     <Flex direction="row" height="100%"className="h-full w-full pt-4">
@@ -61,11 +115,19 @@ const DayCell = ({ selectedTime }) => {
         <Box className="mb-4 items-center justify-center text-sm font-semibold text-gray-500">
           Time
         </Box>
-        {times[day][1].map((time) => (
+        <Box className=" items-center justify-center text-sm m-btext-gray-600"
+        style={{ height: `${boxHeight * startMod}px` }}>
+            <span>{times[day][1][0]}</span>
+          </Box>
+        {times[day][1].slice(1, times[day][1].length - 1).map((time) => (
           <Box key={time} className="flex flex-grow items-center justify-center text-sm m-btext-gray-600">
             <span>{time}</span>
           </Box>
         ))}
+        <Box className=" items-center justify-center text-sm m-btext-gray-600"
+        style={{ height: `${boxHeight * endMod}px` }}>
+            <span>{times[day][1][times[day][1].length - 1]}</span>
+          </Box>
       </Flex>
 
       {/* Time Blocks using Radix Flex */}
@@ -84,8 +146,13 @@ const DayCell = ({ selectedTime }) => {
             disabled={day === times.length - 1}>Next Day</Button>
         </Box>
         </Flex>
-        
-        {times[day][1].map((time, index) => {
+        <Box 
+              className="relative px-4 items-center border border-gray-400 text-sm bg-white"
+              style={{ height: `${boxHeight * startMod}px` }}>
+                
+        </Box>
+        {times[day][1].slice(1, times[day][1].length - 1).map((time, index) => {
+          
           const slotStart = convertTo24Hour(time);
           const slotEnd = slotStart + 1;
 
@@ -118,8 +185,14 @@ const DayCell = ({ selectedTime }) => {
           return (
             <Box
               key={time}
-              className="relative px-4 flex flex-grow items-center border border-gray-400 text-sm bg-white h-12"
+              className="relative px-4 flex flex-grow items-center border border-gray-400 bg-white"
+              ref={index === 0 ? refSlot : null} 
+        
+              // attach ref to first full slot
             >
+              <Box className="absolute right-2 top-0 text-[10px] text-gray-400 z-50">
+              {refSlot.current?.getBoundingClientRect().height.toFixed(2)}
+            </Box>
               {fillPercent > 0 && (
                 <Box
                   className={`absolute left-0 w-full bg-green-200 z-0 ${
@@ -138,7 +211,11 @@ const DayCell = ({ selectedTime }) => {
             </Box>
           );
         })}
-
+        <Box
+              className="relative px-4 items-center border border-gray-400 text-sm bg-white"
+              style={{ height: `${boxHeight * endMod}px` }}>
+                
+        </Box>
 
 
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
 import '../App.css'
@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import { useNavigate } from 'react-router-dom';
 import DayCell from './daycell';
 
-const CreateMeetingForm = ({ selectedDates, formRef, setMeetingData, setShowSummary}) => {
+const CreateMeetingForm = ({ selectedDates, formRef, setMeetingData, setShowSummary, onFormChange}) => {
   const { date } = useParams();
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
@@ -41,6 +41,15 @@ const CreateMeetingForm = ({ selectedDates, formRef, setMeetingData, setShowSumm
     setShowSummary(true);
 
   };
+
+  useEffect(() => {
+    const complete =
+      title.trim() !== "" &&
+      description.trim() !== "" &&
+      meetingType !== "" &&
+      duration !== ""
+      onFormChange?.(complete);
+    }, [title, description, meetingType, duration]);
 
   return (
     <Flex direction="column" minWidth="100%" height="100%" className="max-w-2xl pl-12 bg-white shadow-md rounded-lg ">

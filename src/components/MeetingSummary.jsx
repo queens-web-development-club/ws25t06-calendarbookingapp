@@ -42,9 +42,9 @@ const MeetingSummary = ({meetingData, onClose}) => {
     }
 
     return (
-        <Box className="max-w-2xl mx-auto p-6 bg-transparent shadow-md rounded-lg mt-8 space-y-4">
+        <Box minWidth="50%" className="mx-auto p-6 bg-transparent border border-[1px] border-gray-300 shadow-md rounded-lg mt-8 space-y-4">
           <Heading size="5" className="text-center">Meeting Summary</Heading>
-          <Separator my="3" />
+          <Separator my="3" size="4"/>
     
           <div className="space-y-2">
             <Flex gap="2">
@@ -62,36 +62,34 @@ const MeetingSummary = ({meetingData, onClose}) => {
               <Text>{meetingType}</Text>
             </Flex>
 
-            <Flex gap="2">
-                <div>
-                <Text className="font-semibold">Selected Date(s):</Text>
-                <ul className="list-disc ml-6 mt-1">
+            <Box>
+                <p align="left" className="font-semibold">Selected Date(s):</p>
+                <ul className="flex flex-justify-left mt-1">
                     {selectedDates.map((date, idx) => (
                     <li key={idx} className="text-gray-800">{date}</li>
                     ))}
                 </ul>
-                </div>
-            </Flex>
+            </Box>
             
     
             <Flex gap="2">
               <Text className="font-semibold">Duration:</Text>
-              <Text>{duration} minutes</Text>
+              <Text>{duration} Minutes</Text>
             </Flex>
           </div>
     
-          <Separator my="3" />
+          <Separator my="3" size="4" />
     
           <Flex justify="between" align="center" className="mt-6">
             <Text className="text-sm text-gray-500">{shareLink}</Text>
             <Button onClick={handleCopy}>Copy Share Link</Button>
           </Flex>
 
-          <div className='flex justify-end mt-4'>
+          <Flex justify="between">
             <Button color="red" variant="soft" onClick={handleDelete}>Delete Meeting</Button>
-          </div>
-          
-          <Button onClick={onClose} color="gray" variant="soft">Close</Button>
+            <Button onClick={onClose} color="gray" variant="soft">Close</Button>
+          </Flex>
+            
 
 
         </Box>

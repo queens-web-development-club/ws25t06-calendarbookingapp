@@ -1,13 +1,13 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
 import '../App.css'
 import { useParams } from "react-router-dom";
-import { Heading, Flex, Button, Box, TextArea, Select, TextField, } from "@radix-ui/themes";
+import { Heading, Flex, Button, Box, TextArea, Select, TextField } from "@radix-ui/themes";
 import { format } from "date-fns";
 import { useNavigate } from 'react-router-dom';
 
-const CreateInterviewForm = ({ selectedDates, formRef, setInterviewData, setShowSummary}) => {
+const CreateInterviewForm = ({ selectedDates, formRef, setInterviewData, setShowSummary, onFormChange}) => {
   const { date } = useParams();
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
@@ -33,7 +33,6 @@ const CreateInterviewForm = ({ selectedDates, formRef, setInterviewData, setShow
     setInterviewData({
       title,
       description,
-      interviewType,
       selectedDates: formattedDates,
       duration,
       gap,
@@ -43,70 +42,82 @@ const CreateInterviewForm = ({ selectedDates, formRef, setInterviewData, setShow
 
   };
 
+  useEffect(() => {
+    const complete =
+      title.trim() !== "" &&
+      description.trim() !== "" &&
+      gap !== "" &&
+      duration !== "";
+      onFormChange?.(complete);
+    }, [title, description, gap, duration]);
+
   return (
-    <Box className="max-w-2xl mx-auto p-6 bg-white shadow-md rounded-lg mt-8">
+    <Flex direction="column" minWidth="100%" height="100%" className="max-w-2xl pl-12 bg-white shadow-md rounded-lg ">
       <Heading size="5" mb="4">
         Create Interview
       </Heading>
 
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 text-left">
         
+        {/*Meeting Title*/}
 
         
+        
+        <Flex gap="5" width="100%">
+          <Box width="70%">
+            <label className="font-medium min-w-[100px] text-left">Interview Title:</label>
+            <TextField.Root
+              placeholder="Enter a title for your interview"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              className="flex-1"
+            />
+          </Box>
+          {/* Duration */}
+          <Box width="30%" className="flex items-center gap-4">
+            <label className="w-[130px] font-medium">Duration:</label><br></br>
+            <Select.Root value={duration} onValueChange={setDuration}>
+              <Select.Trigger placeholder="Select duration" />
+              <Select.Content>
+              <Select.Item value="30">30 minutes</Select.Item>              
+              <Select.Item value="60">1 hour</Select.Item>
+              <Select.Item value="90">1 hour 30 minutes</Select.Item>
+              <Select.Item value="120">2 hours</Select.Item>
+              </Select.Content>
+            </Select.Root>
+          </Box>
+        </Flex>
 
-        <div>
-          <label className="font-medium min-w-[100px] text-left">Interview Title:</label>
-          <TextField.Root
-            placeholder="Enter a title for your interview"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            className="flex-1"
-          />
-        </div>
+        <Flex gap="4" width="100%">
+          {/* Description */}
+          <Box width="70%">
+            <TextArea
+              placeholder="What's your interview about?"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              size="3"
+            />
+          </Box>
+          {/* Meeting Type */}
+          <Box width="30%" className="flex items-center gap-4">
+            <label className="w-[130px] font-medium">Break Between Interviews:</label><br></br>
+            <Select.Root value={gap} onValueChange={setGap}>
+                <Select.Trigger placeholder="Select break time" />
+                <Select.Content>
+                <Select.Item value="0">No Break</Select.Item>
+                <Select.Item value="5">5 minutes</Select.Item>
+                <Select.Item value="10">10 minutes</Select.Item>
+                <Select.Item value="15">15 minutes</Select.Item>
+                <Select.Item value="30">30 minutes</Select.Item>
+                </Select.Content>
+            </Select.Root>
+          </Box>
+        </Flex>
 
-        {/* Description */}
-        <div>
-          <TextArea
-            placeholder="What's your interview about?"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            size="3"
-          />
-        </div>
-
-        {/* Duration */}
-        <div className="flex items-center gap-4">
-          <label className="w-[130px] font-medium">Duration:</label>
-          <Select.Root value={duration} onValueChange={setDuration}>
-            <Select.Trigger placeholder="Select duration" />
-            <Select.Content>
-            <Select.Item value="30">30 minutes</Select.Item>              
-            <Select.Item value="60">1 hour</Select.Item>
-            <Select.Item value="90">1 hour 30 minutes</Select.Item>
-            <Select.Item value="120">2 hours</Select.Item>
-            </Select.Content>
-          </Select.Root>
-        </div>
-
-        {/* Gap Between Interviews */}
-        <div className="flex items-center gap-4">
-        <label className="w-[130px] font-medium">Break Between Interviews:</label>
-        <Select.Root value={gap} onValueChange={setGap}>
-            <Select.Trigger placeholder="Select break time" />
-            <Select.Content>
-            <Select.Item value="0">No Break</Select.Item>
-            <Select.Item value="5">5 minutes</Select.Item>
-            <Select.Item value="10">10 minutes</Select.Item>
-            <Select.Item value="15">15 minutes</Select.Item>
-            <Select.Item value="30">30 minutes</Select.Item>
-            </Select.Content>
-        </Select.Root>
-        </div>
-
-
+        
       </form>
-    </Box>
+    </Flex>
   );
 };
 

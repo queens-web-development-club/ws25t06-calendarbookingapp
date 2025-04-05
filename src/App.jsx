@@ -1,27 +1,28 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Box } from "@radix-ui/themes";
 import "./App.css";
 
+// Global Components
 import Navbar from "./components/Navbar.jsx";
+
+// Pages & Components
+import Home from "./pages/Home.jsx";
 import Meeting from "./pages/meeting.jsx";
 import Interview from "./pages/interview.jsx";
 import MeetingForm from "./components/MeetingForm.jsx";
 import MeetingSummary from "./components/MeetingSummary.jsx";
-import LoginPage from "./pages/LoginPage.jsx"; // 🆕 Login Page
-import MeetingAvailability from './pages/meeting-availability.jsx';
+import LoginPage from "./pages/LoginPage.jsx";
+import SignupPage from "./pages/SignupPage.jsx";
+import MeetingAvailability from "./pages/meeting-availability.jsx";
 import MeetingResponses from "./pages/MeetingResponses.jsx";
-import SignupPage from './pages/SignupPage';
-import InterviewForm from "./components/InterviewForm";
+import InterviewForm from "./components/InterviewForm.jsx";
 import InterviewSummary from "./components/InterviewSummary.jsx";
-import InterviewAvailability from "./components/InterviewAvailability.jsx"
+import InterviewAvailability from "./components/InterviewAvailability.jsx";
 
 function App() {
   return (
-      <Router>
-          <Navbar /> {/* Navbar is always visible */}
+    <Router>
+      <Navbar />
 
           <Routes>
             <Route path="/meeting" element={<Meeting />} />
@@ -34,10 +35,10 @@ function App() {
           <Route path="/meeting/:id" element={<MeetingAvailability />} />
             <Route path="/interview-form" element={<InterviewForm/>}/>
             <Route path="/interview-summary" element={<InterviewSummary/>}/>
-            <Route path="/interview/:id" element={<InterviewAvailability/>}/>
+            <Route path="/interview-availability" element={<InterviewAvailability/>}/>
           </Routes>
       </Router>
   );
-};
+}
 
 export default App;

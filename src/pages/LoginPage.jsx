@@ -1,12 +1,12 @@
-// src/components/Login.jsx
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase'; // adjust the path if needed
+import { auth } from '../firebase'; // adjust path if needed
 import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
@@ -15,7 +15,13 @@ const Login = () => {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       console.log('Logged in user:', user);
-      navigate('/calendar'); // or whatever route you want
+
+      setSuccessMessage(`🎉 Welcome back, ${user.displayName || "friend"}!`);
+
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        navigate('/welcome');
+      }, 2000);
     } catch (error) {
       console.error('Login failed:', error.message);
       alert('Login failed: ' + error.message);
@@ -25,6 +31,12 @@ const Login = () => {
   return (
     <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-10 p-4 border rounded-lg shadow bg-white">
       <h2 className="text-2xl font-bold mb-4">Login</h2>
+
+      {/* ✅ Success message */}
+      {successMessage && (
+        <p className="text-green-600 text-sm mb-4 text-center">{successMessage}</p>
+      )}
+
       <input
         type="email"
         placeholder="Email"

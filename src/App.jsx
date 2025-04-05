@@ -18,6 +18,7 @@ import MeetingResponses from "./pages/MeetingResponses.jsx";
 import InterviewForm from "./components/InterviewForm.jsx";
 import InterviewSummary from "./components/InterviewSummary.jsx";
 import InterviewAvailability from "./components/InterviewAvailability.jsx";
+import WelcomePage from "./pages/WelcomePage.jsx"; // ✅ NEW
 
 function App() {
   return (
@@ -25,7 +26,7 @@ function App() {
       <Navbar />
 
       <Routes>
-        <Route path="/" element={<Home />} /> {/* ✅ This line added */}
+        <Route path="/" element={<Home />} />
         <Route path="/meeting" element={<Meeting />} />
         <Route path="/interview" element={<Interview />} />
         <Route path="/meeting-form/:date" element={<MeetingForm />} />
@@ -33,6 +34,7 @@ function App() {
         <Route path="/test" element={<MeetingAvailability />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/welcome" element={<WelcomePage />} /> {/* ✅ NEW ROUTE */}
         <Route path="/meeting/:id" element={<MeetingAvailability />} />
         <Route path="/interview-form" element={<InterviewForm />} />
         <Route path="/interview-summary" element={<InterviewSummary />} />

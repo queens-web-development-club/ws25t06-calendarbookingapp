@@ -1,19 +1,24 @@
 import { Link } from "react-router-dom";
+import { Button, Flex, Box } from "@radix-ui/themes";
+import logo from "../assets/qweb-text-white.png"
+
 
 export default function Navbar() {
   return (
-    <nav className="bg-blue-600 p-3 h-20 flex items-center shadow-lg">
-      <div className="container mx-auto flex justify-between items-center">
-        <h1 className="text-white text-xl font-bold">QWeb Booking</h1>
-        <div className="flex items-center space-x-6">
-          <Link to="/" className="text-white hover:underline">Home</Link>
-          <Link to="/meeting" className="text-white hover:underline">Team Booking</Link>
-          <Link to="/interview" className="text-white hover:underline">Interview Booking</Link>
-          <Link to="/login" className="bg-white text-blue-600 px-4 py-1 rounded hover:bg-gray-100 transition">
-            Sign In
+    <nav className="bg-sky-800 h-24 shadow-lg p-12">
+      <Flex align="center" justify="between" className="flex items-center h-full">
+        <Box className="flex items-center">
+        <img src={logo} alt="QWeb Booking Logo" className="h-full w-full" />
+        </Box>
+        <Flex gap="9" align="center" className="flex items-center h-full">
+          <Link to="/" className="text-base sm:text-xl md:text-2xl lg:text-3xl text-white hover:underline">home</Link>
+          <Link to="/meeting" className="text-base sm:text-xl md:text-2xl lg:text-3xl text-white hover:underline">team booking</Link>
+          <Link to="/interview" className="text-base sm:text-xl md:text-2xl lg:text-3xl text-white hover:underline">interview booking</Link>
+          <Link to="/login" className="bg-white text-base sm:text-xl md:text-2xl lg:text-3xl text-sky-800 px-4 py-1 rounded hover:bg-gray-100 text-blue-600 transition">
+            sign in
           </Link>
-        </div>
-      </div>
+        </Flex>
+      </Flex>
     </nav>
   );
 }

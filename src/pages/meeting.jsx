@@ -12,6 +12,7 @@ function Meeting() {
   const formRef = useRef(null);
   const [meetingData, setMeetingData] = useState(null);
   const [showSummary, setShowSummary] = useState(false);
+  const [isFormComplete, setIsFormComplete] = useState(false);
 
   const addTimeInterval = (timeInterval) => {
     setSelectedDates((prevDates) => {
@@ -30,8 +31,20 @@ function Meeting() {
     }, [selectedDates]
   );
 
+  const handleCreate = () => {
+    console.log(selectedDates)
+    setStep(step + 1);
+    formRef.current?.requestSubmit()
+  }
+
+  const handleFinish = () => {
+    setSelectedDates([])
+    setMeetingData(null);
+    setStep(0)
+  }
+
   return (
-    <Flex className="max-w-full mx-auto h-[calc(100vh-5rem)] bg-gray-500" direction="row">
+    <Flex className="max-w-full mx-auto h-[calc(100vh-6rem)] bg-gray-500" direction="row">
       
       {/* Sidebar - 1 Column */}
       <Box width="30%" height="100%"className="bg-gray-200 p-4">
@@ -41,46 +54,51 @@ function Meeting() {
       {/* Main Content - 2 Columns */}
       <Box width="70%" height="100%" className="bg-white">
       <Flex direction="column" height="100%" className="">
-        <Flex justify="between" className="">
-          
-          {step > 0 && (
-            <Button variant="soft" onClick={() => setStep(step - 1)}>Back</Button>
-          )}
-          <div className="ml-auto">
-            {step < 1 ? (
-              <Button variant="soft" onClick={() => setStep(step + 1)}>Next</Button>
-            ) : (
-              <Button onClick={() => formRef.current?.requestSubmit()}>Create</Button>
+        <Flex justify="between" className="mt-4">
+            <Box className={step == 1 ? "ml-4" : "invisible"}>
+              <Button color="blue" variant="soft" onClick={() => setStep(step - 1)}>Back</Button>
+            </Box>
+          <Box className='mr-4'>
+            {step == 0 && (
+              <Button color="blue" variant="soft" disabled={!selectedDates.some(([_, interval]) => interval != null)} 
+              onClick={() => setStep(step + 1)}>Next</Button>
+            ) 
+            }
+            {step == 1 && (
+              <Button color="blue" disabled={!isFormComplete} onClick={handleCreate}>Create</Button>
             )}
-          </div>
+          </Box>
         </Flex>
-
-        {/* Content Switching */}
-        {step === 0 && (
           
-          <Box height="100%">
-            <Box height="70%">
-              <Calendar setSelectedDates={setSelectedDates} />
+          { step < 2 && (
+            <Box height="100%">
+              <Box height="70%">
+                <Calendar selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
+              </Box>
+              <Box height="30%" className="flex items-center justify-center" >
+                {
+                  step != 1 && (
+                    <TimePicker addTimeInterval={addTimeInterval} />
+                  )
+                }
+                {
+                  step == 1 && (
+                    <MeetingForm selectedDates={selectedDates} formRef={formRef}
+                    setMeetingData={setMeetingData} setShowSummary={setShowSummary}
+                    onFormChange={setIsFormComplete}
+                    />
+      
+                  )
+                }
+              </Box>
             </Box>
-            <Box height="30%" className="flex items-center justify-center" >
-              <TimePicker addTimeInterval={addTimeInterval} />
-            </Box>
-            </Box>
+          )}
           
-        )}
-        {step === 1 && (
-          <MeetingForm selectedDates={selectedDates} formRef={formRef} setMeetingData={setMeetingData} setShowSummary={setShowSummary}/>
-        )}
-
-        {showSummary && (
-          <div className="absolute top-0 left-0 w-full h-full bg-gray-100 bg-opacity-60 flex items-center justify-center z-50">
-            <div className="bg-white rounded-xl shadow-xl p-6 max-w-xl w-full mx-4">
+        {step === 2 && (
               <MeetingSummary
                 meetingData={meetingData}
-                onClose={() => setShowSummary(false)}
+                onClose={handleFinish}
               />
-            </div>
-          </div>
         )}
 
 

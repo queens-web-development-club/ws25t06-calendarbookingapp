@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Calendar from "../components/Calendar.jsx";
 import { Button, Flex, Box } from "@radix-ui/themes";
-import BookingCard from "../components/BookingCard.jsx";
+import BookingSummary from "../components/BookingSummary.jsx"; // ✅ Replaces BookingCard
 import TimePicker from "../components/TimePicker.jsx";
 import MeetingForm from "../components/MeetingForm.jsx";
 import MeetingSummary from "../components/MeetingSummary.jsx";
@@ -17,91 +17,95 @@ function Meeting() {
   const addTimeInterval = (timeInterval) => {
     setSelectedDates((prevDates) => {
       return prevDates.map(([d, interval]) => {
-        // Apply the new time interval only to dates that don't have one
-        return interval === null ? [d, timeInterval] : [d, interval]; 
+        return interval === null ? [d, timeInterval] : [d, interval];
       });
     });
   };
-  
-  // Checks if selectedDates updates correctly (for debugging purposes)
+
   useEffect(() => {
     if (selectedDates.length > 0) {
       console.log("Updated selectedDates:", selectedDates);
     }
-    }, [selectedDates]
-  );
+  }, [selectedDates]);
 
   const handleCreate = () => {
-    console.log(selectedDates)
     setStep(step + 1);
-    formRef.current?.requestSubmit()
-  }
+    formRef.current?.requestSubmit();
+  };
 
   const handleFinish = () => {
-    setSelectedDates([])
+    setSelectedDates([]);
     setMeetingData(null);
-    setStep(0)
-  }
+    setStep(0);
+  };
 
   return (
     <Flex className="max-w-full mx-auto h-[calc(100vh-6rem)] bg-gray-500" direction="row">
-      
-      {/* Sidebar - 1 Column */}
-      <Box width="30%" height="100%"className="bg-gray-200 p-4">
-        <BookingCard meetingData={meetingData} />
+
+      {/* ✅ Sidebar with team bookings */}
+      <Box width="30%" height="100%" className="bg-gray-200 p-4 overflow-y-auto">
+        <BookingSummary type="team" />
       </Box>
 
-      {/* Main Content - 2 Columns */}
+      {/* Main Content */}
       <Box width="70%" height="100%" className="bg-white">
-      <Flex direction="column" height="100%" className="">
-        <Flex justify="between" className="mt-4">
-            <Box className={step == 1 ? "ml-4" : "invisible"}>
+        <Flex direction="column" height="100%">
+          {/* Navigation Buttons */}
+          <Flex justify="between" className="mt-4">
+            <Box className={step === 1 ? "ml-4" : "invisible"}>
               <Button color="blue" variant="soft" onClick={() => setStep(step - 1)}>Back</Button>
             </Box>
-          <Box className='mr-4'>
-            {step == 0 && (
-              <Button color="blue" variant="soft" disabled={!selectedDates.some(([_, interval]) => interval != null)} 
-              onClick={() => setStep(step + 1)}>Next</Button>
-            ) 
-            }
-            {step == 1 && (
-              <Button color="blue" disabled={!isFormComplete} onClick={handleCreate}>Create</Button>
-            )}
-          </Box>
-        </Flex>
-          
-          { step < 2 && (
+            <Box className="mr-4">
+              {step === 0 && (
+                <Button
+                  color="blue"
+                  variant="soft"
+                  disabled={!selectedDates.some(([_, interval]) => interval != null)}
+                  onClick={() => setStep(step + 1)}
+                >
+                  Next
+                </Button>
+              )}
+              {step === 1 && (
+                <Button
+                  color="blue"
+                  disabled={!isFormComplete}
+                  onClick={handleCreate}
+                >
+                  Create
+                </Button>
+              )}
+            </Box>
+          </Flex>
+
+          {/* Content Switching */}
+          {step < 2 && (
             <Box height="100%">
               <Box height="70%">
                 <Calendar selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
               </Box>
-              <Box height="30%" className="flex items-center justify-center" >
-                {
-                  step != 1 && (
-                    <TimePicker addTimeInterval={addTimeInterval} />
-                  )
-                }
-                {
-                  step == 1 && (
-                    <MeetingForm selectedDates={selectedDates} formRef={formRef}
-                    setMeetingData={setMeetingData} setShowSummary={setShowSummary}
+              <Box height="30%" className="flex items-center justify-center">
+                {step !== 1 ? (
+                  <TimePicker addTimeInterval={addTimeInterval} />
+                ) : (
+                  <MeetingForm
+                    selectedDates={selectedDates}
+                    formRef={formRef}
+                    setMeetingData={setMeetingData}
+                    setShowSummary={setShowSummary}
                     onFormChange={setIsFormComplete}
-                    />
-      
-                  )
-                }
+                  />
+                )}
               </Box>
             </Box>
           )}
-          
-        {step === 2 && (
-              <MeetingSummary
-                meetingData={meetingData}
-                onClose={handleFinish}
-              />
-        )}
 
-
+          {step === 2 && (
+            <MeetingSummary
+              meetingData={meetingData}
+              onClose={handleFinish}
+            />
+          )}
         </Flex>
       </Box>
     </Flex>

@@ -3,7 +3,7 @@ import reactLogo from '../assets/react.svg'
 import viteLogo from '/vite.svg'
 import '../App.css'
 import { useParams } from "react-router-dom";
-import { Heading, Flex, Button, Box, TextArea, Select, TextField, } from "@radix-ui/themes";
+import { Heading, Flex, Button, Box, TextArea, Select, TextField } from "@radix-ui/themes";
 import { format } from "date-fns";
 import { useNavigate } from 'react-router-dom';
 import DayCell from './daycell';

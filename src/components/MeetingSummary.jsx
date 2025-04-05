@@ -10,6 +10,7 @@ import {
     Flex,
     Separator,
     Button,
+    AlertDialog
   } from "@radix-ui/themes";
 
 const MeetingSummary = ({meetingData, onClose}) => {
@@ -25,12 +26,9 @@ const MeetingSummary = ({meetingData, onClose}) => {
     };
 
     const handleDelete = () => {
-        const confirm = window.confirm("Are you sure you want to delete this meeting?");
-        if (confirm) {
-          alert("Meeting deleted.");
-          navigate("/meeting");
-        }
-      };
+      window.location.href = "/meeting";
+      
+    };
       
     if (!meetingData) {
         return (
@@ -86,7 +84,34 @@ const MeetingSummary = ({meetingData, onClose}) => {
           </Flex>
 
           <Flex justify="between">
-            <Button color="red" variant="soft" onClick={handleDelete}>Delete Meeting</Button>
+
+
+            <AlertDialog.Root>
+              <AlertDialog.Trigger>
+                <Button color="red" variant="soft" >Delete Meeting</Button>
+              </AlertDialog.Trigger>
+              <AlertDialog.Content maxWidth="450px">
+                <AlertDialog.Title>Delete Meeting</AlertDialog.Title>
+                <AlertDialog.Description size="2">
+                  Are you sure? This meeting and all associated data will be lost.
+                </AlertDialog.Description>
+
+                <Flex gap="3" mt="4" justify="end">
+                  <AlertDialog.Cancel>
+                    <Button variant="soft" color="gray">
+                      Cancel
+                    </Button>
+                  </AlertDialog.Cancel>
+                  <AlertDialog.Action>
+                    <Button onClick={handleDelete} variant="solid" color="red">
+                      Delete Meeting
+                    </Button>
+                  </AlertDialog.Action>
+                </Flex>
+              </AlertDialog.Content>
+            </AlertDialog.Root>
+
+            
             <Button onClick={onClose} color="gray" variant="soft">Close</Button>
           </Flex>
             

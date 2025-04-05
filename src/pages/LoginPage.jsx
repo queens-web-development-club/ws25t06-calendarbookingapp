@@ -7,10 +7,15 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [error, setError] = useState('');  // State for error message
+  const [loading, setLoading] = useState(false); // Loading state
   const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');  // Reset error before submitting
+    setLoading(true);  // Start loading
+
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -18,14 +23,14 @@ const Login = () => {
 
       setSuccessMessage(`🎉 Welcome back, ${user.displayName || "friend"}!`);
 
-      // Redirect after 2 seconds
-      setTimeout(() => {
-        navigate('/welcome');
-      }, 2000);
+      // Redirect immediately after successful login
+      navigate('/welcome');  // No delay anymore
     } catch (error) {
       console.error('Login failed:', error.message);
-      alert('Login failed: ' + error.message);
+      setError('Incorrect email or password. Please try again.');
     }
+
+    setLoading(false);  // Stop loading after process
   };
 
   return (
@@ -35,6 +40,11 @@ const Login = () => {
       {/* ✅ Success message */}
       {successMessage && (
         <p className="text-green-600 text-sm mb-4 text-center">{successMessage}</p>
+      )}
+
+      {/* ❌ Error message */}
+      {error && (
+        <p className="text-red-600 text-sm mb-4 text-center">{error}</p>
       )}
 
       <input
@@ -53,8 +63,12 @@ const Login = () => {
         className="w-full mb-4 p-2 border rounded"
         required
       />
-      <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600">
-        Log In
+      <button 
+        type="submit" 
+        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+        disabled={loading} // Disable while loading
+      >
+        {loading ? "Signing In..." : "Log In"}
       </button>
 
       <p className="mt-4 text-sm text-center">

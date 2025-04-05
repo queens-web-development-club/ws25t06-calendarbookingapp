@@ -6,13 +6,16 @@ function WelcomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = auth.currentUser;
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) {
+        // If no user is logged in, redirect to login page
+        navigate("/login");
+      }
+    });
 
-    // If no user, redirect to login
-    if (!user) {
-      navigate("/login");
-    }
-  }, []);
+    // Clean up the listener when the component unmounts
+    return () => unsubscribe();
+  }, [navigate]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-green-50">

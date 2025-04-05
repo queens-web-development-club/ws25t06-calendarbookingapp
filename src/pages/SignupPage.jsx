@@ -9,22 +9,21 @@ function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [error, setError] = useState("");  // State for error message
   const [loading, setLoading] = useState(false);  
   const navigate = useNavigate();
 
   useEffect(() => {
     if (successMessage) {
-      const timer = setTimeout(() => {
-        setLoading(false);  // Stop loading after redirect delay
-        navigate("/welcome"); // Redirect to welcome page
-      }, 2000);  // Ensure the success message is visible for 2 seconds
-
-      return () => clearTimeout(timer); // Clean up the timer if the component unmounts
+      // Stop loading once the success message is set
+      setLoading(false);
+      navigate("/welcome"); // Redirect to the welcome page immediately
     }
   }, [successMessage, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");  // Reset error state before submission
     setSuccessMessage("");  
     setLoading(true);
 
@@ -41,12 +40,19 @@ function SignupPage() {
         createdAt: new Date(),
       });
 
-      setSuccessMessage(`🎉 Welcome, ${firstName}! Your account was created successfully.`);
+      // Set success message
+      setSuccessMessage(`🎉 Welcome, ${firstName}! Your account was created successfully.`); 
 
     } catch (error) {
       console.error("Signup failed:", error.message);
-      alert("Signup failed: " + error.message);
-      setLoading(false);  
+      if (error.code === "auth/email-already-in-use") {
+        setError("This email is already registered. Please use a different email.");
+      } else if (error.code === "auth/weak-password") {
+        setError("The password is too weak. Please use a stronger password.");
+      } else {
+        setError("Signup failed: " + error.message);
+      }
+      setLoading(false);  // Stop loading after error
     }
   };
 
@@ -55,8 +61,14 @@ function SignupPage() {
       <form onSubmit={handleSubmit} className="max-w-sm w-full p-4 border rounded-lg shadow bg-white">
         <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
 
+        {/* ✅ Success message */}
         {successMessage && (
-          <p className="text-green-600 text-sm text-center mb-4">{successMessage}</p>
+          <p className="text-green-600 text-sm mb-4 text-center">{successMessage}</p>
+        )}
+
+        {/* ❌ Error message */}
+        {error && (
+          <p className="text-red-600 text-sm mb-4 text-center">{error}</p>
         )}
 
         <input

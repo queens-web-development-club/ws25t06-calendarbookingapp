@@ -52,36 +52,40 @@ function Meeting() {
       {/* Main Content - 2 Columns */}
       <Box width="70%" height="100%" className="bg-white">
       <Flex direction="column" height="100%" className="">
-        <Flex  className="">
-          
-          {step > 0 && (
-            <Button variant="soft" onClick={() => setStep(step - 1)}>Back</Button>
-          )}
-          <div className="ml-auto">
+        <Flex justify="between" className="mt-4">
+            <Box className={step > 0 ? "ml-4" : "invisible"}>
+              <Button color="blue" variant="soft" onClick={() => setStep(step - 1)}>Back</Button>
+            </Box>
+          <Box className='mr-4'>
             {step < 1 ? (
-              <Button variant="soft" onClick={() => setStep(step + 1)}>Next</Button>
+              <Button color="blue" variant="soft" onClick={() => setStep(step + 1)}>Next</Button>
             ) : (
-              <Button onClick={handleCreate}>Create</Button>
+              <Button color="blue" onClick={handleCreate}>Create</Button>
             )}
-          </div>
+          </Box>
         </Flex>
-
-        {/* Content Switching */}
-        {step === 0 && (
           
           <Box height="100%">
             <Box height="70%">
               <Calendar selectedDates={selectedDates} setSelectedDates={setSelectedDates} />
             </Box>
             <Box height="30%" className="flex items-center justify-center" >
-              <TimePicker addTimeInterval={addTimeInterval} />
+              {
+                step == 0 && (
+                  <TimePicker addTimeInterval={addTimeInterval} />
+                )
+              }
+              {
+                step == 1 && (
+                  <MeetingForm selectedDates={selectedDates} formRef={formRef} setMeetingData={setMeetingData} setShowSummary={setShowSummary}/>
+    
+                )
+              }
+              
             </Box>
           </Box>
           
-        )}
-        {step === 1 && (
-          <MeetingForm selectedDates={selectedDates} formRef={formRef} setMeetingData={setMeetingData} setShowSummary={setShowSummary}/>
-        )}
+       
 
         {step === 2 && (
           <Box className="bg-white rounded-xl shadow-xl p-6 max-w-xl w-full mx-4">

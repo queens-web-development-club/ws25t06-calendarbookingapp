@@ -67,8 +67,9 @@ import React, { useState } from "react";
          ))}
  
          {days.map((day) => {
-           const selectedEntry = selectedDates.find((d) => isSameDay(d[0], day));
-           const isSelected = !!selectedEntry;
+            const selectedEntry = Array.isArray(selectedDates)
+              ? selectedDates.find((d) => Array.isArray(d) && isSameDay(d[0],date))
+              : null;           const isSelected = !!selectedEntry;
            const hasTimeInterval = isSelected && selectedEntry[1];
  
            return (

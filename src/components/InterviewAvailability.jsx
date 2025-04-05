@@ -2,7 +2,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Box, Heading, Text, Button, Flex } from "@radix-ui/themes";
 import { format } from "date-fns";
-import Calendar from "../components/Calendar.jsx"
+import CalendarInterview from "../components/calenderInterview.jsx";
 
 // mock interview data for now 
 const mockInterviewData = {
@@ -84,7 +84,7 @@ const InterviewBookingPage = () => {
 
         {/* Calendar Column */}
         <Box width="70%" className="bg-white p-4 rounded shadow">
-            <Calendar
+            <CalendarInterview
                 selectMode="single"
                 onDateSelect={(date) => {
                     console.log("Selected Date:", date); // ✅ should show in console

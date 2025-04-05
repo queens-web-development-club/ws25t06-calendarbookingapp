@@ -14,27 +14,44 @@ import React, { useState } from "react";
    });
  
    const toggleDate = (date) => {
-      setSelectedDates((prevSelected) => {
-        const selectedEntry = prevSelected.find(([d]) => isSameDay(d, date));
-        const hasTimeInterval = selectedEntry && selectedEntry[1];
-    
-        if (hasTimeInterval) {
-          setSelectedPopupDate(selectedEntry); // Open modal for that date
-          return prevSelected; // Keep selection unchanged
-        }
-
-        // Ensures popup does not open if new date is selected
-        setSelectedPopupDate(null);
-    
-        // Modify only untagged dates
-        const isAlreadySelected = prevSelected.some(([d, interval]) => isSameDay(d, date) && !interval);
-        const updatedDates = isAlreadySelected
-          ? prevSelected.filter(([d, interval]) => !(isSameDay(d, date) && !interval)) // Remove untagged selection
-          : [...prevSelected, [date, null]]; // Add new date with no interval
-    
-        return updatedDates;
-      });
-    };
+     const selectedEntry = selectedDates.find((d) => isSameDay(d[0], date));
+     const hasTimeInterval = selectedEntry && selectedEntry[1];
+     setSelectedDates((prevSelected) => {
+       const selectedEntry = prevSelected.find(([d]) => isSameDay(d, date));
+       const hasTimeInterval = selectedEntry && selectedEntry[1];
+   
+       if (hasTimeInterval) {
+         setSelectedPopupDate(selectedEntry); // Open modal for that date
+         return prevSelected; // Keep selection unchanged
+       }
+ 
+     if (hasTimeInterval) {
+       setSelectedPopupDate(selectedEntry); // Show modal for that date
+     } 
+     else {
+       setLocalSelectedDates((prevSelected) => {
+         const isAlreadySelected = prevSelected.some((d) => isSameDay(d, date));
+         const updatedDates = isAlreadySelected
+           ? prevSelected.filter((d) => !isSameDay(d, date)) // Remove if selected
+           : [...prevSelected, [date]]; // Add if not selected
+         
+         setSelectedDates(updatedDates); // Update parent state in Meeting.jsx
+         console.log(updatedDates)
+         return updatedDates;
+       });
+     }
+       // Ensures popup does not open if new date is selected
+       setSelectedPopupDate(null);
+   
+       // Modify only untagged dates
+       const isAlreadySelected = prevSelected.some(([d, interval]) => isSameDay(d, date) && !interval);
+       const updatedDates = isAlreadySelected
+         ? prevSelected.filter(([d, interval]) => !(isSameDay(d, date) && !interval)) // Remove untagged selection
+         : [...prevSelected, [date, null]]; // Add new date with no interval
+   
+       return updatedDates;
+     });
+   };
  
    return (
      <div className="w-full h-full mx-auto p-4 bg-white shadow-lg rounded-lg flex flex-col">
@@ -50,9 +67,8 @@ import React, { useState } from "react";
          ))}
  
          {days.map((day) => {
-            const selectedEntry = Array.isArray(selectedDates)
-              ? selectedDates.find((d) => Array.isArray(d) && isSameDay(d[0],date))
-              : null;           const isSelected = !!selectedEntry;
+           const selectedEntry = selectedDates.find((d) => isSameDay(d[0], day));
+           const isSelected = !!selectedEntry;
            const hasTimeInterval = isSelected && selectedEntry[1];
  
            return (

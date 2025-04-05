@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Box, Heading, Text, Button, Flex } from "@radix-ui/themes";
+import { Box, Heading, Text, Button, Flex, ScrollArea } from "@radix-ui/themes";
 import { format } from "date-fns";
 import CalendarInterview from "../components/calenderInterview.jsx";
 
@@ -52,19 +52,21 @@ const InterviewBookingPage = () => {
   };
 
   return (
-    <Box className="relative max-w-7xl mx-auto p-6 pb-24 bg-white mt-10 shadow-lg rounded-lg">
-      <Heading size="5" mb="4">Select a Date & Time</Heading>
+    <Flex direction="column" height="100vh" width="100%"className=" bg-white">
+      <Box height="15%" className="mt-8">
+        <Heading size="5" mb="4">Select a Date & Time</Heading>
+        <Flex height="1"direction="column" gap="1" className="mb-4">
+          <Text size="4" weight="bold">{mockInterviewData.title}</Text>
+          <Text className="mb-4">{mockInterviewData.description}</Text>
+        </Flex>
+      </Box>
 
-      <Flex direction="column" gap="1" className="mb-4">
-        <Text size="4" weight="bold">{mockInterviewData.title}</Text>
-        <Text className="mb-4">{mockInterviewData.description}</Text>
-      </Flex>
-
-      <Flex className="max-w-7xl mx-auto mt-10" direction="row" gap="6">
+      <Flex className="px-8 mx-auto" height="75%" width="100%"direction="row" gap="6">
         {/* Time Slots Column */}
         
         {selectedDate && (
-            <Box width="30%" className="bg-blue-50 p-4 rounded shadow">
+          <ScrollArea scrollbars="vertical" style={{ height: "100%", width: "30%"}}>
+            <Box width="" className="">
                 {timeSlots.map((slot) => (
                 <button
                     key={`${slot.start}-${slot.end}`}
@@ -79,11 +81,12 @@ const InterviewBookingPage = () => {
                 </button>
                 ))}
             </Box>
+          </ScrollArea>
         )}
 
 
         {/* Calendar Column */}
-        <Box width="70%" className="bg-white p-4 rounded shadow">
+        <Box width="70%" height="100%"className="bg-white rounded">
             <CalendarInterview
                 selectMode="single"
                 onDateSelect={(date) => {
@@ -93,31 +96,28 @@ const InterviewBookingPage = () => {
             />
 
         </Box>
-        </Flex>
+      </Flex>
 
         {/*Submit Button*/}
         
-        <div className="absolute bottom-6 right-6">
-        {selectedDate && selectedSlot && (
-            <Button
-                className="fixed bottom-6 right-6 z-50"
-                onClick={() => {
-                alert(`Submitted: ${format(selectedDate, 'yyyy-MM-dd')} at ${selectedSlot.start}`);
-                console.log("Submitted:", {
-                    date: selectedDate,
-                    time: selectedSlot,
-                });
-                }}
-            >
-                Submit Availability
-            </Button>
-        )}
+        <Box justify="end" height="10%">
+          {selectedDate && selectedSlot && (
+              <Button size="3" variant="soft"
+                  className="fixed bottom-6 right-6 z-50"
+                  onClick={() => {
+                  alert(`Submitted: ${format(selectedDate, 'yyyy-MM-dd')} at ${selectedSlot.start}`);
+                  console.log("Submitted:", {
+                      date: selectedDate,
+                      time: selectedSlot,
+                  });
+                  }}
+              >
+                  Submit Availability
+              </Button>
+          )}
 
-        </div>
-
-
-
-    </Box>
+        </Box>
+    </Flex>
   );
 };
 

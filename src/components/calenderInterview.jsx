@@ -33,7 +33,7 @@ const Calendar = ({ selectMode, setSelectedDates, onDateSelect }) => { // Accept
   
 
   return (
-    <div className="w-full h-full mx-auto p-4 bg-white shadow-lg rounded-lg flex flex-col">
+    <div className="w-full h-full mx-auto p-4 bg-white rounded-lg flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-2 bg-gray-200 rounded">◀</button>
         <h2 className="text-lg font-bold">{format(currentMonth, "MMMM yyyy")}</h2>

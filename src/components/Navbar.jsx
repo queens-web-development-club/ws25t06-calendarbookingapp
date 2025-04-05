@@ -1,37 +1,32 @@
-import { Link, useLocation } from "react-router-dom";
-import { Button, Flex, Box } from "@radix-ui/themes";
-import logo from "../assets/qweb-text-white.png"
-import { useState } from "react";
+import { Link } from "react-router-dom";
 
+function Navbar() {
+  return (
+    <nav className="bg-gradient-to-br from-blue-900 to-blue-700 text-white font-sans shadow-lg">
+      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        {/* Logo */}
+        <Link to="/" className="text-2xl font-bold tracking-wide hover:opacity-90 transition">
+          <span className="text-green-400">Q</span>
+          <span className="text-white">&lt;web&gt;</span>
+        </Link>
 
-export default function Navbar() {
-  const location = useLocation();
+        {/* Nav links */}
+        <div className="hidden md:flex items-center space-x-8 text-lg font-medium">
+          <Link to="/" className="hover:text-blue-300 transition">home</Link>
+          <Link to="/meeting" className="hover:text-blue-300 transition">team booking</Link>
+          <Link to="/interview" className="hover:text-blue-300 transition">interview booking</Link>
+        </div>
 
-  const hideOnRoutes = [
-    /^\/interview\/.+$/,   // e.g. /interview/123
-    /^\/meeting\/.+$/,     // e.g. /meeting/abc
-  ];
-
-  const shouldHide = hideOnRoutes.some((pattern) => pattern.test(location.pathname));
-
-  if (shouldHide) return null;
-
-    return (
-      <nav className="bg-sky-800 h-24 shadow-lg p-12">
-        <Flex align="center" justify="between" className="flex items-center h-full">
-          <Box className="flex items-center">
-          <img src={logo} alt="QWeb Booking Logo" className="h-full w-full" />
-          </Box>
-          <Flex gap="9" align="center" className="flex items-center h-full">
-            <Link to="/" className="text-base sm:text-xl md:text-2xl lg:text-3xl text-white hover:underline">home</Link>
-            <Link to="/meeting" className="text-base sm:text-xl md:text-2xl lg:text-3xl text-white hover:underline">team booking</Link>
-            <Link to="/interview" className="text-base sm:text-xl md:text-2xl lg:text-3xl text-white hover:underline">interview booking</Link>
-            <Link to="/login" className="bg-white text-base sm:text-xl md:text-2xl lg:text-3xl text-sky-800 px-4 py-1 rounded hover:bg-gray-100 text-blue-600 transition">
-              sign in
-            </Link>
-          </Flex>
-        </Flex>
-      </nav>
-    );
-  
+        {/* Sign-in button */}
+        <Link
+          to="/login"
+          className="bg-white text-blue-900 font-semibold px-4 py-1.5 rounded-md shadow hover:bg-blue-100 transition"
+        >
+          sign in
+        </Link>
+      </div>
+    </nav>
+  );
 }
+
+export default Navbar;

@@ -19,7 +19,6 @@ import InterviewForm from "./components/InterviewForm.jsx";
 import InterviewSummary from "./components/InterviewSummary.jsx";
 import InterviewAvailability from "./components/InterviewAvailability.jsx";
 import WelcomePage from "./pages/WelcomePage.jsx"; // ✅ NEW
-import ProfilePage from "./pages/ProfilePage.jsx"; // Ensure the path is correct
 
 function App() {
   return (
@@ -36,7 +35,6 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/welcome" element={<WelcomePage />} /> {/* ✅ NEW ROUTE */}
-        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/meeting/:id" element={<MeetingAvailability />} />
         <Route path="/interview-form" element={<InterviewForm />} />
         <Route path="/interview-summary" element={<InterviewSummary />} />

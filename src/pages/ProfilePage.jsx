@@ -1,109 +1,89 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, setDoc, Timestamp } from "firebase/firestore";
-import { auth, db } from "../firebase";
+import { auth, db } from "../firebase"; // Firebase configuration
+import { useNavigate } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
 
-function SignupPage() {
-  const [firstName, setFirstName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [loading, setLoading] = useState(false);  
+function ProfilePage() {
+  const [userInfo, setUserInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (successMessage) {
-      const timer = setTimeout(() => {
-        setLoading(false);  // Stop loading after redirect delay
-        navigate("/welcome"); // Redirect to welcome page
-      }, 2000);  // Ensure the success message is visible for 2 seconds
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (!user) {
+        // Redirect to login if no user is logged in
+        navigate("/login");
+        return;
+      }
 
-      return () => clearTimeout(timer); // Clean up the timer if the component unmounts
-    }
-  }, [successMessage, navigate]);
+      // Fetch user data from Firestore
+      const getUserInfo = async () => {
+        try {
+          const userRef = doc(db, "users", user.uid); // Get user data from Firestore
+          const docSnap = await getDoc(userRef); // Fetch the document
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSuccessMessage("");  
-    setLoading(true);
+          if (docSnap.exists()) {
+            setUserInfo(docSnap.data()); // Set the user data if document exists
+          } else {
+            console.log("No such user!");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        } finally {
+          setLoading(false); // Stop loading after data is fetched
+        }
+      };
 
-    try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+      getUserInfo();
+    });
 
-      await updateProfile(user, { displayName: firstName });
+    // Cleanup the subscription when the component unmounts
+    return () => unsubscribe();
+  }, [navigate]);
 
-      // Adding createdAt field to Firestore document
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        email: user.email,
-        firstName: firstName,
-        createdAt: Timestamp.fromDate(new Date()),  // Store current timestamp
-      });
-
-      setSuccessMessage(`🎉 Welcome, ${firstName}! Your account was created successfully.`);  // Set success message
-    } catch (error) {
-      console.error("Signup failed:", error.message);
-      alert("Signup failed: " + error.message);
-      setLoading(false);  // Stop loading after error
-    }
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen flex justify-center items-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <form onSubmit={handleSubmit} className="max-w-sm w-full p-4 border rounded-lg shadow bg-white">
-        <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold text-center mb-4">Your Profile</h2>
 
-        {/* ✅ Success message */}
-        {successMessage && (
-          <p className="text-green-600 text-sm mb-4 text-center">{successMessage}</p>
+        {userInfo && (
+          <div>
+            <div className="mb-4">
+              <label className="font-semibold">Name:</label>
+              <p>{userInfo.firstName}</p>
+            </div>
+
+            <div className="mb-4">
+              <label className="font-semibold">Email:</label>
+              <p>{userInfo.email}</p>
+            </div>
+
+            <div className="mb-4">
+              <label className="font-semibold">Password:</label>
+              <p>********</p> {/* Masked password */}
+            </div>
+          </div>
         )}
 
-        <input
-          type="text"
-          placeholder="First Name"
-          value={firstName}
-          onChange={(e) => setFirstName(e.target.value)}
-          className="w-full mb-2 p-2 border rounded"
-          required
-        />
-
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-2 p-2 border rounded"
-          required
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-4 p-2 border rounded"
-          required
-        />
-
-        <button
-          type="submit"
-          className="w-full bg-green-500 text-white p-2 rounded hover:bg-green-600"
-          disabled={loading}
-        >
-          {loading ? "Creating Account..." : "Sign Up"}
-        </button>
-
-        <p className="mt-4 text-sm text-center">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 underline hover:text-blue-800">
-            Log in here
-          </Link>
-        </p>
-      </form>
+        <div className="text-center mt-6">
+          <button
+            onClick={() => auth.signOut()}
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          >
+            Log Out
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default SignupPage;
+export default ProfilePage;

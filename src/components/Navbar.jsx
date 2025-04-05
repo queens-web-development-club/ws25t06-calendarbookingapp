@@ -46,13 +46,8 @@ function Navbar() {
         {/* Conditional Sign-In / User Name and Logout Button */}
         {user ? (
           <div className="flex items-center space-x-6">
-            {/* Profile Link */}
-            <Link
-              to="/profile" // Profile page link
-              className="text-white font-medium hover:text-green-400 transition"
-            >
-              <span className="text-lg font-semibold">{user.displayName}</span>
-            </Link>
+            {/* Display user name instead of link to profile */}
+            <span className="text-white font-medium">{user.displayName}</span>  {/* Static name */}
 
             {/* Logout button */}
             <button

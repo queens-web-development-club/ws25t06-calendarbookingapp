@@ -11,6 +11,7 @@ import GetUser from "../components/getUser.jsx";
 function Meeting() {
   const [timeInterval, setTimeInterval] = useState(null);
   const [step, setStep] = useState(0);
+  const [respondents, setRespondents] = useState({})
 
 
   const handleStart = () => {
@@ -22,21 +23,38 @@ function Meeting() {
     setStep(2);
   };
   
+  const addRespondent = (userData) => {
+    setRespondents((prev) => ({
+      ...prev,
+      [userData.email]: {
+        ...userData,
+        timeInterval, // store their selected time
+      },
+    }));
+    setTimeInterval(null); // reset after submission
+  };
+  
+  
 
   return (
-    <Flex className="max-w-full mx-auto h-[calc(100vh-5rem)] bg-white" direction="column">
+    <Flex height="100vh" className="max-w-full mx-auto bg-white p-8" direction="column">
         <Flex direction="row" width="100%" height="100%">
             <Box width="20%" height="100%" className=" p-4">
                 <Flex direction="column">
                     <Heading className=''>Respondents</Heading>
                     <Separator my="3" size="4"/>
+                    {Object.values(respondents).map((r, idx) => (
+                        <Box key={idx} className="mb-2 text-xl text-gray-700">
+                            {r.name}
+                        </Box>
+                        ))}
                     <Button disabled={step > 0} variant="soft" size="4" onClick={handleStart}>Add Availability</Button>
                 </Flex>
  
             </Box>
             <Flex width="80%"height="100%" direction="column">
                 <Box width="80%" height={step == 0 ? `90%` : `70%`} className="ml-auto mr-auto flex justify-center" >
-                    <Daycell selectedTime={timeInterval}/>
+                    <Daycell respondents={respondents} selectedTime={timeInterval}/>
                 </Box>
                 { step > 0 && (
                     <Box height="30%" className="flex items-center justify-center" >
@@ -45,7 +63,7 @@ function Meeting() {
                     )
                     }
                     { step == 2 && (
-                        <GetUser setStep={setStep}/>
+                        <GetUser setStep={setStep} addRespondent={addRespondent}/>
                     )
                     }
                     </Box>

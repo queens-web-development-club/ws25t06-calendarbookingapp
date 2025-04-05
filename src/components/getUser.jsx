@@ -2,24 +2,30 @@ import React, { useState } from "react";
 import { TextField, Heading, Flex, Box, Button, ScrollArea, RadioCards } from "@radix-ui/themes";
 import { format, isValid } from "date-fns";
 
-function GetUser( { setStep } ) {
+function GetUser( { setStep, addRespondent } ) {
 
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+  
     const handleConfirm = () => {
-        console.log("It works!")
-        setStep(2);
-    }
+      addRespondent({ name, email });
+      setStep(0); 
+    };
 
   return (
     <Flex flexGrow="1" justify="center" width="100%" className="w-full h-full p-6 bg-white shadow-lg rounded-lg" 
     align="center" direction="column" gap="2">
         <Box width="50%">
-            <TextField.Root size="3" className="min-w-128"placeholder="What's your name? " />
+            <TextField.Root size="3" className="min-w-128"placeholder="What's your name? " 
+            onChange={(e) => setName(e.target.value)}/>
         </Box>
         <Box width="50%">
-            <TextField.Root size="3" className="min-w-128"placeholder="What's your email? " />
+            <TextField.Root size="3" className="min-w-128"placeholder="What's your email? " 
+            onChange={(e) => setEmail(e.target.value)}/>
         </Box>
         <Box width="50%">
-            <button onClick={handleConfirm} className="p-4 h-full w-full rounded-[8px] bg-sky-300 text-white transition hover:bg-sky-400">
+            <button onClick={handleConfirm} className="p-4 h-full w-full rounded-[8px] 
+            bg-sky-300 text-white transition hover:bg-sky-400">
                 Confirm Availability
             </button>
         </Box>

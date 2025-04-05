@@ -2,11 +2,12 @@ import React from "react";
 import { Box, Flex, ScrollArea, Button } from "@radix-ui/themes";
 import { useState, useRef, useEffect } from 'react';
 
-const DayCell = ({ selectedTime }) => {
+const DayCell = ({ selectedTime, respondents }) => {
 
   const [day, setDay] = useState(0)
   const refSlot = useRef(null);
   const [boxHeight, setBoxHeight] = useState(0);
+
 
   const times = [
     ["Sun Apr 06 2025", ["9:30 AM","10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:40 PM"]],
@@ -51,9 +52,6 @@ const DayCell = ({ selectedTime }) => {
   if (endMod == 0) {
     endMod = 1
   }
-  console.log(startMod)
-  console.log("TEST")
-  console.log(endMod)
 
 
 
@@ -78,6 +76,15 @@ const DayCell = ({ selectedTime }) => {
     }
   }, [day]);
     
+
+  const getHourLabel = (timeStr) => {
+    const [time, modifier] = timeStr.split(" ");
+    const [hour] = time.split(":");
+    return `${hour}:00 ${modifier}`;
+  };
+  
+  
+  
   // Fri 28
 
   let test = times[day][0].slice(0, 3) + times[day][0].slice(8, 10);
@@ -126,7 +133,7 @@ const DayCell = ({ selectedTime }) => {
         ))}
         <Box className=" items-center justify-center text-sm m-btext-gray-600"
         style={{ height: `${boxHeight * endMod}px` }}>
-            <span>{times[day][1][times[day][1].length - 1]}</span>
+            <span>{getHourLabel(times[day][1][times[day][1].length - 1])}</span>
           </Box>
       </Flex>
 
@@ -191,22 +198,45 @@ const DayCell = ({ selectedTime }) => {
               // attach ref to first full slot
             >
               <Box className="absolute right-2 top-0 text-[10px] text-gray-400 z-50">
-              {refSlot.current?.getBoundingClientRect().height.toFixed(2)}
+              
             </Box>
-              {fillPercent > 0 && (
-                <Box
-                  className={`absolute left-0 w-full bg-green-200 z-0 ${
-                    fillType === "top"
-                      ? "top-0"
-                      : fillType === "bottom"
-                      ? "bottom-0"
-                      : "top-0"
-                  }`}
-                  style={{
-                    height: `${fillPercent}%`,
-                  }}
-                />
-              )}
+            {Object.values(respondents || {}).map((r, i) => {
+  const [startStr, endStr] = r.timeInterval?.split(" - ") || [];
+  if (!startStr || !endStr) return null;
+
+  const rStart = convertTo24Hour(startStr);
+  const rEnd = convertTo24Hour(endStr);
+  const isBeforeStart = slotEnd <= rStart;
+  const isAfterEnd = slotStart >= rEnd;
+
+  if (isBeforeStart || isAfterEnd) return null;
+
+  const overlapStart = Math.max(rStart, slotStart);
+  const overlapEnd = Math.min(rEnd, slotEnd);
+  const fillPercent = (overlapEnd - overlapStart) * 100;
+  const fillTop = (overlapStart - slotStart) * 100;
+
+  const greenShades = [
+    "bg-green-100",
+    "bg-green-200",
+    "bg-green-300",
+    "bg-green-400",
+    "bg-green-500",
+    "bg-green-600",
+  ];
+
+  return (
+    <Box
+      key={r.email}
+      className={`absolute left-0 w-full ${greenShades[i % greenShades.length]} z-0`}
+      style={{
+        top: `${fillTop}%`,
+        height: `${fillPercent}%`,
+      }}
+    />
+  );
+})}
+
               <Box className="relative z-10 w-full h-full" />
             </Box>
           );

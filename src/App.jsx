@@ -24,20 +24,21 @@ function App() {
     <Router>
       <Navbar />
 
-          <Routes>
-            <Route path="/meeting" element={<Meeting />} />
-            <Route path="/interview" element={<Interview />} />
-            <Route path="/meeting-form/:date" element={<MeetingForm />} />
-            <Route path="/meeting-summary" element={<MeetingSummary />} />
-            <Route path="/test" element={<MeetingAvailability />}/>
-            <Route path="/login" element={<LoginPage />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/meeting/:id" element={<MeetingAvailability />} />
-            <Route path="/interview-form" element={<InterviewForm/>}/>
-            <Route path="/interview-summary" element={<InterviewSummary/>}/>
-            <Route path="/interview-availability" element={<InterviewAvailability/>}/>
-          </Routes>
-      </Router>
+      <Routes>
+        <Route path="/" element={<Home />} /> {/* ✅ This line added */}
+        <Route path="/meeting" element={<Meeting />} />
+        <Route path="/interview" element={<Interview />} />
+        <Route path="/meeting-form/:date" element={<MeetingForm />} />
+        <Route path="/meeting-summary" element={<MeetingSummary />} />
+        <Route path="/test" element={<MeetingAvailability />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/meeting/:id" element={<MeetingAvailability />} />
+        <Route path="/interview-form" element={<InterviewForm />} />
+        <Route path="/interview-summary" element={<InterviewSummary />} />
+        <Route path="/interview-availability" element={<InterviewAvailability />} />
+      </Routes>
+    </Router>
   );
 }
 

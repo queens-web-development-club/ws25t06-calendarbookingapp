@@ -1,48 +1,64 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
 function SignupPage() {
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");  // State for error message
   const [loading, setLoading] = useState(false);  
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (successMessage) {
-      // Stop loading once the success message is set
-      setLoading(false);
-      navigate("/welcome"); // Redirect to the welcome page immediately
-    }
-  }, [successMessage, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");  // Reset error state before submission
-    setSuccessMessage("");  
+    setError("");  
     setLoading(true);
-
+  
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
+  
       await updateProfile(user, { displayName: firstName });
+  
+      console.log("Yes this code is running!")
 
-      await setDoc(doc(db, "users", user.uid), {
-        uid: user.uid,
-        email: user.email,
-        firstName: firstName,
-        createdAt: new Date(),
-      });
+      try {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+      
+        await updateProfile(user, { displayName: firstName });
+      
+        console.log("Yes this code is running!");
+      
+        await Promise.race([
+          setDoc(doc(db, "users", user.uid), {
+            uid: user.uid,
+            email: user.email,
+            firstName: firstName,
+            createdAt: Timestamp.now(),
+          }),
+          timeout(5000),
+        ]);
+      
+        console.log("HELLO");
+      
+        setTimeout(() => navigate("/welcome"), 100);
+      } catch (error) {
+        console.error("Signup failed:", error.message);
+        // ... existing error handling
+      }
+      
+      console.log("HELLO")
 
-      // Set success message
-      setSuccessMessage(`🎉 Welcome, ${firstName}! Your account was created successfully.`); 
+  
+      setTimeout(() => navigate("/welcome"), 100);
 
+  
     } catch (error) {
       console.error("Signup failed:", error.message);
       if (error.code === "auth/email-already-in-use") {
@@ -52,20 +68,18 @@ function SignupPage() {
       } else {
         setError("Signup failed: " + error.message);
       }
-      setLoading(false);  // Stop loading after error
+      setLoading(false); 
     }
+    setLoading(false)
   };
+  
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <form onSubmit={handleSubmit} className="max-w-sm w-full p-4 border rounded-lg shadow bg-white">
         <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
 
-        {/* ✅ Success message */}
-        {successMessage && (
-          <p className="text-green-600 text-sm mb-4 text-center">{successMessage}</p>
-        )}
-
+        
         {/* ❌ Error message */}
         {error && (
           <p className="text-red-600 text-sm mb-4 text-center">{error}</p>

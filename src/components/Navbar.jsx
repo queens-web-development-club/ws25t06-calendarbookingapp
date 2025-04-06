@@ -29,7 +29,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-gradient-to-br h-24 px-12 from-blue-900 to-blue-700 text-white font-sans shadow-lg">
+    <nav className="bg-[#003048] h-24 px-12 from-blue-900 to-blue-700 text-white font-sans shadow-lg">
       <Flex align="center" justify="between" className="flex items-center h-full">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold tracking-wide hover:opacity-90 transition">
@@ -52,15 +52,15 @@ function Navbar() {
           <Box className="flex items-center space-x-6">
             {/* Display user name instead of link to profile */}
             <span className="text-white font-medium 
-            sm:text-xs md:text-base lg:text-2xl">{user.displayName}</span>  {/* Static name */}
+            sm:text-xs md:text-base lg:text-xl">{user.displayName}</span>  {/* Static name */}
 
             {/* Logout button */}
             <button
               onClick={handleLogout}
-              className="sm:text-xs md:text-base lg:text-2xl
+              className="sm:text-xs md:text-base lg:text-xl
               bg-red-600 text-white font-semibold px-4 py-1.5 rounded-md shadow hover:bg-red-700 transition"
             >
-              <span className="text-white font-medium sm:text-xs md:text-base lg:text-2xl">
+              <span className="text-white font-medium sm:text-xs md:text-base lg:text-xl">
                 log out
               </span>
               

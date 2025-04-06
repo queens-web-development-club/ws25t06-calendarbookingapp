@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { Button, Flex, Box, Separator} from "@radix-ui/themes";
 import { doc, setDoc, Timestamp } from "firebase/firestore";
 import { auth, db } from "../firebase";
 
@@ -75,8 +76,8 @@ function SignupPage() {
   
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <form onSubmit={handleSubmit} className="max-w-sm w-full p-4 border rounded-lg shadow bg-white">
+    <Flex className="h-[calc(100vh-6rem)] w-full flex flex-col items-center justify-center bg-gray-900">
+      <form onSubmit={handleSubmit} className="max-w-sm my-auto w-full p-4 rounded-lg shadow bg-gray-800">
         <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
 
         
@@ -127,7 +128,7 @@ function SignupPage() {
           </Link>
         </p>
       </form>
-    </div>
+    </Flex>
   );
 }
 

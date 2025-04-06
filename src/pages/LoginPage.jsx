@@ -34,7 +34,7 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-10 p-4 border rounded-lg shadow bg-white">
+    <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-10 p-4 rounded-lg shadow bg-gray-900">
       <h2 className="text-2xl font-bold mb-4">Login</h2>
 
       {/* ✅ Success message */}

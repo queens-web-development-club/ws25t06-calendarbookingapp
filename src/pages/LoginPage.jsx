@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { Heading, Flex, Button, Box, TextArea, Select, TextField } from "@radix-ui/themes";
 import { auth } from '../firebase'; // adjust path if needed
 import { useNavigate, Link } from 'react-router-dom';
 
@@ -34,7 +35,8 @@ const Login = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-10 p-4 rounded-lg shadow bg-gray-900">
+    <Flex className="w-full h-[calc(100vh-6rem)] bg-gray-900 flex items-center">
+    <form onSubmit={handleSubmit} className="max-w-sm mx-auto p-4 w-[50%] rounded-lg shadow bg-gray-800">
       <h2 className="text-2xl font-bold mb-4">Login</h2>
 
       {/* ✅ Success message */}
@@ -78,6 +80,7 @@ const Login = () => {
         </Link>
       </p>
     </form>
+    </Flex>
   );
 };
 

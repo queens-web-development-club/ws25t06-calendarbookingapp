@@ -13,6 +13,7 @@ const Login = () => {
   };
 
   return (
+    <Box className="w-full h-[calc(100vh-6rem)] bg-gray-900">
     <form onSubmit={handleSubmit} className="max-w-sm mx-auto mt-10 p-4 border rounded-lg shadow bg-white">
       <h2 className="text-2xl font-bold mb-4">Login</h2>
       <input
@@ -35,6 +36,7 @@ const Login = () => {
         Log In
       </button>
     </form>
+    </Box>
   );
 };
 

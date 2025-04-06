@@ -51,7 +51,7 @@ function BookingCard({ index, interviewData }) {
             <Flex direction="column" gap="2">
                 <Heading className="mb-4">{title}</Heading>
                 <Text className="text-gray-700">{description}</Text>
-                <Text className="text-sm"><strong>Interview Gap:</strong> {gap}</Text>
+                <Text className="text-sm"><strong>Interview Gap:</strong> {gap} minutes</Text>
                 <Text className="text-sm"><strong>Duration:</strong> {duration} minutes</Text>
 
                 {Array.isArray(selectedDates) && selectedDates.length > 0 ? (

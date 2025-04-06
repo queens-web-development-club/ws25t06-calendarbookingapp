@@ -99,28 +99,28 @@ function TimePicker( {addTimeInterval} ) {
     <Flex flexGrow="1" justify="center" className="w-full h-full p-6  bg-gray-900 rounded-lg" 
     align="center" direction="column" gap="2">
 
-      <h2 className="text-lg font-semibold mt-2">Enter Time</h2>
+      <h2 className="text-lg font-semibold mt-2 text-gray-300">Enter Time</h2>
       <Flex gap="3" align="center" justify="center" className="max-w-full h-full ml-auto mr-auto text-4xl font-bold">
         <Flex direction="column" align="center" width="10%"className=" mb-4">
-          <span className="text-xs text-center block">Hours</span>
+          <span className="text-xs text-gray-300 text-center block">Hours</span>
           <input
           type="text"
           value={startHour}
           onChange={handleNumberChange(setStartHour)}
           onBlur={handleHourBlur(setStartHour)}
-          className="w-full h-[6vw] text-[4vw] text-center bg-gray-800 rounded-md"
+          className="w-full h-[6vw] text-[4vw]  text-gray-300 text-center bg-gray-800 rounded-md"
           maxLength={2}
           />
         </Flex>
         <span className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl">:</span>
         <Flex direction="column" align="center" width="10%" className=" mb-4">
-          <span className="text-xs text-center block">Minutes</span>
+          <span className="text-gray-300 text-xs text-center block">Minutes</span>
           <input
           type="text"
           value={startMin}
           onChange={handleNumberChange(setStartMin)}
           onBlur={handleMinBlur(setStartMin)}
-          className="w-full h-[6vw] text-[4vw] text-center bg-gray-800 rounded-md"
+          className="w-full h-[6vw] text-[4vw] text-gray-300 text-center bg-gray-800 rounded-md"
           maxLength={2}
         />
         </Flex>
@@ -136,7 +136,7 @@ function TimePicker( {addTimeInterval} ) {
                 <RadioCards.Item value="PM">PM</RadioCards.Item>
             </RadioCards.Root>
         </Flex>
-        <span className="mr-2 ml-2 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl"> to </span>
+        <span className="mr-2 ml-2 text-gray-300 text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl"> to </span>
 
         <Flex direction="column"width="10%" align="center" className=" mb-4">
           <span className="text-xs text-center block">Hours</span>
@@ -145,7 +145,7 @@ function TimePicker( {addTimeInterval} ) {
           value={endHour}
           onChange={handleNumberChange(setEndHour)}
           onBlur={handleHourBlur(setEndHour)}
-          className="w-full h-[6vw] text-[4vw] text-center bg-gray-800 rounded-md"
+          className="w-full h-[6vw] text-[4vw] text-center text-gray-300 bg-gray-800 rounded-md"
           maxLength={2}
         />
         </Flex>

@@ -2,9 +2,9 @@ import React from "react";
 import { Box, Flex, ScrollArea, Button } from "@radix-ui/themes";
 import { useState, useRef, useEffect } from 'react';
 
-const DayCell = ({ selectedTime, respondents }) => {
+const DayCell = ({ selectedTime, respondents, setDay, day }) => {
 
-  const [day, setDay] = useState(0)
+  
   const refSlot = useRef(null);
   const [boxHeight, setBoxHeight] = useState(0);
 
@@ -201,7 +201,10 @@ const DayCell = ({ selectedTime, respondents }) => {
               
             </Box>
             {Object.values(respondents || {}).map((r, i) => {
-  const [startStr, endStr] = r.timeInterval?.split(" - ") || [];
+  const availability = r.availability;
+  if (!availability || availability.date !== times[day][0]) return null;
+
+  const [startStr, endStr] = availability.timeInterval.split(" - ");
   if (!startStr || !endStr) return null;
 
   const rStart = convertTo24Hour(startStr);
@@ -216,7 +219,7 @@ const DayCell = ({ selectedTime, respondents }) => {
   const fillPercent = (overlapEnd - overlapStart) * 100;
   const fillTop = (overlapStart - slotStart) * 100;
 
-  const greenShades = [
+  const cyanShades = [
     "bg-cyan-100",
     "bg-cyan-200",
     "bg-cyan-300",
@@ -231,7 +234,7 @@ const DayCell = ({ selectedTime, respondents }) => {
   return (
     <Box
       key={r.email}
-      className={`absolute left-0 w-full ${greenShades[i % greenShades.length]} z-0`}
+      className={`absolute left-0 w-full opacity-[50%] ${cyanShades[i % cyanShades.length]} z-0`}
       style={{
         top: `${fillTop}%`,
         height: `${fillPercent}%`,

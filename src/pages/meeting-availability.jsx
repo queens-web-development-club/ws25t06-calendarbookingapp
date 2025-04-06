@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import Calendar from "../components/Calendar.jsx";
-import { Button, Flex, Box, Heading, Separator } from "@radix-ui/themes";
+import { Button, Flex, Box, Heading, Separator, Text } from "@radix-ui/themes";
 import BookingCard from "../components/MeetingBookingCard.jsx";
 import TimePicker from "../components/TimePicker.jsx";
 import MeetingForm from "../components/MeetingForm.jsx";
@@ -12,14 +12,23 @@ function Meeting() {
   const [timeInterval, setTimeInterval] = useState(null);
   const [step, setStep] = useState(0);
   const [respondents, setRespondents] = useState({})
+  const [availability, setAvailability] = useState(null); // includes date + time
+  const [day, setDay] = useState(0)
 
+
+  const times = [
+    ["Sun Apr 06 2025", ["9:30 AM","10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:40 PM"]],
+    ["Wed Apr 16 2025" , ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM"]],
+    ["Thu Apr 24 2025", ["7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM"]]
+  ]
 
   const handleStart = () => {
     setStep(1)
   }
 
   const addTimeInterval = (timeInterval) => {
-    setTimeInterval(timeInterval);
+    const currentDate = times[day][0]; // You'll need to pass this from DayCell back up
+    setAvailability({ date: currentDate, timeInterval });
     setStep(2);
   };
   
@@ -28,12 +37,13 @@ function Meeting() {
       ...prev,
       [userData.email]: {
         ...userData,
-        timeInterval, // store their selected time
+        availability,
       },
     }));
-    setTimeInterval(null); // reset after submission
+    setAvailability(null); // reset after submission
   };
   
+
   
 
   return (
@@ -54,7 +64,8 @@ function Meeting() {
             </Box>
             <Flex width="80%"height="100%" direction="column">
                 <Box width="80%" height={step == 0 ? `90%` : `70%`} className="ml-auto mr-auto flex justify-center" >
-                    <Daycell respondents={respondents} selectedTime={timeInterval}/>
+                    <Daycell respondents={respondents} selectedTime={timeInterval}
+                     day={day} setDay={setDay}/>
                 </Box>
                 { step > 0 && (
                     <Box height="30%" className="flex items-center justify-center" >
@@ -62,8 +73,9 @@ function Meeting() {
                         <TimePicker addTimeInterval={addTimeInterval} />
                     )
                     }
+
                     { step == 2 && (
-                        <GetUser setStep={setStep} addRespondent={addRespondent}/>
+                        <GetUser setStep={setStep} step={step} addRespondent={addRespondent}/>
                     )
                     }
                     </Box>

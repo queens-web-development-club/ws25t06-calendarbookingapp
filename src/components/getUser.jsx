@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { TextField, Heading, Flex, Box, Button, ScrollArea, RadioCards } from "@radix-ui/themes";
 import { format, isValid } from "date-fns";
 
-function GetUser( { setStep, addRespondent } ) {
+function GetUser( { setStep, addRespondent, step } ) {
 
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -13,7 +13,7 @@ function GetUser( { setStep, addRespondent } ) {
     };
 
   return (
-    <Flex flexGrow="1" justify="center" width="100%" className="w-full h-full p-6 bg-gray-900 shadow-lg rounded-lg" 
+      <Flex flexGrow="1" justify="center" width="100%" className="w-full h-full p-6 bg-gray-900 shadow-lg rounded-lg" 
     align="center" direction="column" gap="2">
         <Box width="50%">
             <TextField.Root size="3" className="min-w-128"placeholder="What's your name? " 

@@ -52,7 +52,7 @@ const InterviewBookingPage = () => {
   };
 
   return (
-    <Flex direction="column" height="100vh" width="100%"className=" bg-white">
+    <Flex direction="column" width="100%"className="h-[calc(100vh-6rem)] bg-gray-900">
       <Box height="15%" className="mt-8">
         <Heading size="5" mb="4">Select a Date & Time</Heading>
         <Flex height="1"direction="column" gap="1" className="mb-4">
@@ -61,7 +61,7 @@ const InterviewBookingPage = () => {
         </Flex>
       </Box>
 
-      <Flex className="px-8 mx-auto" height="75%" width="100%"direction="row" gap="6">
+      <Flex className="px-8 mx-auto" height="70%" width="100%"direction="row" gap="6">
         {/* Time Slots Column */}
         
         {selectedDate && (
@@ -73,8 +73,8 @@ const InterviewBookingPage = () => {
                     onClick={() => setSelectedSlot(slot)}
                     className={`block w-full text-left px-4 py-2 mb-2 rounded ${
                     selectedSlot?.start === slot.start && selectedSlot?.end === slot.end
-                        ? "bg-green-500 text-white"
-                        : "bg-blue-500 text-white hover:bg-blue-600"
+                        ? "bg-cyan-700 text-gray-300"
+                        : "bg-gray-800 text-gray-300 hover:bg-gray-500"
                     }`}
                 >
                     {slot.start} - {slot.end}
@@ -86,7 +86,7 @@ const InterviewBookingPage = () => {
 
 
         {/* Calendar Column */}
-        <Box width="70%" height="100%"className="bg-white rounded">
+        <Box width="70%" height="100%"className="bg-gray-900 rounded">
             <CalendarInterview
                 selectMode="single"
                 onDateSelect={(date) => {
@@ -100,10 +100,10 @@ const InterviewBookingPage = () => {
 
         {/*Submit Button*/}
         
-        <Box justify="end" height="10%">
+        <Flex justify="center" align="center" height="15%" className="px-8">
           {selectedDate && selectedSlot && (
               <Button size="3" variant="soft"
-                  className="fixed bottom-6 right-6 z-50"
+                  
                   onClick={() => {
                   alert(`Submitted: ${format(selectedDate, 'yyyy-MM-dd')} at ${selectedSlot.start}`);
                   console.log("Submitted:", {
@@ -116,7 +116,7 @@ const InterviewBookingPage = () => {
               </Button>
           )}
 
-        </Box>
+        </Flex>
     </Flex>
   );
 };

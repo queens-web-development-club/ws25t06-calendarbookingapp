@@ -33,16 +33,16 @@ const Calendar = ({ selectMode, setSelectedDates, onDateSelect }) => { // Accept
   
 
   return (
-    <div className="w-full h-full mx-auto p-4 bg-white rounded-lg flex flex-col">
+    <div className="w-full h-full mx-auto p-4 bg-gray-900 rounded-lg flex flex-col">
       <div className="flex justify-between items-center mb-4">
-        <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-2 bg-gray-200 rounded">◀</button>
-        <h2 className="text-lg font-bold">{format(currentMonth, "MMMM yyyy")}</h2>
-        <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-2 bg-gray-200 rounded">▶</button>
+        <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-2 bg-gray-900 text-gray-300 rounded">◀</button>
+        <h2 className="text-lg text-gray-300 font-bold">{format(currentMonth, "MMMM yyyy")}</h2>
+        <button onClick={() => setCurrentMonth(addMonths(currentMonth, 1))} className="p-2 bg-gray-900 text-gray-300 rounded">▶</button>
       </div>
 
       <div className="flex-1 grid grid-cols-7 gap-1 text-center">
         {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-          <div key={day} className="font-bold text-gray-700">{day}</div>
+          <div key={day} className="font-bold text-gray-300">{day}</div>
         ))}
         
         {days.map((day) => {
@@ -55,8 +55,9 @@ const Calendar = ({ selectMode, setSelectedDates, onDateSelect }) => { // Accept
             <button
               key={day.toISOString()}
               onClick={() => handleClick(day)}
-              className={`p-4 h-full w-full rounded-[8px] border-[1px] transition bg-[#f9f9f9] ${
-                isSelected ? "border-[#1E88E5] border-2 text-[#1E88E5] " : "hover:bg-gray-200 border-transparent"
+              className={`p-4 h-full w-full rounded-[8px] border-[1px] transition ${
+                isSelected ? "border-cyan-400 border-2 text-cyan-400" 
+                 : "hover:bg-gray-700 border-transparent bg-gray-800 text-gray-300"
               }`}
             >
               {format(day, "d")}

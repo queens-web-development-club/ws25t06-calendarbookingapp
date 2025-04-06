@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { db, auth } from "../firebase";
 import { collection, query, where, onSnapshot } from "firebase/firestore";
+import { Flex, Text, Button, Card, Heading, Separator, Link } from "@radix-ui/themes";
 
 const BookingSummary = ({ type }) => {
   const [bookings, setBookings] = useState([]);
@@ -49,16 +50,39 @@ const BookingSummary = ({ type }) => {
       ) : (
         <div className="space-y-3">
           {bookings.map((booking) => (
-            <div key={booking.id} className="border border-gray-200 rounded p-3">
-              <p className="font-semibold text-black">{booking.title}</p>
-              <p className="text-sm text-gray-600">{booking.description}</p>
-              <p className="text-xs text-gray-500 mt-1">{booking.selectedDates?.join(", ")}</p>
-              <p className="text-xs text-gray-500">Duration: {booking.duration} min</p>
-            </div>
+        <Card size="5">
+            <Flex direction="column" gap="2">
+                <Heading className="mb-4">{title}</Heading>
+                <Text className="text-gray-700">{description}</Text>
+                <Text className="text-sm"><strong>Type:</strong> {meetingType}</Text>
+                <Text className="text-sm"><strong>Duration:</strong> {duration} minutes</Text>
+
+                {Array.isArray(selectedDates) && selectedDates.length > 0 ? (
+                    <ul className="list-disc ml-5 text-sm">
+                        {selectedDates.map((date, i) => (
+                            <li key={i}>{date}</li>
+                        ))}
+                    </ul>
+                ) : (
+                    <Text className="text-sm text-gray-500">No dates selected.</Text>
+                )}
+
+                <Separator my="3" size="4" />
+
+                <Link className="text-sm" target="_blank">View Booking Page</Link>
+                <Button size="2" className="text-sm">
+                    Copy Link
+                </Button>
+                <Button size="2" className="text-sm">
+                    Share Link
+                </Button>
+            </Flex>
+        </Card>
           ))}
-        </div>
-      )}
-    </div>
+          </div>
+        )}
+      </div>
+
   );
 };
 

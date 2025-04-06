@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import Calendar from "../components/Calendar.jsx";
-import { Button, Flex, Box } from "@radix-ui/themes";
+import { Button, Flex, Box, Separator } from "@radix-ui/themes";
 import BookingSummary from "../components/BookingSummary.jsx"; // ✅ updated import
 import TimePicker from "../components/TimePicker.jsx";
 import InterviewForm from "../components/InterviewForm.jsx";
 import InterviewSummary from "../components/InterviewSummary.jsx";
+import BookingCard from '../components/InterviewBookingCard.jsx';
 
 function Interview() {
   const [selectedDates, setSelectedDates] = useState([]);
@@ -13,6 +14,7 @@ function Interview() {
   const [interviewData, setInterviewData] = useState(null);
   const [showSummary, setShowSummary] = useState(false);
   const [isFormComplete, setIsFormComplete] = useState(false);
+  const [interviews, setInterviews] = useState([])
 
   const addTimeInterval = (timeInterval) => {
     setSelectedDates((prevDates) => {
@@ -29,9 +31,16 @@ function Interview() {
   }, [selectedDates]);
 
   const handleCreate = () => {
-    setStep(step + 1);
     formRef.current?.requestSubmit();
   };
+
+  useEffect(() => {
+    if (interviewData) {
+      setInterviews(prev => [...prev, interviewData]);
+      setStep(2);
+      console.log("New Meeting Added:", interviewData);
+    }
+  }, [interviewData])
 
   const handleFinish = () => {
     setSelectedDates([]);
@@ -40,26 +49,31 @@ function Interview() {
   };
 
   return (
-    <Flex className="max-w-full mx-auto h-[calc(100vh-6rem)] bg-gray-500" direction="row">
+    <Flex className="max-w-full mx-auto h-[calc(100vh-6rem)] bg-gray-900" direction="row">
       
       {/* ✅ Sidebar with live interview bookings */}
-      <Box width="30%" height="100%" className="bg-gray-200 p-4 overflow-y-auto">
-        <BookingSummary type="interview" />
+      <Box width="30%" height="100%" className="bg-gray-900 p-4 overflow-y-auto">
+            {interviews.length === 0 ? (
+          <BookingCard/>
+        ) : (
+          interviews.map((interview, index) => (
+            <BookingCard key={index} interviewData={interview} />
+          ))
+        )}
       </Box>
-
+      <Separator orientation="vertical" size="4" color="white"/>
       {/* Main Content */}
-      <Box width="70%" height="100%" className="bg-white">
+      <Box width="70%" height="100%" className="bg-gray-900">
         <Flex direction="column" height="100%">
           
           {/* Navigation Buttons */}
           <Flex justify="between" className="mt-4">
             <Box className={step === 1 ? "ml-4" : "invisible"}>
-              <Button color="blue" variant="soft" onClick={() => setStep(step - 1)}>Back</Button>
+              <Button variant="soft" onClick={() => setStep(step - 1)}>Back</Button>
             </Box>
             <Box className="mr-4">
               {step === 0 && (
                 <Button
-                  color="blue"
                   variant="soft"
                   disabled={!selectedDates.some(([_, interval]) => interval != null)}
                   onClick={() => setStep(step + 1)}
@@ -69,7 +83,6 @@ function Interview() {
               )}
               {step === 1 && (
                 <Button
-                  color="blue"
                   disabled={!isFormComplete}
                   onClick={handleCreate}
                 >

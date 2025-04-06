@@ -39,11 +39,11 @@ function Navbar() {
 
         {/* Nav links */}
         <Flex gapX="7" className="hidden md:flex items-center space-x-8 text-lg font-medium">
-          <Link to="/" className="text-base sm:text-lg md:text-xl lg:text-2xl text-white hover:underline
+          <Link to="/" className="text-base sm:text-xs md:text-base lg:text-2xl text-white hover:underline
           hover:text-blue-300 transition">home</Link>
-          <Link to="/meeting" className="text-base sm:text-lg md:text-xl lg:text-2xl text-white hover:underline
+          <Link to="/meeting" className="text-base sm:text-xs md:text-base lg:text-2xl text-white hover:underline
           hover:text-blue-300 transition">team booking</Link>
-          <Link to="/interview" className="text-base sm:text-lg md:text-xl lg:text-2xl text-white hover:underline
+          <Link to="/interview" className="text-base sm:text-xs md:text-base lg:text-2xl text-white hover:underline
           hover:text-blue-300 transition">interview booking</Link>
         </Flex>
 
@@ -52,15 +52,15 @@ function Navbar() {
           <Box className="flex items-center space-x-6">
             {/* Display user name instead of link to profile */}
             <span className="text-white font-medium 
-            text-base sm:text-lg md:text-xl lg:text-2xl">{user.displayName}</span>  {/* Static name */}
+            sm:text-xs md:text-base lg:text-2xl">{user.displayName}</span>  {/* Static name */}
 
             {/* Logout button */}
             <button
               onClick={handleLogout}
-              className="text-base sm:text-lg md:text-xl lg:text-2xl
+              className="sm:text-xs md:text-base lg:text-2xl
               bg-red-600 text-white font-semibold px-4 py-1.5 rounded-md shadow hover:bg-red-700 transition"
             >
-              <span className="text-white font-medium text-base sm:text-lg md:text-xl lg:text-2xl">
+              <span className="text-white font-medium sm:text-xs md:text-base lg:text-2xl">
                 log out
               </span>
               
@@ -69,7 +69,7 @@ function Navbar() {
         ) : (
           <Link
             to="/login"
-            className="text-base sm:text-xl md:text-2xl lg:text-3xl
+            className="sm:text-xs md:text-base lg:text-3xl
             bg-white text-blue-900 font-semibold px-4 py-1.5 rounded-md shadow hover:bg-blue-100 transition"
           >
             sign in

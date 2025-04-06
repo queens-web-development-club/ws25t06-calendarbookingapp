@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect } from 'react';
 import Calendar from "../components/Calendar.jsx";
-import { Button, Flex, Box } from "@radix-ui/themes";
-import BookingSummary from "../components/BookingSummary.jsx"; // ✅ Replaces BookingCard
+import { Button, Flex, Box, Separator} from "@radix-ui/themes";
+import BookingSummary from "../components/BookingSummary.jsx";
 import TimePicker from "../components/TimePicker.jsx";
 import MeetingForm from "../components/MeetingForm.jsx";
 import MeetingSummary from "../components/MeetingSummary.jsx";
+import BookingCard from "../components/MeetingBookingCard.jsx";
 
 function Meeting() {
   const [selectedDates, setSelectedDates] = useState([]);
@@ -13,6 +14,7 @@ function Meeting() {
   const [meetingData, setMeetingData] = useState(null);
   const [showSummary, setShowSummary] = useState(false);
   const [isFormComplete, setIsFormComplete] = useState(false);
+  const [meetings, setMeetings] = useState([])
 
   const addTimeInterval = (timeInterval) => {
     setSelectedDates((prevDates) => {
@@ -29,9 +31,18 @@ function Meeting() {
   }, [selectedDates]);
 
   const handleCreate = () => {
-    setStep(step + 1);
+    
+    
     formRef.current?.requestSubmit();
   };
+
+  useEffect(() => {
+    if (meetingData) {
+      setMeetings(prev => [...prev, meetingData]);
+      setStep(2);
+      console.log("New Meeting Added:", meetingData);
+    }
+  }, [meetingData])
 
   const handleFinish = () => {
     setSelectedDates([]);
@@ -40,25 +51,31 @@ function Meeting() {
   };
 
   return (
-    <Flex className="max-w-full mx-auto h-[calc(100vh-6rem)] bg-gray-500" direction="row">
+    <Flex className="max-w-full mx-auto h-[calc(100vh-6rem)] " direction="row">
 
       {/* ✅ Sidebar with team bookings */}
-      <Box width="30%" height="100%" className="bg-gray-200 p-4 overflow-y-auto">
-        <BookingSummary type="team" />
+      <Box width="30%" height="100%" className="bg-gray-900 p-4 overflow-y-auto">
+            {meetings.length === 0 ? (
+          <BookingCard/>
+        ) : (
+          meetings.map((meeting, index) => (
+            <BookingCard key={index} meetingData={meeting} />
+          ))
+        )}
       </Box>
 
+      <Separator orientation="vertical" size="4" color="white"/>
       {/* Main Content */}
-      <Box width="70%" height="100%" className="bg-white">
+      <Box width="70%" height="100%" className=" bg-gray-900">
         <Flex direction="column" height="100%">
           {/* Navigation Buttons */}
           <Flex justify="between" className="mt-4">
             <Box className={step === 1 ? "ml-4" : "invisible"}>
-              <Button color="blue" variant="soft" onClick={() => setStep(step - 1)}>Back</Button>
+              <Button variant="soft" onClick={() => setStep(step - 1)}>Back</Button>
             </Box>
             <Box className="mr-4">
               {step === 0 && (
                 <Button
-                  color="blue"
                   variant="soft"
                   disabled={!selectedDates.some(([_, interval]) => interval != null)}
                   onClick={() => setStep(step + 1)}
@@ -68,7 +85,6 @@ function Meeting() {
               )}
               {step === 1 && (
                 <Button
-                  color="blue"
                   disabled={!isFormComplete}
                   onClick={handleCreate}
                 >

@@ -1,21 +1,21 @@
 import { useState } from 'react';
-import { Flex, Text, Button, Card, Heading, Separator, Link } from "@radix-ui/themes";
+import { Flex, Text, Button, Card, Heading, Separator, Box, Link } from "@radix-ui/themes";
 
-function BookingCard({ meetingData }) {
+function BookingCard({ index, interviewData }) {
     const [copySuccess, setCopySuccess] = useState('');
 
-    if (!meetingData) {
+    if (!interviewData) {
         return (
             <Card size="5">
                 <Flex direction="column" gap="2">
-                    <Heading className="mb-10">Booking #1</Heading>
-                    <Text>No meeting created yet.</Text>
+                    <Heading className="mb-10">No interview has been created yet.</Heading>
+                    <Text>Select whatever days and times you are free for interviews!</Text>
                 </Flex>
             </Card>
         );
     }
 
-    const { title, description, meetingType, selectedDates, duration, bookingLink } = meetingData;
+    const { title, description, selectedDates, duration, gap, bookingLink } = interviewData;
 
     const handleCopyClick = () => {
         navigator.clipboard.writeText(bookingLink)
@@ -51,7 +51,7 @@ function BookingCard({ meetingData }) {
             <Flex direction="column" gap="2">
                 <Heading className="mb-4">{title}</Heading>
                 <Text className="text-gray-700">{description}</Text>
-                <Text className="text-sm"><strong>Type:</strong> {meetingType}</Text>
+                <Text className="text-sm"><strong>Interview Gap:</strong> {gap}</Text>
                 <Text className="text-sm"><strong>Duration:</strong> {duration} minutes</Text>
 
                 {Array.isArray(selectedDates) && selectedDates.length > 0 ? (
@@ -67,13 +67,16 @@ function BookingCard({ meetingData }) {
                 <Separator my="3" size="4" />
 
                 <Link href={bookingLink} className="text-sm" target="_blank">View Booking Page</Link>
-                <Button onClick={handleCopyClick} size="2" className="text-sm">
+                <Flex gap="3" direction="column" className="mt-4">
+
+                
+                <Button variant="soft" onClick={handleCopyClick} size="2" className="text-sm">
                     Copy Link
                 </Button>
-                <Button onClick={handleShareClick} size="2" className="text-sm">
+                <Button variant="soft" onClick={handleShareClick} size="2" className="text-sm">
                     Share Link
                 </Button>
-
+                </Flex>
                 {copySuccess && <Text className="text-sm text-green-500 mt-2">{copySuccess}</Text>}
             </Flex>
         </Card>

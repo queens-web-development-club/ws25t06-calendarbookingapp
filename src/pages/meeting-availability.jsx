@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import Calendar from "../components/Calendar.jsx";
 import { Button, Flex, Box, Heading, Separator } from "@radix-ui/themes";
-import BookingCard from "../components/BookingCard.jsx";
+import BookingCard from "../components/MeetingBookingCard.jsx";
 import TimePicker from "../components/TimePicker.jsx";
 import MeetingForm from "../components/MeetingForm.jsx";
 import MeetingSummary from "../components/MeetingSummary.jsx";
@@ -37,7 +37,7 @@ function Meeting() {
   
 
   return (
-    <Flex height="100vh" className="max-w-full mx-auto bg-white p-8" direction="column">
+    <Flex className="h-[calc(100vh-6rem)] max-w-full mx-auto bg-gray-900 p-8" direction="column">
         <Flex direction="row" width="100%" height="100%">
             <Box width="20%" height="100%" className=" p-4">
                 <Flex direction="column">

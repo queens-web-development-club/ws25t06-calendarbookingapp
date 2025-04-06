@@ -96,7 +96,7 @@ function TimePicker( {addTimeInterval} ) {
 
 
   return (
-    <Flex flexGrow="1" justify="center" className="w-full h-full p-6 bg-white rounded-lg" 
+    <Flex flexGrow="1" justify="center" className="w-full h-full p-6  bg-gray-900 rounded-lg" 
     align="center" direction="column" gap="2">
 
       <h2 className="text-lg font-semibold mt-2">Enter Time</h2>
@@ -108,7 +108,7 @@ function TimePicker( {addTimeInterval} ) {
           value={startHour}
           onChange={handleNumberChange(setStartHour)}
           onBlur={handleHourBlur(setStartHour)}
-          className="w-full h-[6vw] text-[4vw] text-center bg-gray-200 rounded-md"
+          className="w-full h-[6vw] text-[4vw] text-center bg-gray-800 rounded-md"
           maxLength={2}
           />
         </Flex>
@@ -120,7 +120,7 @@ function TimePicker( {addTimeInterval} ) {
           value={startMin}
           onChange={handleNumberChange(setStartMin)}
           onBlur={handleMinBlur(setStartMin)}
-          className="w-full h-[6vw] text-[4vw] text-center bg-gray-200 rounded-md"
+          className="w-full h-[6vw] text-[4vw] text-center bg-gray-800 rounded-md"
           maxLength={2}
         />
         </Flex>
@@ -145,7 +145,7 @@ function TimePicker( {addTimeInterval} ) {
           value={endHour}
           onChange={handleNumberChange(setEndHour)}
           onBlur={handleHourBlur(setEndHour)}
-          className="w-full h-[6vw] text-[4vw] text-center bg-gray-200 rounded-md"
+          className="w-full h-[6vw] text-[4vw] text-center bg-gray-800 rounded-md"
           maxLength={2}
         />
         </Flex>
@@ -160,7 +160,7 @@ function TimePicker( {addTimeInterval} ) {
           value={endMin}
           onChange={handleNumberChange(setEndMin)}
           onBlur={handleMinBlur(setEndMin)}
-          className="w-full h-[6vw] text-[4vw] text-center bg-gray-200 rounded-md"
+          className="w-full h-[6vw] text-[4vw] text-center text-gray-300 bg-gray-800 rounded-md"
           maxLength={2}
         />
         </Flex>
@@ -179,7 +179,7 @@ function TimePicker( {addTimeInterval} ) {
           <button onClick={handleSubmit} 
           disabled={!isValidTime}
           className={`text-2xl w-full h-[6vw] flex items-center justify-center rounded-lg
-            ${isValidTime ? "bg-sky-300 text-white" : "bg-gray-300 text-gray-600 cursor-not-allowed"}`}>
+            ${isValidTime ? "bg-cyan-700 text-gray-800 hover:bg-cyan-600" : "bg-gray-800 text-gray-600 cursor-not-allowed"}`}>
             ✓
           </button>
         </Box>

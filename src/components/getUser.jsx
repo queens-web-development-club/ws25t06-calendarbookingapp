@@ -13,7 +13,7 @@ function GetUser( { setStep, addRespondent } ) {
     };
 
   return (
-    <Flex flexGrow="1" justify="center" width="100%" className="w-full h-full p-6 bg-white shadow-lg rounded-lg" 
+    <Flex flexGrow="1" justify="center" width="100%" className="w-full h-full p-6 bg-gray-900 shadow-lg rounded-lg" 
     align="center" direction="column" gap="2">
         <Box width="50%">
             <TextField.Root size="3" className="min-w-128"placeholder="What's your name? " 
@@ -25,7 +25,7 @@ function GetUser( { setStep, addRespondent } ) {
         </Box>
         <Box width="50%">
             <button onClick={handleConfirm} className="p-4 h-full w-full rounded-[8px] 
-            bg-sky-300 text-white transition hover:bg-sky-400">
+            bg-cyan-600 text-white transition hover:bg-cyan-400">
                 Confirm Availability
             </button>
         </Box>

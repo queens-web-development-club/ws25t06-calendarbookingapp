@@ -30,8 +30,8 @@ const MeetingSummary = ({ meetingData, onClose }) => {
   if (!meetingData) {
     return (
       <Box className="max-w-2xl mx-auto p-6 mt-8">
-        <Heading size="5">No Meeting Data</Heading>
-        <Text>Please go back and create a meeting first.</Text>
+        <Heading className="text-gray-300"size="5">No Meeting Data</Heading>
+        <Text className="text-gray-300">Please go back and create a meeting first.</Text>
       </Box>
     );
   }
@@ -40,7 +40,7 @@ const MeetingSummary = ({ meetingData, onClose }) => {
   if (!user) {
     return (
       <Box className="p-6 bg-transparent border border-[1px] border-gray-300 shadow-md rounded-lg mt-8">
-        <Heading size="5" className="text-center">Meeting Summary</Heading>
+        <Heading size="5" className="text-center text-gray-300">Meeting Summary</Heading>
         <Separator my="3" size="4" />
         <Text className="text-gray-500 text-center">Login to view meeting details</Text>
       </Box>
@@ -48,23 +48,23 @@ const MeetingSummary = ({ meetingData, onClose }) => {
   }
 
   return (
-    <Box minWidth="50%" className="mx-auto p-6 bg-transparent border border-[1px] border-gray-300 shadow-md rounded-lg mt-8 space-y-4">
-      <Heading size="5" className="text-center">Meeting Summary</Heading>
+    <Box minWidth="50%" className="mx-auto p-6 bg-gray-800 shadow-md rounded-lg mt-8 space-y-4">
+      <Heading size="5" className="text-center text-gray-300">Meeting Summary</Heading>
       <Separator my="3" size="4" />
 
       <div className="space-y-2">
         <Flex gap="2">
-          <Text className="font-semibold">Title:</Text>
+          <Text className="font-semibold text-gray-300">Title:</Text>
           <Text>{title}</Text>
         </Flex>
 
         <Flex gap="2">
-          <Text className="font-semibold">Description:</Text>
+          <Text className="font-semibold text-gray-300">Description:</Text>
           <Text>{description}</Text>
         </Flex>
 
         <Flex gap="2">
-          <Text className="font-semibold">Meeting Type:</Text>
+          <Text className="font-semibold text-gray-300">Meeting Type:</Text>
           <Text>{meetingType}</Text>
         </Flex>
 
@@ -72,7 +72,7 @@ const MeetingSummary = ({ meetingData, onClose }) => {
           <p align="left" className="font-semibold">Selected Date(s):</p>
           <ul className="flex flex-justify-left mt-1">
             {selectedDates.map((date, idx) => (
-              <li key={idx} className="text-gray-800">{date}</li>
+              <li key={idx} className="text-gray-300">{date}</li>
             ))}
           </ul>
         </Box>

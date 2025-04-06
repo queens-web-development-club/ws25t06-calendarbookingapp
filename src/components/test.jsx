@@ -17,6 +17,9 @@ function RandomLinkGenerator() {
       >
         Generate Random Link
       </button>
+      <div className="bg-cyan-400">
+
+      </div>
       {randomLink && (
         <a
           href={randomLink}

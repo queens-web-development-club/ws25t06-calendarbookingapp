@@ -38,7 +38,7 @@ function App() {
         <Route path="/meeting/:id" element={<MeetingAvailability />} />
         <Route path="/interview-form" element={<InterviewForm />} />
         <Route path="/interview-summary" element={<InterviewSummary />} />
-        <Route path="/interview-availability" element={<InterviewAvailability />} />
+        <Route path="/interview/:id" element={<InterviewAvailability />} />
       </Routes>
     </Router>
   );

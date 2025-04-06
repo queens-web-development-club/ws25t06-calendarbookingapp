@@ -124,16 +124,16 @@ const DayCell = ({ selectedTime, respondents }) => {
         </Box>
         <Box className=" items-center justify-center text-sm m-btext-gray-600"
         style={{ height: `${boxHeight * startMod}px` }}>
-            <span>{times[day][1][0]}</span>
+            <span className="text-gray-300">{times[day][1][0]}</span>
           </Box>
         {times[day][1].slice(1, times[day][1].length - 1).map((time) => (
           <Box key={time} className="flex flex-grow items-center justify-center text-sm m-btext-gray-600">
-            <span>{time}</span>
+            <span className="text-gray-300">{time}</span>
           </Box>
         ))}
         <Box className=" items-center justify-center text-sm m-btext-gray-600"
         style={{ height: `${boxHeight * endMod}px` }}>
-            <span>{getHourLabel(times[day][1][times[day][1].length - 1])}</span>
+            <span className="text-gray-300">{getHourLabel(times[day][1][times[day][1].length - 1])}</span>
           </Box>
       </Flex>
 
@@ -154,7 +154,7 @@ const DayCell = ({ selectedTime, respondents }) => {
         </Box>
         </Flex>
         <Box 
-              className="relative px-4 items-center border border-gray-400 text-sm bg-white"
+              className="relative px-4 items-center border border-gray-600 text-sm bg-gray-800"
               style={{ height: `${boxHeight * startMod}px` }}>
                 
         </Box>
@@ -192,7 +192,7 @@ const DayCell = ({ selectedTime, respondents }) => {
           return (
             <Box
               key={time}
-              className="relative px-4 flex flex-grow items-center border border-gray-400 bg-white"
+              className="relative px-4 flex flex-grow items-center border border-gray-600 bg-gray-800"
               ref={index === 0 ? refSlot : null} 
         
               // attach ref to first full slot
@@ -217,12 +217,15 @@ const DayCell = ({ selectedTime, respondents }) => {
   const fillTop = (overlapStart - slotStart) * 100;
 
   const greenShades = [
-    "bg-green-100",
-    "bg-green-200",
-    "bg-green-300",
-    "bg-green-400",
-    "bg-green-500",
-    "bg-green-600",
+    "bg-cyan-100",
+    "bg-cyan-200",
+    "bg-cyan-300",
+    "bg-cyan-400",
+    "bg-cyan-500",
+    "bg-cyan-600",
+    "bg-cyan-700",
+    "bg-cyan-800",
+    "bg-cyan-900"
   ];
 
   return (
@@ -242,7 +245,7 @@ const DayCell = ({ selectedTime, respondents }) => {
           );
         })}
         <Box
-              className="relative px-4 items-center border border-gray-400 text-sm bg-white"
+              className="relative px-4 items-center border border-gray-600 text-sm bg-gray-800"
               style={{ height: `${boxHeight * endMod}px` }}>
                 
         </Box>

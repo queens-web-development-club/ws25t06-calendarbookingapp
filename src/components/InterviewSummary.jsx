@@ -40,7 +40,7 @@ const InterviewSummary = ({interviewData, onClose}) => {
   }
 
   return (
-      <Box minWidth="50%" className="mx-auto p-6 bg-transparent shadow-md rounded-lg mt-8 space-y-4">
+      <Box minWidth="50%" className="mx-auto p-6 bg-gray-800 shadow-md rounded-lg mt-8 space-y-4">
         <Heading size="5" className="text-center">Interview Summary</Heading>
         <Separator my="3" size="4"/>
   

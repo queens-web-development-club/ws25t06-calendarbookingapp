@@ -26,21 +26,38 @@ const CreateMeetingForm = ({ selectedDates, formRef, setMeetingData, setShowSumm
     return format(new Date().setHours(hours, minutes), "h:mm a");
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formattedDates = selectedDates.map((date) => format(new Date(date[0]), "yyyy-MM-dd") + ": " + date[1]);
+    const user = auth.currentUser;
+    if (!user) {
+      alert("You must be signed in to create a meeting.");
+      return;
+    }
 
-    setMeetingData({
+    const formattedDates = selectedDates.map(
+      (date) => format(new Date(date[0]), "yyyy-MM-dd") + ": " + date[1]
+    );
+
+    const meetingData = {
+      userId: user.uid,
       title,
       description,
       meetingType,
       selectedDates: formattedDates,
       duration,
-    })
+      type: "team",
+      createdAt: new Date(),
+    };
 
-    setShowSummary(true);
-
+    try {
+      await addDoc(collection(db, "bookings"), meetingData);
+      setMeetingData(meetingData);
+      setShowSummary(true);
+      console.log("✅ Meeting booking saved!");
+    } catch (error) {
+      console.error("Error saving meeting to Firebase:", error);
+    }
   };
 
   useEffect(() => {
@@ -53,15 +70,15 @@ const CreateMeetingForm = ({ selectedDates, formRef, setMeetingData, setShowSumm
   }, [title, description, meetingType, duration]);
 
   return (
-    <Flex direction="column" minWidth="100%" height="100%" className="max-w-2xl pl-12 bg-gray-900 shadow-md rounded-lg ">
-      <Heading size="5"className="text-gray-300"  mb="4">
+    <Flex direction="column" minWidth="100%" height="100%" className="max-w-2xl pl-12 bg-white shadow-md rounded-lg ">
+      <Heading size="5" mb="4">
         Create Meeting
       </Heading>
 
       <form ref={formRef} onSubmit={handleSubmit} className="space-y-4 text-left">
         <Flex gap="5" width="100%">
           <Box width="70%">
-            <label className="font-medium min-w-[100px] text-gray-300 text-left">Meeting Title:</label>
+            <label className="font-medium min-w-[100px] text-left">Meeting Title:</label>
             <TextField.Root
               placeholder="Enter a title for your meeting"
               value={title}
@@ -71,7 +88,7 @@ const CreateMeetingForm = ({ selectedDates, formRef, setMeetingData, setShowSumm
             />
           </Box>
           <Box width="30%" className="flex items-center gap-4">
-            <label className="w-[130px] text-gray-300 font-medium">Duration:<br /></label>
+            <label className="w-[130px] font-medium">Duration:<br /></label>
             <Select.Root value={duration} onValueChange={setDuration}>
               <Select.Trigger placeholder="Select duration" />
               <Select.Content>
@@ -84,17 +101,17 @@ const CreateMeetingForm = ({ selectedDates, formRef, setMeetingData, setShowSumm
           </Box>
         </Flex>
 
-        <Flex gap="4" width="100%" height="40%">
+        <Flex gap="4" width="100%">
           <Box width="70%">
             <TextArea
               placeholder="What's your meeting about?"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              size="2"
+              size="3"
             />
           </Box>
           <Box width="30%" className="flex items-center gap-4">
-            <label className="w-[130px] text-gray-300 font-medium">Meeting Type:</label><br />
+            <label className="w-[130px] font-medium">Meeting Type:</label><br />
             <Select.Root value={meetingType} onValueChange={setMeetingType}>
               <Select.Trigger placeholder="Choose meeting type" />
               <Select.Content>

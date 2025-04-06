@@ -25,38 +25,21 @@ const CreateInterviewForm = ({ selectedDates, formRef, setInterviewData, setShow
     return format(new Date().setHours(hours, minutes), "h:mm a");
   });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    const user = auth.currentUser;
-    if (!user) {
-      alert("You must be signed in to create an interview.");
-      return;
-    }
+    const formattedDates = selectedDates.map((date) => format(new Date(date[0]), "yyyy-MM-dd") + ": " + date[1]);
 
-    const formattedDates = selectedDates.map(
-      (date) => format(new Date(date[0]), "yyyy-MM-dd") + ": " + date[1]
-    );
-
-    const interviewData = {
-      userId: user.uid,
+    setInterviewData({
       title,
       description,
       selectedDates: formattedDates,
       duration,
-      gap,
-      type: "interview",
-      createdAt: new Date(),
-    };
+      gap
+    });
 
-    try {
-      await addDoc(collection(db, "bookings"), interviewData);
-      setInterviewData(interviewData);
-      setShowSummary(true);
-      console.log("✅ Interview booking saved!");
-    } catch (error) {
-      console.error("Error saving interview to Firebase:", error);
-    }
+    setShowSummary(true);
+
   };
 
   useEffect(() => {
@@ -73,7 +56,7 @@ const CreateInterviewForm = ({ selectedDates, formRef, setInterviewData, setShow
       direction="column"
       minWidth="100%"
       height="100%"
-      className="max-w-2xl pl-12 bg-white shadow-md rounded-lg"
+      className="max-w-2xl pl-12 bg-gray-900 shadow-md rounded-lg"
     >
       <Heading size="5" mb="4">Create Interview</Heading>
 
@@ -109,7 +92,7 @@ const CreateInterviewForm = ({ selectedDates, formRef, setInterviewData, setShow
               placeholder="What's your interview about?"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              size="3"
+              size="2"
             />
           </Box>
           <Box width="30%" className="flex items-center gap-4">
@@ -127,10 +110,6 @@ const CreateInterviewForm = ({ selectedDates, formRef, setInterviewData, setShow
           </Box>
         </Flex>
 
-        {/* ✅ Add Submit Button */}
-        <Button type="submit" className="mt-6 bg-blue-600 text-white hover:bg-blue-700 transition">
-          Save Interview Booking
-        </Button>
       </form>
     </Flex>
   );

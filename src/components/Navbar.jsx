@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Button, Flex, Box } from "@radix-ui/themes";
 import { auth } from "../firebase"; // Import Firebase auth
 import { signOut } from "firebase/auth"; // Import signOut method
 
@@ -28,44 +29,53 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-gradient-to-br from-blue-900 to-blue-700 text-white font-sans shadow-lg">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <nav className="bg-gradient-to-br h-24 px-12 from-blue-900 to-blue-700 text-white font-sans shadow-lg">
+      <Flex align="center" justify="between" className="flex items-center h-full">
         {/* Logo */}
         <Link to="/" className="text-2xl font-bold tracking-wide hover:opacity-90 transition">
-          <span className="text-green-400">Q</span>
-          <span className="text-white">&lt;web&gt;</span>
+          <span className="text-green-400 text-base sm:text-lg md:text-xl lg:text-2xl">Q</span>
+          <span className="text-white text-base sm:text-lg md:text-xl lg:text-2xl">&lt;web&gt;</span>
         </Link>
 
         {/* Nav links */}
-        <div className="hidden md:flex items-center space-x-8 text-lg font-medium">
-          <Link to="/" className="hover:text-blue-300 transition">home</Link>
-          <Link to="/meeting" className="hover:text-blue-300 transition">team booking</Link>
-          <Link to="/interview" className="hover:text-blue-300 transition">interview booking</Link>
-        </div>
+        <Flex gapX="7" className="hidden md:flex items-center space-x-8 text-lg font-medium">
+          <Link to="/" className="text-base sm:text-lg md:text-xl lg:text-2xl text-white hover:underline
+          hover:text-blue-300 transition">home</Link>
+          <Link to="/meeting" className="text-base sm:text-lg md:text-xl lg:text-2xl text-white hover:underline
+          hover:text-blue-300 transition">team booking</Link>
+          <Link to="/interview" className="text-base sm:text-lg md:text-xl lg:text-2xl text-white hover:underline
+          hover:text-blue-300 transition">interview booking</Link>
+        </Flex>
 
         {/* Conditional Sign-In / User Name and Logout Button */}
         {user ? (
-          <div className="flex items-center space-x-6">
+          <Box className="flex items-center space-x-6">
             {/* Display user name instead of link to profile */}
-            <span className="text-white font-medium">{user.displayName}</span>  {/* Static name */}
+            <span className="text-white font-medium 
+            text-base sm:text-lg md:text-xl lg:text-2xl">{user.displayName}</span>  {/* Static name */}
 
             {/* Logout button */}
             <button
               onClick={handleLogout}
-              className="bg-red-600 text-white font-semibold px-4 py-1.5 rounded-md shadow hover:bg-red-700 transition"
+              className="text-base sm:text-lg md:text-xl lg:text-2xl
+              bg-red-600 text-white font-semibold px-4 py-1.5 rounded-md shadow hover:bg-red-700 transition"
             >
-              Log out
+              <span className="text-white font-medium text-base sm:text-lg md:text-xl lg:text-2xl">
+                log out
+              </span>
+              
             </button>
-          </div>
+          </Box>
         ) : (
           <Link
             to="/login"
-            className="bg-white text-blue-900 font-semibold px-4 py-1.5 rounded-md shadow hover:bg-blue-100 transition"
+            className="text-base sm:text-xl md:text-2xl lg:text-3xl
+            bg-white text-blue-900 font-semibold px-4 py-1.5 rounded-md shadow hover:bg-blue-100 transition"
           >
             sign in
           </Link>
         )}
-      </div>
+      </Flex>
     </nav>
   );
 }

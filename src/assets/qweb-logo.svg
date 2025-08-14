@@ -1,0 +1,16 @@
+<svg width="120" height="40" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient definitions -->
+  <defs>
+    <linearGradient id="qGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#3B82F6;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10B981;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Stylized Q letter with gradient -->
+  <path d="M15 8C15 4.13401 18.134 1 22 1H28C31.866 1 35 4.13401 35 8V12C35 15.866 31.866 19 28 19H22C18.134 19 15 15.866 15 12V8Z" fill="url(#qGradient)"/>
+  <path d="M35 19L40 25" stroke="url(#qGradient)" stroke-width="3" stroke-linecap="round"/>
+  
+  <!-- web tag -->
+  <text x="45" y="18" font-family="monospace" font-size="16" font-weight="bold" fill="white">&lt;web&gt;</text>
+</svg>

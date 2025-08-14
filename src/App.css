@@ -1,45 +1,174 @@
-@import "tailwindcss";
+/* Custom styles for QWeb Booking App */
 
-#root {
+/* Ensure full screen rendering */
+html, body, #root {
   width: 100%;
   height: 100%;
-  margin: 0 auto;
-  
-  text-align: center;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  min-width: 100vw;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+#root {
+  min-height: 100vh;
+  width: 100%;
 }
 
-@keyframes logo-spin {
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar with QWeb colors */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f9ff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #3b82f6, #10b981);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #2563eb, #059669);
+}
+
+/* Focus styles with QWeb colors */
+*:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Button hover effects */
+.btn-hover {
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-hover:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.2s ease-in-out;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* QWeb gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(20px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+.fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* QWeb brand animations */
+@keyframes qwebGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.8), 0 0 30px rgba(16, 185, 129, 0.6);
   }
 }
 
-.card {
-  padding: 2em;
+.qweb-glow {
+  animation: qwebGlow 2s ease-in-out infinite;
 }
 
-.read-the-docs {
-  color: #888;
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .mobile-hidden {
+    display: none;
+  }
 }
+
+@media (min-width: 641px) {
+  .desktop-hidden {
+    display: none;
+  }
+}
+
+/* Fix for full screen rendering */
+.min-h-screen {
+  min-height: 100vh !important;
+  width: 100% !important;
+}
+
+.max-w-7xl {
+  max-width: 80rem !important;
+  width: 100% !important;
+}
+
+/* Ensure containers expand properly */
+.container, .mx-auto {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* QWeb specific button styles */
+.btn-qweb-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-qweb-primary:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #059669 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.btn-qweb-secondary {
+  background: white;
+  color: #3b82f6;
+  border: 2px solid #3b82f6;
+  transition: all 0.3s ease;
+}
+
+.btn-qweb-secondary:hover {
+  background: #3b82f6;
+  color: white;
+  transform: translateY(-1px);
+}
+

@@ -1,13 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
-import { 
-  createUserWithEmailAndPassword, 
-  signInWithEmailAndPassword, 
-  signOut, 
-  onAuthStateChanged,
-  updateProfile 
-} from 'firebase/auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
-import { auth, db } from '../../lib/firebase';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext({});
 
@@ -21,65 +12,51 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        // Get additional user data from Firestore
-        const userDoc = await getDoc(doc(db, 'users', user.uid));
-        if (userDoc.exists()) {
-          setUser({ ...user, ...userDoc.data() });
-        } else {
-          setUser(user);
-        }
+  // Simple QWEB password authentication
+  const login = async (password) => {
+    setLoading(true);
+    try {
+      // For demo purposes, using a simple password check
+      // In production, this should be a secure API call
+      if (password === 'qweb2024' || password === 'QWEB2024') {
+        const user = {
+          id: 'qweb-member',
+          displayName: 'QWEB Member',
+          email: 'member@qweb.ca',
+          role: 'member',
+          isActive: true
+        };
+        setUser(user);
+        // Store in localStorage for persistence
+        localStorage.setItem('qweb-user', JSON.stringify(user));
+        return user;
       } else {
-        setUser(null);
+        throw new Error('Invalid QWEB password');
       }
+    } catch (error) {
+      throw error;
+    } finally {
       setLoading(false);
-    });
-
-    return unsubscribe;
-  }, []);
-
-  const signup = async (email, password, displayName) => {
-    try {
-      const { user } = await createUserWithEmailAndPassword(auth, email, password);
-      
-      // Update profile with display name
-      await updateProfile(user, { displayName });
-      
-      // Create user document in Firestore
-      await setDoc(doc(db, 'users', user.uid), {
-        displayName,
-        email,
-        createdAt: new Date().toISOString(),
-        role: 'member', // Default role
-        isActive: true
-      });
-
-      return user;
-    } catch (error) {
-      throw error;
-    }
-  };
-
-  const login = async (email, password) => {
-    try {
-      const { user } = await signInWithEmailAndPassword(auth, email, password);
-      return user;
-    } catch (error) {
-      throw error;
     }
   };
 
   const logout = () => {
-    return signOut(auth);
+    setUser(null);
+    localStorage.removeItem('qweb-user');
   };
+
+  // Check if user is already logged in on app start
+  useEffect(() => {
+    const savedUser = localStorage.getItem('qweb-user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
 
   const value = {
     user,
-    signup,
     login,
     logout,
     loading
@@ -87,7 +64,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={value}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 };

@@ -1,8 +1,27 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
 
 const Home = () => {
-  const { user } = useAuth();
+  const { user, login, logout, loading } = useAuth();
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setError('');
+    
+    try {
+      await login(password);
+      setPassword('');
+    } catch (error) {
+      setError('Invalid QWEB password. Please try again.');
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-qweb-50 to-qweb-green-50">
@@ -13,46 +32,68 @@ const Home = () => {
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
               Welcome to{' '}
               <span className="bg-gradient-to-r from-qweb-blue-600 to-qweb-green-600 bg-clip-text text-transparent">
-                Queen's Web Development
+                QWEB Booking
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Streamline your team meetings and interview scheduling with our unified booking platform. 
+              Streamline your team meetings and interview scheduling with our unified QWEB booking platform. 
               No more switching between multiple tools - everything you need in one place.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              {!user ? (
-                <>
-                  <Link
-                    to="/signup"
-                    className="bg-gradient-to-r from-qweb-blue-600 to-qweb-green-600 hover:from-qweb-blue-700 hover:to-qweb-green-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all shadow-lg transform hover:scale-105"
+            
+            {!user ? (
+              <div className="max-w-md mx-auto">
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div>
+                    <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                      QWEB Password
+                    </label>
+                    <input
+                      type="password"
+                      id="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Enter your QWEB password"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-qweb-blue-500 focus:border-transparent"
+                      required
+                    />
+                  </div>
+                  {error && (
+                    <p className="text-red-600 text-sm">{error}</p>
+                  )}
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full bg-gradient-to-r from-qweb-blue-600 to-qweb-green-600 hover:from-qweb-blue-700 hover:to-qweb-green-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all shadow-lg transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Get Started
-                  </Link>
-                  <Link
-                    to="/login"
-                    className="bg-white hover:bg-gray-50 text-qweb-blue-600 border-2 border-qweb-blue-600 px-8 py-3 rounded-lg text-lg font-semibold transition-colors shadow-lg"
-                  >
-                    Sign In
-                  </Link>
-                </>
-              ) : (
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link
-                    to="/meetings"
-                    className="bg-gradient-to-r from-qweb-blue-600 to-qweb-blue-700 hover:from-qweb-blue-700 hover:to-qweb-blue-800 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all shadow-lg transform hover:scale-105"
-                  >
-                    Schedule Team Meeting
-                  </Link>
-                  <Link
-                    to="/interviews"
-                    className="bg-gradient-to-r from-qweb-green-600 to-qweb-green-700 hover:from-qweb-green-700 hover:to-qweb-green-800 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all shadow-lg transform hover:scale-105"
-                  >
-                    Book Interview
-                  </Link>
-                </div>
-              )}
-            </div>
+                    {loading ? 'Signing In...' : 'Sign In'}
+                  </button>
+                </form>
+                <p className="text-sm text-gray-500 mt-3 text-center">
+                  Use your QWEB team password to access the platform
+                </p>
+              </div>
+            ) : (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link
+                  to="/meetings"
+                  className="bg-gradient-to-r from-qweb-blue-600 to-qweb-blue-700 hover:from-qweb-blue-700 hover:to-qweb-blue-800 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all shadow-lg transform hover:scale-105"
+                >
+                  Schedule Team Meeting
+                </Link>
+                <Link
+                  to="/interviews"
+                  className="bg-gradient-to-r from-qweb-green-600 to-qweb-green-700 hover:from-qweb-green-700 hover:to-qweb-green-800 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all shadow-lg transform hover:scale-105"
+                >
+                  Book Interview
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="bg-gray-600 hover:bg-gray-700 text-white px-8 py-3 rounded-lg text-lg font-semibold transition-all shadow-lg transform hover:scale-105"
+                >
+                  Sign Out
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -66,7 +107,7 @@ const Home = () => {
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               We've combined the best features from Calendly and LettuceMeet to create 
-              the perfect solution for QWeb's needs.
+              the perfect solution for QWEB's booking needs.
             </p>
           </div>
 
@@ -123,15 +164,12 @@ const Home = () => {
             Ready to Get Started?
           </h2>
           <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Join QWeb members who are already using our platform to streamline their scheduling.
+            Join QWEB members who are already using our platform to streamline their scheduling.
           </p>
           {!user ? (
-            <Link
-              to="/signup"
-              className="bg-white hover:bg-gray-50 text-qweb-blue-600 px-8 py-3 rounded-lg text-lg font-semibold transition-all shadow-lg inline-block transform hover:scale-105"
-            >
-              Create Your Account
-            </Link>
+            <p className="text-white/80 text-lg">
+              Sign in with your QWEB password above to access the platform
+            </p>
           ) : (
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link

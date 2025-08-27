@@ -37,7 +37,7 @@ const Navbar = () => {
                 {/* web tag */}
                 <span className="ml-2 text-xl font-mono font-bold text-white">&lt;web&gt;</span>
               </div>
-              <span className="text-xl font-bold text-white ml-2">Queen's Web Development</span>
+                              <span className="text-xl font-bold text-white ml-2">QWEB Booking</span>
             </Link>
           </div>
 
@@ -101,18 +101,7 @@ const Navbar = () => {
               </div>
             ) : (
               <div className="flex items-center space-x-4">
-                <Link
-                  to="/login"
-                  className="text-white/90 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Login
-                </Link>
-                <Link
-                  to="/signup"
-                  className="bg-gradient-to-r from-qweb-blue-500 to-qweb-green-500 hover:from-qweb-blue-600 hover:to-qweb-green-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors shadow-lg"
-                >
-                  Sign Up
-                </Link>
+                <span className="text-white/80 text-sm">Sign in on the home page</span>
               </div>
             )}
           </div>
@@ -200,21 +189,10 @@ const Navbar = () => {
                   </button>
                 </div>
               ) : (
-                <div className="pt-4 pb-3 border-t border-white/20 space-y-2">
-                  <Link
-                    to="/login"
-                    className="block px-3 py-2 text-white/90 hover:text-white hover:bg-white/10 rounded-md text-base font-medium transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    to="/signup"
-                    className="block px-3 py-2 bg-gradient-to-r from-qweb-blue-500 to-qweb-green-500 hover:from-qweb-blue-600 hover:to-qweb-green-600 text-white rounded-md text-base font-medium transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Sign Up
-                  </Link>
+                <div className="pt-4 pb-3 border-t border-white/20">
+                  <div className="px-3 py-2 text-white/80 text-sm">
+                    Sign in on the home page
+                  </div>
                 </div>
               )}
             </div>

@@ -7,8 +7,6 @@ import Navbar from "./components/layout/Navbar";
 
 // Pages
 import Home from "./pages/Home";
-import LoginPage from "./pages/LoginPage";
-import SignupPage from "./pages/SignupPage";
 import MeetingsPage from "./pages/MeetingsPage";
 import InterviewsPage from "./pages/InterviewsPage";
 import BookingsPage from "./pages/BookingsPage";
@@ -22,8 +20,6 @@ function App() {
           <main className="w-full">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
               <Route path="/meetings" element={<MeetingsPage />} />
               <Route path="/interviews" element={<InterviewsPage />} />
               <Route path="/bookings" element={<BookingsPage />} />

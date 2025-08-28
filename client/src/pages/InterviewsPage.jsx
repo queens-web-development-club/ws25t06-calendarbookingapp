@@ -105,14 +105,14 @@ const InterviewsPage = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Please sign in to access interview scheduling</h2>
           <Link
-            to="/login"
+            to="/"
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors"
           >
-            Sign In
+            Go to Homepage to Sign In
           </Link>
         </div>
       </div>
-    );
+      );
   }
 
   return (

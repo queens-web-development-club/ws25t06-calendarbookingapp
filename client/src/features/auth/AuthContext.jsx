@@ -20,7 +20,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // For demo purposes, using a simple password check
       // In production, this should be a secure API call
-      if (password === 'qweb2024' || password === 'QWEB2024') {
+      if (password === '1234') {
         const user = {
           id: 'qweb-member',
           displayName: 'QWEB Member',

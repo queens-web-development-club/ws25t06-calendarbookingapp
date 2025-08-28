@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
 import { collection, addDoc, getDocs, query, where, orderBy } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { generateTimeSlots, calculateTotalSlotTime } from '../utils/timeSlots';
 
 const InterviewsPage = () => {
   const { user } = useAuth();
@@ -17,16 +18,33 @@ const InterviewsPage = () => {
     location: '',
     interviewLink: '',
     bufferTime: 15, // Buffer time between interviews in minutes
+    startHour: 9, // Start hour for business hours
+    endHour: 17, // End hour for business hours
     availableSlots: []
   });
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedSlots, setSelectedSlots] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState(null);
 
   useEffect(() => {
     if (user) {
       fetchInterviews();
     }
   }, [user]);
+
+  // Global mouse up handler for drag operations
+  useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      setIsDragging(false);
+      setDragStart(null);
+    };
+
+    document.addEventListener('mouseup', handleGlobalMouseUp);
+    return () => {
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, []);
 
 
 
@@ -52,36 +70,9 @@ const InterviewsPage = () => {
     // Form submission is now handled in handleCreateInterview after step 2
   };
 
-  const generateTimeSlots = () => {
-    const slots = [];
-    const startHour = 9; // 9 AM
-    const endHour = 17; // 5 PM
-    const totalSlotTime = formData.duration + formData.bufferTime;
-
-    for (let hour = startHour; hour < endHour; hour++) {
-      for (let minute = 0; minute < 60; minute += totalSlotTime) {
-        if (hour + (minute + totalSlotTime) / 60 <= endHour) {
-          // Convert to AM/PM format
-          let displayHour = hour;
-          let ampm = 'AM';
-          
-          if (hour === 12) {
-            ampm = 'PM';
-          } else if (hour > 12) {
-            displayHour = hour - 12;
-            ampm = 'PM';
-          }
-          
-          const timeString = `${displayHour}:${minute.toString().padStart(2, '0')} ${ampm}`;
-          slots.push({
-            time: timeString,
-            available: true,
-            bookedBy: null
-          });
-        }
-      }
-    }
-    return slots;
+  // Time slots are now generated using the utility function with custom business hours
+  const getTimeSlots = () => {
+    return generateTimeSlots(formData.duration, formData.bufferTime, formData.startHour, formData.endHour);
   };
 
   const generateWeekCalendar = () => {
@@ -118,6 +109,49 @@ const InterviewsPage = () => {
   const isSlotSelected = (date, time) => {
     const slotKey = `${date.toISOString().split('T')[0]}_${time}`;
     return selectedSlots.find(slot => slot.key === slotKey);
+  };
+
+  const handleMouseDown = (date, time) => {
+    setIsDragging(true);
+    setDragStart({ date, time });
+    handleSlotClick(date, time);
+  };
+
+  const handleMouseEnter = (date, time) => {
+    if (isDragging && dragStart) {
+      // Only allow dragging within the same day
+      if (date.toISOString().split('T')[0] === dragStart.date.toISOString().split('T')[0]) {
+        // Get all time slots to find the range
+        const timeSlots = getTimeSlots();
+        const startIndex = timeSlots.findIndex(slot => slot.time === dragStart.time);
+        const currentIndex = timeSlots.findIndex(slot => slot.time === time);
+        
+        if (startIndex !== -1 && currentIndex !== -1) {
+          const minIndex = Math.min(startIndex, currentIndex);
+          const maxIndex = Math.max(startIndex, currentIndex);
+          
+          // Clear existing selections for this day
+          setSelectedSlots(prev => prev.filter(slot => slot.date !== date.toISOString().split('T')[0]));
+          
+          // Add all slots in the range for this day
+          for (let i = minIndex; i <= maxIndex; i++) {
+            const slot = timeSlots[i];
+            const slotKey = `${date.toISOString().split('T')[0]}_${slot.time}`;
+            setSelectedSlots(prev => [...prev, { 
+              key: slotKey, 
+              date: date.toISOString().split('T')[0], 
+              time: slot.time, 
+              selected: true 
+            }]);
+          }
+        }
+      }
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setDragStart(null);
   };
 
   const handleNextStep = () => {
@@ -161,6 +195,8 @@ const InterviewsPage = () => {
         location: '',
         interviewLink: '',
         bufferTime: 15,
+        startHour: 9,
+        endHour: 17,
         availableSlots: []
       });
       setSelectedSlots([]);
@@ -318,6 +354,84 @@ const InterviewsPage = () => {
                   </div>
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="startHour" className="block text-sm font-medium text-gray-700 mb-1">
+                      Start Time
+                    </label>
+                    <select
+                      id="startHour"
+                      name="startHour"
+                      value={formData.startHour}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    >
+                      <option value={0}>12:00 AM (Midnight)</option>
+                      <option value={1}>1:00 AM</option>
+                      <option value={2}>2:00 AM</option>
+                      <option value={3}>3:00 AM</option>
+                      <option value={4}>4:00 AM</option>
+                      <option value={5}>5:00 AM</option>
+                      <option value={6}>6:00 AM</option>
+                      <option value={7}>7:00 AM</option>
+                      <option value={8}>8:00 AM</option>
+                      <option value={9}>9:00 AM</option>
+                      <option value={10}>10:00 AM</option>
+                      <option value={11}>11:00 AM</option>
+                      <option value={12}>12:00 PM (Noon)</option>
+                      <option value={13}>1:00 PM</option>
+                      <option value={14}>2:00 PM</option>
+                      <option value={15}>3:00 PM</option>
+                      <option value={16}>4:00 PM</option>
+                      <option value={17}>5:00 PM</option>
+                      <option value={18}>6:00 PM</option>
+                      <option value={19}>7:00 PM</option>
+                      <option value={20}>8:00 PM</option>
+                      <option value={21}>9:00 PM</option>
+                      <option value={22}>10:00 PM</option>
+                      <option value={23}>11:00 PM</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label htmlFor="endHour" className="block text-sm font-medium text-gray-700 mb-1">
+                      End Time
+                    </label>
+                    <select
+                      id="endHour"
+                      name="endHour"
+                      value={formData.endHour}
+                      onChange={handleChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    >
+                      <option value={1}>1:00 AM</option>
+                      <option value={2}>2:00 AM</option>
+                      <option value={3}>3:00 AM</option>
+                      <option value={4}>4:00 AM</option>
+                      <option value={5}>5:00 AM</option>
+                      <option value={6}>6:00 AM</option>
+                      <option value={7}>7:00 AM</option>
+                      <option value={8}>8:00 AM</option>
+                      <option value={9}>9:00 AM</option>
+                      <option value={10}>10:00 AM</option>
+                      <option value={11}>11:00 AM</option>
+                      <option value={12}>12:00 PM (Noon)</option>
+                      <option value={13}>1:00 PM</option>
+                      <option value={14}>2:00 PM</option>
+                      <option value={15}>3:00 PM</option>
+                      <option value={16}>4:00 PM</option>
+                      <option value={17}>5:00 PM</option>
+                      <option value={18}>6:00 PM</option>
+                      <option value={19}>7:00 PM</option>
+                      <option value={20}>8:00 PM</option>
+                      <option value={21}>9:00 PM</option>
+                      <option value={22}>10:00 PM</option>
+                      <option value={23}>11:00 PM</option>
+                      <option value={24}>12:00 AM (Next Day)</option>
+                    </select>
+                  </div>
+                </div>
+
                 {/* Interview Type Selection */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -408,16 +522,23 @@ const InterviewsPage = () => {
                 <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
                   <h4 className="text-sm font-medium text-blue-800 mb-2">Time Slot Information</h4>
                   <p className="text-sm text-blue-700">
-                    Each slot is {formData.duration} minutes with {formData.bufferTime === 0 ? 'no' : `${formData.bufferTime} minutes`} buffer time.
-                    Total time per slot: {formData.duration + formData.bufferTime} minutes.
+                    Each interview slot is {formData.duration} minutes long.
+                    {formData.bufferTime === 0 ? ' No buffer time between interviews.' : ` ${formData.bufferTime} minutes buffer time between interviews.`}
+                    Total time needed per slot: {calculateTotalSlotTime(formData.duration, formData.bufferTime)} minutes.
                     Click on time slots to select them for your interview availability.
                   </p>
+                  <div className="mt-3 p-3 bg-blue-100 rounded border border-blue-300">
+                    <p className="text-xs text-blue-800">
+                      <strong>Grid Explanation:</strong> Each row represents a {formData.duration}-minute interview slot. 
+                      {formData.bufferTime > 0 ? ` The ${formData.bufferTime}-minute buffer time is included in the spacing between slots.` : ' Since there is no buffer time, slots are back-to-back.'}
+                    </p>
+                  </div>
                 </div>
 
                 {/* Week Calendar Grid */}
                 <div className="overflow-x-auto">
                   <div className="min-w-max">
-                    {/* Header Row */}
+                    {/* Header Row - Fixed */}
                     <div className="grid grid-cols-8 gap-1 mb-2">
                       <div className="w-20 h-10"></div> {/* Empty corner */}
                       {generateWeekCalendar().map((date, index) => (
@@ -427,37 +548,49 @@ const InterviewsPage = () => {
                       ))}
                     </div>
 
-                    {/* Time Slots */}
-                    {generateTimeSlots().map((slot, timeIndex) => (
-                      <div key={timeIndex} className="grid grid-cols-8 gap-1 mb-1">
-                        <div className="w-20 h-8 flex items-center justify-center text-xs text-gray-600 font-medium">
+                    {/* Time Slots - Scrollable Container */}
+                    <div className="max-h-96 overflow-y-auto border border-gray-200 rounded-lg">
+                      <div className="min-w-max">
+                        {getTimeSlots().map((slot, timeIndex) => (
+                          <div key={timeIndex} className="grid grid-cols-8 gap-1 mb-1">
+                                                    <div className="w-20 h-8 flex items-center justify-center text-xs text-gray-600 font-medium">
                           {slot.time}
                         </div>
-                        {generateWeekCalendar().map((date, dateIndex) => {
-                          const isSelected = isSlotSelected(date, slot.time);
-                          return (
-                            <button
+                            {generateWeekCalendar().map((date, dateIndex) => {
+                              const isSelected = isSlotSelected(date, slot.time);
+                              return (
+                                                            <button
                               key={dateIndex}
-                              onClick={() => handleSlotClick(date, slot.time)}
+                              onMouseDown={() => handleMouseDown(date, slot.time)}
+                              onMouseEnter={() => handleMouseEnter(date, slot.time)}
+                              onMouseUp={handleMouseUp}
                               className={`w-32 h-8 rounded border-2 transition-all ${
                                 isSelected
-                                  ? 'bg-green-500 border-green-600 text-white'
+                                  ? 'bg-green-500 border-green-600'
                                   : 'bg-white border-gray-200 hover:bg-green-50 hover:border-green-300'
                               }`}
+                              title={`${slot.time} - ${formData.duration} minute interview${formData.bufferTime > 0 ? ` + ${formData.bufferTime} min buffer` : ''}`}
                             >
-                              {isSelected ? '✓' : ''}
                             </button>
-                          );
-                        })}
+                              );
+                            })}
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    </div>
                   </div>
                 </div>
 
                 <div className="mt-6 text-center">
                   <p className="text-sm text-gray-600 mb-4">
+                    Available time slots: <span className="font-medium text-blue-600">{getTimeSlots().length}</span> | 
                     Selected slots: <span className="font-medium text-green-600">{selectedSlots.length}</span>
                   </p>
+                  {getTimeSlots().length > 20 && (
+                    <p className="text-xs text-gray-500 mb-2">
+                      💡 Use the scroll bar to view all available time slots
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex justify-end space-x-4 pt-4">

@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
-import { collection, addDoc, getDocs, query, where, orderBy } from 'firebase/firestore';
-import { db } from '../lib/firebase';
 import { generateTimeSlots, calculateTotalSlotTime } from '../utils/timeSlots';
 
 const InterviewsPage = () => {

@@ -682,6 +682,17 @@ const InterviewsPage = () => {
                       >
                         Manage
                       </Link>
+                      <button
+                        onClick={() => {
+                          const bookingUrl = `${window.location.origin}/book-interview/${interview.id}`;
+                          navigator.clipboard.writeText(bookingUrl);
+                          alert('Booking link copied to clipboard!');
+                        }}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                        title="Copy booking link to clipboard"
+                      >
+                        Share
+                      </button>
                     </div>
                   </div>
                 </div>

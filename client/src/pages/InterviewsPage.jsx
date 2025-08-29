@@ -44,18 +44,14 @@ const InterviewsPage = () => {
     };
   }, []);
 
-
-
   const fetchInterviews = async () => {
     try {
-      const interviewsRef = collection(db, 'interviews');
-      const q = query(interviewsRef, where('creatorId', '==', user.uid), orderBy('createdAt', 'desc'));
-      const querySnapshot = await getDocs(q);
-      const interviewsList = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setInterviews(interviewsList);
+      const response = await fetch(`http://localhost:3000/interviews?organizerEmail=${user.email}`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch interviews');
+      }
+      const data = await response.json();
+      setInterviews(data.interviews || []);
     } catch (error) {
       console.error('Error fetching interviews:', error);
     } finally {
@@ -170,21 +166,46 @@ const InterviewsPage = () => {
 
     try {
       const interviewData = {
-        ...formData,
-        creatorId: user.uid,
-        creatorName: user.displayName || user.email,
-        createdAt: new Date().toISOString(),
-        status: 'active',
-        bookings: [],
+        title: formData.title,
+        description: formData.description,
+        duration: formData.duration,
+        location: formData.interviewType === 'in-person' ? formData.location : formData.interviewLink,
+        maxBookings: selectedSlots.length,
+        organizerEmail: "",
+        organizerName: "",
+        interviewType: formData.interviewType,
+        bufferTime: formData.bufferTime,
+        startHour: formData.startHour,
+        endHour: formData.endHour,
         availableSlots: selectedSlots.map(slot => ({
           date: slot.date,
           time: slot.time,
-          available: true,
-          bookedBy: null
+          duration: formData.duration,
+          bufferTime: formData.bufferTime
         }))
       };
 
-      await addDoc(collection(db, 'interviews'), interviewData);
+      console.log('Sending interview data:', interviewData);
+
+      const response = await fetch('http://localhost:3000/interviews', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(interviewData),
+      });
+
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        throw new Error(`Failed to create interview: ${errorText}`);
+      }
+
+      const data = await response.json();
+      console.log('Success response:', data);
       setFormData({
         title: '',
         description: '',
@@ -642,23 +663,17 @@ const InterviewsPage = () => {
                       {interview.description && (
                         <p className="text-gray-600 mb-3">{interview.description}</p>
                       )}
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-500">
-                        <span>Duration: {interview.duration} minutes</span>
-                        <span>Buffer Time: {interview.bufferTime === 0 ? 'None' : `${interview.bufferTime} minutes`}</span>
-                        <span>Created: {new Date(interview.createdAt).toLocaleDateString()}</span>
-                        <span>Type: {interview.interviewType === 'online' ? 'Online' : 'In-Person'}</span>
-                        {interview.interviewType === 'online' && interview.interviewLink && (
-                          <span>Link: <a href={interview.interviewLink} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">{interview.interviewLink}</a></span>
-                        )}
-                        {interview.interviewType === 'in-person' && interview.location && (
-                          <span>Location: {interview.location}</span>
-                        )}
-                      </div>
-                      <div className="mt-3">
-                        <span className="text-sm text-gray-500">
-                          Total Time per Slot: {interview.duration + interview.bufferTime} minutes
-                        </span>
-                      </div>
+                                             <div className="flex flex-wrap gap-4 text-sm text-gray-500">
+                         <span>Duration: {interview.settings?.duration || 30} minutes</span>
+                         <span>Created: {new Date(interview.createdAt).toLocaleDateString()}</span>
+                         <span>Type: {(interview.settings?.interviewType || 'online') === 'online' ? 'Online' : 'In-Person'}</span>
+                         {(interview.settings?.interviewType || 'online') === 'online' && interview.settings?.location && (
+                           <span>Link: <a href={interview.settings.location} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">{interview.settings.location}</a></span>
+                         )}
+                         {(interview.settings?.interviewType || 'online') === 'in-person' && interview.settings?.location && (
+                           <span>Location: {interview.settings.location}</span>
+                         )}
+                       </div>
                     </div>
                     <div className="flex space-x-2">
                       <Link

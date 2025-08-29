@@ -12,6 +12,9 @@ import InterviewsPage from "./pages/InterviewsPage";
 import BookingsPage from "./pages/BookingsPage";
 import InterviewBookingPage from "./pages/InterviewBookingPage";
 import BookingVerificationPage from "./pages/BookingVerificationPage";
+import MeetingCreationPage from "./pages/MeetingCreationPage";
+import MeetingBookingPage from "./pages/MeetingBookingPage";
+import MeetingVerificationPage from "./pages/MeetingVerificationPage";
 
 function App() {
   return (
@@ -27,6 +30,9 @@ function App() {
               <Route path="/bookings" element={<BookingsPage />} />
               <Route path="/book-interview/:interviewId" element={<InterviewBookingPage />} />
               <Route path="/booking-verification" element={<BookingVerificationPage />} />
+              <Route path="/create-meeting" element={<MeetingCreationPage />} />
+              <Route path="/book-meeting/:meetingId" element={<MeetingBookingPage />} />
+              <Route path="/meeting-verification" element={<MeetingVerificationPage />} />
               
               {/* Legacy routes for backward compatibility */}
               <Route path="/meeting" element={<MeetingsPage />} />

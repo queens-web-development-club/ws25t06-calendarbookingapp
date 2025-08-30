@@ -4,7 +4,6 @@ const cors = require('cors');
 const app = express();
 const PORT = 3000;
 const interviewsRoutes = require('./routes/interviews');
-const timeslotsRoutes = require('./routes/timeslots');
 
 // Middleware
 app.use(cors({
@@ -20,7 +19,7 @@ const pool = require('./db');
 // Routes
 
 app.use('/interviews', interviewsRoutes);
-app.use('/timeslots', timeslotsRoutes);
+
 
 app.get('/', (req, res) => {
     res.send('Hello from Express!');

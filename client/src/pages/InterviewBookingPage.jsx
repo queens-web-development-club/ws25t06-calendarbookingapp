@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const InterviewBookingPage = () => {
-  const { interviewId } = useParams();
+  const { token } = useParams();
   const navigate = useNavigate();
   const [interview, setInterview] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ const InterviewBookingPage = () => {
 
   useEffect(() => {
     fetchInterview();
-  }, [interviewId]);
+  }, [token]);
 
   // Auto-select first available date when interview data loads
   useEffect(() => {
@@ -34,72 +34,52 @@ const InterviewBookingPage = () => {
 
   const fetchInterview = async () => {
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      setLoading(true);
+      setError('');
       
-      // Mock interview data - replace this with your actual data source
-      const mockInterview = {
-        id: interviewId,
-        title: 'Senior Frontend Developer',
-        description: 'Join us for a technical interview to discuss your experience and skills. We\'ll cover technical questions, coding challenges, and discuss your background.',
-        duration: 60,
-        bufferTime: 15,
-        interviewType: 'online',
-        interviewLink: 'https://meet.google.com/abc-defg-hij',
-        location: null,
-        availableSlots: [
-          // Today and next few days
-          { key: '1', date: new Date().toISOString().split('T')[0], time: '10:00 AM', available: true },
-          { key: '2', date: new Date().toISOString().split('T')[0], time: '2:00 PM', available: true },
-          { key: '3', date: new Date().toISOString().split('T')[0], time: '4:00 PM', available: true },
-          
-          // Tomorrow
-          { key: '4', date: new Date(Date.now() + 24*60*60*1000).toISOString().split('T')[0], time: '9:00 AM', available: true },
-          { key: '5', date: new Date(Date.now() + 24*60*60*1000).toISOString().split('T')[0], time: '1:00 PM', available: true },
-          { key: '6', date: new Date(Date.now() + 24*60*60*1000).toISOString().split('T')[0], time: '3:00 PM', available: true },
-          
-          // Day after tomorrow
-          { key: '7', date: new Date(Date.now() + 2*24*60*60*1000).toISOString().split('T')[0], time: '10:00 AM', available: true },
-          { key: '8', date: new Date(Date.now() + 2*24*60*60*1000).toISOString().split('T')[0], time: '2:00 PM', available: true },
-          
-          // 3 days from now
-          { key: '9', date: new Date(Date.now() + 3*24*60*60*1000).toISOString().split('T')[0], time: '11:00 AM', available: true },
-          { key: '10', date: new Date(Date.now() + 3*24*60*60*1000).toISOString().split('T')[0], time: '4:00 PM', available: true },
-          
-          // 4 days from now
-          { key: '11', date: new Date(Date.now() + 4*24*60*60*1000).toISOString().split('T')[0], time: '9:00 AM', available: true },
-          { key: '12', date: new Date(Date.now() + 4*24*60*60*1000).toISOString().split('T')[0], time: '1:00 PM', available: true },
-          
-          // 5 days from now
-          { key: '13', date: new Date(Date.now() + 5*24*60*60*1000).toISOString().split('T')[0], time: '10:00 AM', available: true },
-          { key: '14', date: new Date(Date.now() + 5*24*60*60*1000).toISOString().split('T')[0], time: '3:00 PM', available: true },
-          
-          // 6 days from now
-          { key: '15', date: new Date(Date.now() + 6*24*60*60*1000).toISOString().split('T')[0], time: '11:00 AM', available: true },
-          { key: '16', date: new Date(Date.now() + 6*24*60*60*1000).toISOString().split('T')[0], time: '2:00 PM', available: true },
-          
-          // 7 days from now
-          { key: '17', date: new Date(Date.now() + 7*24*60*60*1000).toISOString().split('T')[0], time: '9:00 AM', available: true },
-          { key: '18', date: new Date(Date.now() + 7*24*60*60*1000).toISOString().split('T')[0], time: '1:00 PM', available: true },
-          
-          // Some booked slots for testing
-          { key: '19', date: new Date(Date.now() + 8*24*60*60*1000).toISOString().split('T')[0], time: '10:00 AM', available: false, bookedBy: 'john@example.com' },
-          { key: '20', date: new Date(Date.now() + 8*24*60*60*1000).toISOString().split('T')[0], time: '2:00 PM', available: false, bookedBy: 'sarah@example.com' },
-          
-          // More available slots
-          { key: '21', date: new Date(Date.now() + 9*24*60*60*1000).toISOString().split('T')[0], time: '11:00 AM', available: true },
-          { key: '22', date: new Date(Date.now() + 9*24*60*60*1000).toISOString().split('T')[0], time: '3:00 PM', available: true },
-          
-          // 10 days from now
-          { key: '23', date: new Date(Date.now() + 10*24*60*60*1000).toISOString().split('T')[0], time: '9:00 AM', available: true },
-          { key: '24', date: new Date(Date.now() + 10*24*60*60*1000).toISOString().split('T')[0], time: '1:00 PM', available: true },
-        ]
+      const response = await fetch(`http://localhost:3000/interviews/${token}`);
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error('Interview not found. Please check the booking link.');
+        }
+        throw new Error('Failed to load interview details');
+      }
+      
+      const data = await response.json();
+      
+      // Transform the API response to match the expected format
+      const transformedInterview = {
+        id: data.interview.id,
+        title: data.interview.title,
+        description: data.interview.description,
+        duration: data.interview.settings?.duration || 30,
+        bufferTime: data.interview.settings?.bufferTime || 15,
+        interviewType: data.interview.settings?.interviewType || 'online',
+        location: data.interview.settings?.location || null,
+        organizerName: data.interview.organizerName,
+        organizerEmail: data.interview.organizerEmail,
+        // Transform availableSlots to match the expected format
+        availableSlots: data.availableSlots.map((slot, index) => ({
+          key: slot.id,
+          id: slot.id,
+          date: new Date(slot.startTime).toISOString().split('T')[0],
+          time: new Date(slot.startTime).toLocaleTimeString('en-US', { 
+            hour: 'numeric', 
+            minute: '2-digit',
+            hour12: true 
+          }),
+          available: slot.isAvailable,
+          bookingCount: slot.bookingCount || 0,
+          startTime: slot.startTime,
+          endTime: slot.endTime
+        }))
       };
       
-      setInterview(mockInterview);
+      setInterview(transformedInterview);
     } catch (error) {
       console.error('Error fetching interview:', error);
-      setError('Failed to load interview details');
+      setError(error.message || 'Failed to load interview details');
     } finally {
       setLoading(false);
     }

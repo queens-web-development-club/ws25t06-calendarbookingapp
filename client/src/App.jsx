@@ -28,12 +28,16 @@ function App() {
               <Route path="/meetings" element={<MeetingsPage />} />
               <Route path="/interviews" element={<InterviewsPage />} />
               <Route path="/bookings" element={<BookingsPage />} />
-              <Route path="/book-interview/:interviewId" element={<InterviewBookingPage />} />
-              <Route path="/booking-verification" element={<BookingVerificationPage />} />
+
               <Route path="/create-meeting" element={<MeetingCreationPage />} />
               <Route path="/book-meeting/:meetingId" element={<MeetingBookingPage />} />
               <Route path="/meeting-verification" element={<MeetingVerificationPage />} />
-              
+ 
+              <Route path="/book-interview/:token" element={<InterviewBookingPage />} />
+              <Route path="/booking/:token" element={<InterviewBookingPage />} />
+              <Route path="/booking-verification" element={<BookingVerificationPage />} />
+
+
               {/* Legacy routes for backward compatibility */}
               <Route path="/meeting" element={<MeetingsPage />} />
               <Route path="/interview" element={<InterviewsPage />} />
@@ -46,3 +50,6 @@ function App() {
 }
 
 export default App;
+
+
+

@@ -170,7 +170,6 @@ const InterviewsPage = () => {
         description: formData.description,
         duration: formData.duration,
         location: formData.interviewType === 'in-person' ? formData.location : formData.interviewLink,
-        maxBookings: selectedSlots.length,
         organizerEmail: "",
         organizerName: "",
         interviewType: formData.interviewType,

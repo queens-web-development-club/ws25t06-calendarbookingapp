@@ -13,7 +13,6 @@ router.post('/', async (req, res) => {
       description,
       duration,
       location,
-      maxBookings,
       organizerEmail,
       organizerName,
       interviewType,
@@ -26,7 +25,7 @@ router.post('/', async (req, res) => {
     // Validate required fields
     if (!title) {
       return res.status(400).json({
-        error: 'Missing required fields: title, duration, maxBookings, organizerEmail are required'
+        error: 'Missing required fields: title, duration, organizerEmail are required'
       });
     }
 
@@ -210,26 +209,64 @@ router.get('/', async (req, res) => {
   }
 });
 
-// GET /api/interviews/:id - Get a specific interview
-router.get('/:id', async (req, res) => {
+// GET /api/interviews/:token - Get a specific interview by token with available timeslots
+router.get('/:token', async (req, res) => {
   try {
-    const { id } = req.params;
+    const { token } = req.params;
 
-    const query = `
-      SELECT id, title, description, organizer_name, organizer_email, type, settings, status, created_at, updated_at
+    // First, get the interview details by token
+    const interviewQuery = `
+      SELECT id, title, description, organizer_name, organizer_email, type, settings, status, created_at, updated_at, token
       FROM events 
-      WHERE id = $1 AND type = 'interview'
+      WHERE token = $1 AND type = 'interview'
     `;
 
-    const result = await pool.query(query, [id]);
+    const interviewResult = await pool.query(interviewQuery, [token]);
 
-    if (result.rows.length === 0) {
+    if (interviewResult.rows.length === 0) {
       return res.status(404).json({
         error: 'Interview not found'
       });
     }
 
-    const interview = result.rows[0];
+    const interview = interviewResult.rows[0];
+
+    // Get all available timeslots for this interview
+    const timeslotsQuery = `
+      SELECT id, start_time, end_time, is_available, created_at
+      FROM time_slots 
+      WHERE event_id = $1 AND is_available = true
+      ORDER BY start_time ASC
+    `;
+
+    const timeslotsResult = await pool.query(timeslotsQuery, [interview.id]);
+    const availableSlots = timeslotsResult.rows.map(slot => ({
+      id: slot.id,
+      startTime: slot.start_time,
+      endTime: slot.end_time,
+      isAvailable: slot.is_available,
+      createdAt: slot.created_at
+    }));
+
+    // Get booking count for each slot (optional - to show how many people have booked each slot)
+    const bookingCountsQuery = `
+      SELECT time_slot_id, COUNT(*) as booking_count
+      FROM responses 
+      WHERE time_slot_id IN (SELECT id FROM time_slots WHERE event_id = $1)
+      GROUP BY time_slot_id
+    `;
+
+    const bookingCountsResult = await pool.query(bookingCountsQuery, [interview.id]);
+    const bookingCounts = {};
+    bookingCountsResult.rows.forEach(row => {
+      bookingCounts[row.time_slot_id] = parseInt(row.booking_count);
+    });
+
+    // Add booking count to each slot
+    const slotsWithBookings = availableSlots.map(slot => ({
+      ...slot,
+      bookingCount: bookingCounts[slot.id] || 0
+    }));
     
     res.json({
       interview: {
@@ -242,12 +279,15 @@ router.get('/:id', async (req, res) => {
         settings: interview.settings,
         status: interview.status,
         createdAt: interview.created_at,
-        updatedAt: interview.updated_at
-      }
+        updatedAt: interview.updated_at,
+        token: interview.token
+      },
+      availableSlots: slotsWithBookings,
+      totalAvailableSlots: slotsWithBookings.length
     });
 
   } catch (error) {
-    console.error('Error fetching interview:', error);
+    console.error('Error fetching interview by token:', error);
     res.status(500).json({
       error: 'Internal server error',
       details: error.message

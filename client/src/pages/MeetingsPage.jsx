@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
 import { generateTimeSlots, calculateTotalSlotTime } from '../utils/timeSlots';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const MeetingsPage = () => {
   const { user } = useAuth();
@@ -779,10 +780,7 @@ const MeetingsPage = () => {
           <h3 className="text-2xl font-semibold text-gray-900 mb-6">Your Team Meetings</h3>
           
           {loading ? (
-            <div className="text-center py-8">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600">Loading meetings...</p>
-            </div>
+            <LoadingSpinner variant="compact" message="Loading meetings..." />
           ) : meetings.length === 0 ? (
             <div className="text-center py-12">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">

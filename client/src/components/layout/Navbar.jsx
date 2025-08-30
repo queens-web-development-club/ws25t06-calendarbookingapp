@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../features/auth/AuthContext';
+import qwebLogo from '../../assets/qweb_logo.jpg';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,71 +19,68 @@ const Navbar = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <nav className="bg-gradient-to-r from-qweb-800 to-qweb-green-800 text-white shadow-lg">
+    <nav className="bg-white shadow-lg border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Brand */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-3">
+            <Link to="/" className="flex items-center space-x-3 group">
               <div className="flex items-center">
-                {/* QWeb Logo */}
-                <div className="relative">
-                  {/* Gradient Q */}
-                  <div className="w-10 h-10 bg-gradient-to-b from-qweb-blue-500 to-qweb-green-500 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-                    Q
-                  </div>
-                  {/* Tail extending from Q */}
-                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-gradient-to-b from-qweb-blue-500 to-qweb-green-500 rounded-full"></div>
+                {/* QWEB Logo */}
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center shadow-md group-hover:shadow-lg transition-all duration-200">
+                  <img src={qwebLogo} alt="QWEB Logo" className="w-8 h-8 object-contain" />
                 </div>
-                {/* web tag */}
-                <span className="ml-2 text-xl font-mono font-bold text-white">&lt;web&gt;</span>
+                {/* Brand Text */}
+                <div className="ml-3">
+                  <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">QWEB</span>
+                  <span className="block text-xs text-gray-500 font-medium">Booking Platform</span>
+                </div>
               </div>
-                              <span className="text-xl font-bold text-white ml-2">QWEB Booking</span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-1">
             <Link
               to="/"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                 isActive('/') 
-                  ? 'bg-white/20 text-white' 
-                  : 'text-white/90 hover:bg-white/10 hover:text-white'
+                  ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 shadow-sm border border-blue-200' 
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50'
               }`}
             >
               Home
             </Link>
             <Link
-              to="/meetings"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/meetings') 
-                  ? 'bg-white/20 text-white' 
-                  : 'text-white/90 hover:bg-white/10 hover:text-white'
+              to="/interviews"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                isActive('/interviews') 
+                  ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 shadow-sm border border-blue-200' 
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50'
               }`}
             >
-              Team Meetings
+              Schedule Interview
             </Link>
             <Link
-              to="/interviews"
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                isActive('/interviews') 
-                  ? 'bg-white/20 text-white' 
-                  : 'text-white/90 hover:bg-white/10 hover:text-white'
+              to="/meetings"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                isActive('/meetings') 
+                  ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 shadow-sm border border-blue-200' 
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50'
               }`}
             >
-              Interviews
+              Team Coordination
             </Link>
             {user && (
               <Link
                 to="/bookings"
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive('/bookings') 
-                    ? 'bg-white/20 text-white' 
-                    : 'text-white/90 hover:bg-white/10 hover:text-white'
+                    ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 shadow-sm border border-blue-200' 
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50'
                 }`}
               >
-                My Bookings
+                Calendar
               </Link>
             )}
           </div>
@@ -91,17 +89,29 @@ const Navbar = () => {
           <div className="hidden md:flex items-center space-x-4">
             {user ? (
               <div className="flex items-center space-x-4">
-                <span className="text-white/90">Welcome, {user.displayName || user.email}</span>
+                <div className="text-right">
+                  <div className="text-sm font-medium text-gray-900">Welcome back!</div>
+                  <div className="text-xs text-gray-500">{user.displayName || user.email}</div>
+                </div>
                 <button
                   onClick={handleLogout}
-                  className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 text-gray-700 hover:text-gray-900 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 flex items-center space-x-2 shadow-sm hover:shadow-md"
                 >
-                  Logout
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  <span>Sign Out</span>
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-4">
-                <span className="text-white/80 text-sm">Sign in on the home page</span>
+              <div className="flex items-center space-x-3">
+                <span className="text-gray-500 text-sm">QWEB member?</span>
+                <Link
+                  to="/"
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105"
+                >
+                  Sign In
+                </Link>
               </div>
             )}
           </div>
@@ -110,7 +120,7 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white/90 hover:text-white p-2"
+              className="text-gray-600 hover:text-gray-900 p-2 rounded-lg hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 transition-all duration-200"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isMenuOpen ? (
@@ -126,72 +136,73 @@ const Navbar = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-qweb-700 rounded-b-lg">
+            <div className="px-2 pt-2 pb-3 space-y-1 bg-gradient-to-br from-gray-50 to-blue-50 rounded-b-lg border-t border-gray-200">
               <Link
                 to="/"
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                className={`block px-3 py-2 rounded-lg text-base font-medium transition-all duration-200 ${
                   isActive('/') 
-                    ? 'bg-white/20 text-white' 
-                    : 'text-white/90 hover:bg-white/10 hover:text-white'
+                    ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border border-blue-200' 
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50'
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
                 Home
               </Link>
               <Link
-                to="/meetings"
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                  isActive('/meetings') 
-                    ? 'bg-white/20 text-white' 
-                    : 'text-white/90 hover:bg-white/10 hover:text-white'
+                to="/interviews"
+                className={`block px-3 py-2 rounded-lg text-base font-medium transition-all duration-200 ${
+                  isActive('/interviews') 
+                    ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border border-blue-200' 
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50'
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Team Meetings
+                Schedule Interview
               </Link>
               <Link
-                to="/interviews"
-                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
-                  isActive('/interviews') 
-                    ? 'bg-white/20 text-white' 
-                    : 'text-white/90 hover:bg-white/10 hover:text-white'
+                to="/meetings"
+                className={`block px-3 py-2 rounded-lg text-base font-medium transition-all duration-200 ${
+                  isActive('/meetings') 
+                    ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border border-blue-200' 
+                    : 'text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50'
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
-                Interviews
+                Team Coordination
               </Link>
               {user && (
                 <Link
                   to="/bookings"
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  className={`block px-3 py-2 rounded-lg text-base font-medium transition-all duration-200 ${
                     isActive('/bookings') 
-                      ? 'bg-white/20 text-white' 
-                      : 'text-white/90 hover:bg-white/10 hover:text-white'
+                      ? 'bg-gradient-to-r from-blue-100 to-purple-100 text-blue-700 border border-blue-200' 
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  My Bookings
+                  Calendar
                 </Link>
               )}
               {user ? (
-                <div className="pt-4 pb-3 border-t border-white/20">
-                  <div className="px-3 py-2 text-white/90">
-                    Welcome, {user.displayName || user.email}
+                <div className="pt-4 pb-3 border-t border-gray-200">
+                  <div className="px-3 py-2">
+                    <div className="text-sm font-medium text-gray-900">Welcome back!</div>
+                    <div className="text-xs text-gray-500">{user.displayName || user.email}</div>
                   </div>
                   <button
                     onClick={() => {
                       handleLogout();
                       setIsMenuOpen(false);
                     }}
-                    className="block w-full text-left px-3 py-2 text-red-300 hover:text-white hover:bg-white/10 rounded-md text-base font-medium transition-colors"
+                    className="block w-full text-left px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 rounded-lg text-base font-medium transition-all duration-200 mt-2"
                   >
-                    Logout
+                    Sign Out
                   </button>
                 </div>
               ) : (
-                <div className="pt-4 pb-3 border-t border-white/20">
-                  <div className="px-3 py-2 text-white/80 text-sm">
-                    Sign in on the home page
+                <div className="pt-4 pb-3 border-t border-gray-200">
+                  <div className="px-3 py-2 text-gray-500 text-sm">
+                    QWEB member? Sign in on the home page
                   </div>
                 </div>
               )}

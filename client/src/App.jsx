@@ -15,6 +15,7 @@ import BookingVerificationPage from "./pages/BookingVerificationPage";
 import MeetingCreationPage from "./pages/MeetingCreationPage";
 import MeetingBookingPage from "./pages/MeetingBookingPage";
 import MeetingVerificationPage from "./pages/MeetingVerificationPage";
+import TeamBookingPage from "./pages/TeamBookingPage";
 
 function App() {
   return (
@@ -32,11 +33,11 @@ function App() {
               <Route path="/create-meeting" element={<MeetingCreationPage />} />
               <Route path="/book-meeting/:meetingId" element={<MeetingBookingPage />} />
               <Route path="/meeting-verification" element={<MeetingVerificationPage />} />
- 
+              <Route path="/team-booking/:meetingId" element={<TeamBookingPage />} />
+              
               <Route path="/book-interview/:token" element={<InterviewBookingPage />} />
               <Route path="/booking/:token" element={<InterviewBookingPage />} />
               <Route path="/booking-verification" element={<BookingVerificationPage />} />
-
 
               {/* Legacy routes for backward compatibility */}
               <Route path="/meeting" element={<MeetingsPage />} />

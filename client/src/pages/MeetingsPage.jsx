@@ -816,12 +816,12 @@ const MeetingsPage = () => {
                       </div>
                     </div>
                     <div className="flex space-x-2">
-                      <Link
-                        to={`/meetings/${meeting.id}`}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                      >
-                        Manage
-                      </Link>
+                                                   <Link
+                               to={`/team-booking/${meeting.id}`}
+                               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                             >
+                               Team Booking
+                             </Link>
                       <button
                         onClick={() => {
                           const bookingUrl = `${window.location.origin}/book-meeting/${meeting.id}`;

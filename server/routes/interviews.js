@@ -209,6 +209,22 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/interviews/debug - Debug endpoint to check database
+router.get('/debug/check', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT COUNT(*) as count FROM events');
+    res.json({
+      message: 'Database connection working',
+      eventsCount: result.rows[0].count
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: 'Database connection failed',
+      details: error.message
+    });
+  }
+});
+
 // GET /api/interviews/:token - Get a specific interview by token with available timeslots
 router.get('/:token', async (req, res) => {
   try {
@@ -249,23 +265,10 @@ router.get('/:token', async (req, res) => {
     }));
 
     // Get booking count for each slot (optional - to show how many people have booked each slot)
-    const bookingCountsQuery = `
-      SELECT time_slot_id, COUNT(*) as booking_count
-      FROM responses 
-      WHERE time_slot_id IN (SELECT id FROM time_slots WHERE event_id = $1)
-      GROUP BY time_slot_id
-    `;
-
-    const bookingCountsResult = await pool.query(bookingCountsQuery, [interview.id]);
-    const bookingCounts = {};
-    bookingCountsResult.rows.forEach(row => {
-      bookingCounts[row.time_slot_id] = parseInt(row.booking_count);
-    });
-
-    // Add booking count to each slot
+    // For now, let's skip this to avoid any database schema issues
     const slotsWithBookings = availableSlots.map(slot => ({
       ...slot,
-      bookingCount: bookingCounts[slot.id] || 0
+      bookingCount: 0 // We'll add this back later when the booking system is implemented
     }));
     
     res.json({
@@ -288,6 +291,8 @@ router.get('/:token', async (req, res) => {
 
   } catch (error) {
     console.error('Error fetching interview by token:', error);
+    console.error('Token:', req.params.token);
+    console.error('Error stack:', error.stack);
     res.status(500).json({
       error: 'Internal server error',
       details: error.message

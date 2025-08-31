@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
 import { generateTimeSlots, calculateTotalSlotTime } from '../utils/timeSlots';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { format, parseISO } from 'date-fns';
+import EventList from '../components/EventList';
 
 const MeetingsPage = () => {
   const { user } = useAuth();
@@ -184,7 +186,7 @@ const MeetingsPage = () => {
   };
 
   const handleDayClick = (date) => {
-    const dayKey = date.toISOString().split('T')[0];
+    const dayKey = format(date, 'yyyy-MM-dd');
     setSelectedSlots(prev => {
       if (prev.find(slot => slot.key === dayKey)) {
         return prev.filter(slot => slot.key !== dayKey);
@@ -195,7 +197,7 @@ const MeetingsPage = () => {
   };
 
   const isDaySelected = (date) => {
-    const dayKey = date.toISOString().split('T')[0];
+    const dayKey = format(date, 'yyyy-MM-dd');
     return selectedSlots.find(slot => slot.key === dayKey);
   };
 
@@ -706,11 +708,11 @@ const MeetingsPage = () => {
                      <div className="p-3 text-center text-sm font-medium text-gray-700 border-r border-gray-200">
                        Time
                      </div>
-                     {selectedSlots.map((slot, index) => (
-                       <div key={index} className="p-3 text-center text-sm font-medium text-gray-700 border-r border-gray-200 last:border-r-0">
-                         {new Date(slot.date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
-                       </div>
-                     ))}
+                                           {selectedSlots.map((slot, index) => (
+                        <div key={index} className="p-3 text-center text-sm font-medium text-gray-700 border-r border-gray-200 last:border-r-0">
+                          {format(parseISO(slot.date), 'EEE, MMM d')}
+                        </div>
+                      ))}
                    </div>
 
                    {/* Time Slots Grid */}
@@ -779,64 +781,13 @@ const MeetingsPage = () => {
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h3 className="text-2xl font-semibold text-gray-900 mb-6">Your Team Meetings</h3>
           
-          {loading ? (
-            <LoadingSpinner variant="compact" message="Loading meetings..." />
-          ) : meetings.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
-                </svg>
-              </div>
-              <h4 className="text-lg font-medium text-gray-900 mb-2">No meetings yet</h4>
-              <p className="text-gray-600 mb-4">Create your first team meeting to get started!</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {meetings.map((meeting) => (
-                <div key={meeting.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">{meeting.title}</h4>
-                      {meeting.description && (
-                        <p className="text-gray-600 mb-3">{meeting.description}</p>
-                      )}
-                      <div className="flex flex-wrap gap-4 text-sm text-gray-500">
-                        <span>Duration: {meeting.duration} minutes</span>
-                        <span>Created: {new Date(meeting.created).toLocaleDateString()}</span>
-                        <span>Type: {meeting.meetingType === 'online' ? 'Online' : 'In-Person'}</span>
-                        {meeting.meetingType === 'online' && meeting.meetingLink && (
-                          <span>Link: <a href={meeting.meetingLink} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{meeting.meetingLink}</a></span>
-                        )}
-                        {meeting.meetingType === 'in-person' && meeting.location && (
-                          <span>Location: {meeting.location}</span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex space-x-2">
-                                                   <Link
-                               to={`/team-booking/${meeting.id}`}
-                               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                             >
-                               Team Booking
-                             </Link>
-                      <button
-                        onClick={() => {
-                          const bookingUrl = `${window.location.origin}/book-meeting/${meeting.id}`;
-                          navigator.clipboard.writeText(bookingUrl);
-                          alert('Booking link copied to clipboard!');
-                        }}
-                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                        title="Copy booking link to clipboard"
-                      >
-                        Share
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <EventList
+            events={meetings}
+            loading={loading}
+            eventType="meeting"
+            primaryButtonText="Team Booking"
+            secondaryButtonText="Share"
+          />
         </div>
       </div>
     </div>

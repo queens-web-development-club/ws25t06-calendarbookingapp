@@ -32,17 +32,24 @@ router.post('/', async (req, res) => {
     // Create settings object with interview-specific data
     const settings = {
       duration: parseInt(duration) || 30,
-      location: location || '',
-      interviewType: interviewType || 'online',
       startHour: parseInt(startHour) || 9,
       endHour: parseInt(endHour) || 17
     };
+
+    // Add interview type specific data to settings
+    if (interviewType === 'online') {
+      settings.interviewType = 'online';
+      settings.interviewLink = location || ''; // location field contains the interview link for online interviews
+    } else {
+      settings.interviewType = 'in-person';
+      settings.location = location || ''; // location field contains the physical location for in-person interviews
+    }
 
     // Insert into events table
     const query = `
       INSERT INTO events (title, description, type, settings, organizer_email, organizer_name)
       VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING id, title, description, type, settings, organizer_email, organizer_name, created_at
+      RETURNING id, title, description, type, settings, organizer_email, organizer_name, created_at, token
     `;
 
     const values = [
@@ -150,7 +157,8 @@ router.post('/', async (req, res) => {
         type: newInterview.type,
         settings: newInterview.settings,
         createdAt: newInterview.created_at,
-        status: 'active'
+        status: 'active',
+        token: newInterview.token
       }
     });
 
@@ -168,36 +176,51 @@ router.post('/', async (req, res) => {
 // GET /api/interviews - Get all interviews for an organizer
 router.get('/', async (req, res) => {
   try {
+    console.log('GET /interviews called');
+    console.log('Query params:', req.query);
+    
     const { organizerEmail } = req.query;
 
-    if (!organizerEmail) {
-      return res.status(400).json({
-        error: 'organizerEmail query parameter is required'
-      });
-    }
-
+    // Always return all interviews regardless of organizerEmail for now
+    // This ensures we can see all interviews in the database
     const query = `
-      SELECT id, title, description, organizer_name, organizer_email, type, settings, status, created_at, updated_at
+      SELECT id, title, description, organizer_name, organizer_email, type, settings, status, created_at, updated_at, token
       FROM events 
-      WHERE type = 'interview' AND organizer_email = $1
+      WHERE type = 'interview'
       ORDER BY created_at DESC
     `;
 
-    const result = await pool.query(query, [organizerEmail]);
+    console.log('Executing query:', query);
+
+    const result = await pool.query(query);
+    console.log('Query result rows:', result.rows);
+    console.log('Number of interviews found:', result.rows.length);
     
     res.json({
-      interviews: result.rows.map(row => ({
-        id: row.id,
-        title: row.title,
-        description: row.description,
-        organizerName: row.organizer_name,
-        organizerEmail: row.organizer_email,
-        type: row.type,
-        settings: row.settings,
-        status: row.status,
-        createdAt: row.created_at,
-        updatedAt: row.updated_at
-      }))
+      interviews: result.rows.map(row => {
+        const settings = row.settings || {};
+        
+        // Determine interview type from settings
+        let interviewType = 'Online';
+        if (settings.location) {
+          interviewType = 'In-Person';
+        }
+        
+        return {
+          id: row.id,
+          title: row.title,
+          description: row.description,
+          organizerName: row.organizer_name || '',
+          organizerEmail: row.organizer_email || '',
+          type: row.type,
+          settings: row.settings,
+          interviewType: interviewType, // Add the determined interview type
+          status: row.status,
+          createdAt: row.created_at,
+          updatedAt: row.updated_at,
+          token: row.token
+        };
+      })
     });
 
   } catch (error) {
@@ -212,12 +235,21 @@ router.get('/', async (req, res) => {
 // GET /api/interviews/debug - Debug endpoint to check database
 router.get('/debug/check', async (req, res) => {
   try {
+    console.log('Debug endpoint called');
     const result = await pool.query('SELECT COUNT(*) as count FROM events');
+    console.log('Total events in database:', result.rows[0].count);
+    
+    // Also check for interviews specifically
+    const interviewResult = await pool.query("SELECT COUNT(*) as count FROM events WHERE type = 'interview'");
+    console.log('Total interviews in database:', interviewResult.rows[0].count);
+    
     res.json({
       message: 'Database connection working',
-      eventsCount: result.rows[0].count
+      totalEvents: result.rows[0].count,
+      totalInterviews: interviewResult.rows[0].count
     });
   } catch (error) {
+    console.error('Debug endpoint error:', error);
     res.status(500).json({
       error: 'Database connection failed',
       details: error.message

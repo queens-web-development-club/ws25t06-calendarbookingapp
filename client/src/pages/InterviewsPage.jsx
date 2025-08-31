@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../features/auth/AuthContext';
 import { generateTimeSlots, calculateTotalSlotTime } from '../utils/timeSlots';
 import LoadingSpinner from '../components/LoadingSpinner';
+import EventList from '../components/EventList';
 
 const InterviewsPage = () => {
   const { user } = useAuth();
   const [interviews, setInterviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     title: '',
     description: '',
     duration: 30,
@@ -20,7 +21,9 @@ const InterviewsPage = () => {
     startHour: 9, // Start hour for business hours
     endHour: 17, // End hour for business hours
     availableSlots: []
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedSlots, setSelectedSlots] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -48,11 +51,15 @@ const InterviewsPage = () => {
 
   const fetchInterviews = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/interviews?organizerEmail=${user.email}`);
+      console.log('Fetching interviews for user:', user);
+      
+      // First, let's try without organizerEmail to see all interviews
+      const response = await fetch('http://localhost:3000/interviews');
       if (!response.ok) {
         throw new Error('Failed to fetch interviews');
       }
       const data = await response.json();
+      console.log('Fetched interviews data:', data);
       setInterviews(data.interviews || []);
     } catch (error) {
       console.error('Error fetching interviews:', error);
@@ -246,10 +253,20 @@ const InterviewsPage = () => {
       
       // Refresh the interviews list
       fetchInterviews();
+      // Reset form after successful creation
+      resetForm();
+      setShowCreateForm(false);
     } catch (error) {
       console.error('Error creating interview:', error);
       alert(`Error creating interview: ${error.message}`);
     }
+  };
+
+  const resetForm = () => {
+    setFormData(initialFormData);
+    setCurrentStep(1);
+    setSelectedSlots([]);
+    setCreatedInterview(null);
   };
 
   const handleChange = (e) => {
@@ -527,8 +544,11 @@ const InterviewsPage = () => {
                       value={formData.interviewLink}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="e.g., https://zoom.us/j/123456789, https://meet.google.com/abc-defg-hij"
+                      placeholder="https://meet.google.com/abc-defg-hij"
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Enter your Google Meet, Zoom, or other video conferencing link
+                    </p>
                   </div>
                 ) : (
                   <div>
@@ -542,15 +562,21 @@ const InterviewsPage = () => {
                       value={formData.location}
                       onChange={handleChange}
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                      placeholder="e.g., Room 123, Building A, 123 Main Street"
+                      placeholder="Conference Room A, 123 Main Street, Suite 100"
                     />
+                    <p className="text-xs text-gray-500 mt-1">
+                      Enter the physical location where the interview will take place
+                    </p>
                   </div>
                 )}
 
                 <div className="flex justify-end space-x-4 pt-4">
                   <button
                     type="button"
-                    onClick={() => setShowCreateForm(false)}
+                    onClick={() => {
+                      resetForm();
+                      setShowCreateForm(false);
+                    }}
                     className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
                   >
                     Cancel
@@ -939,64 +965,13 @@ const InterviewsPage = () => {
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h3 className="text-2xl font-semibold text-gray-900 mb-6">Your Interview Slots</h3>
           
-          {loading ? (
-            <LoadingSpinner variant="compact" message="Loading interviews..." />
-          ) : interviews.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-              </div>
-              <h4 className="text-lg font-medium text-gray-900 mb-2">No interview slots yet</h4>
-              <p className="text-gray-600 mb-4">Create your first interview slots to get started!</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {interviews.map((interview) => (
-                <div key={interview.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">{interview.title}</h4>
-                      {interview.description && (
-                        <p className="text-gray-600 mb-3">{interview.description}</p>
-                      )}
-                                             <div className="flex flex-wrap gap-4 text-sm text-gray-500">
-                         <span>Duration: {interview.settings?.duration || 30} minutes</span>
-                         <span>Created: {new Date(interview.createdAt).toLocaleDateString()}</span>
-                         <span>Type: {(interview.settings?.interviewType || 'online') === 'online' ? 'Online' : 'In-Person'}</span>
-                         {(interview.settings?.interviewType || 'online') === 'online' && interview.settings?.location && (
-                           <span>Link: <a href={interview.settings.location} target="_blank" rel="noopener noreferrer" className="text-green-600 hover:underline">{interview.settings.location}</a></span>
-                         )}
-                         {(interview.settings?.interviewType || 'online') === 'in-person' && interview.settings?.location && (
-                           <span>Location: {interview.settings.location}</span>
-                         )}
-                       </div>
-                    </div>
-                    <div className="flex space-x-2">
-                      <Link
-                        to={`/interviews/${interview.id}`}
-                        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                      >
-                        Manage
-                      </Link>
-                      <button
-                        onClick={() => {
-                          const bookingUrl = `${window.location.origin}/book-interview/${interview.id}`;
-                          navigator.clipboard.writeText(bookingUrl);
-                          alert('Booking link copied to clipboard!');
-                        }}
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                        title="Copy booking link to clipboard"
-                      >
-                        Share
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          <EventList
+            events={interviews}
+            loading={loading}
+            eventType="interview"
+            primaryButtonText="Manage"
+            secondaryButtonText="Share"
+          />
         </div>
       </div>
     </div>

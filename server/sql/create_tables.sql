@@ -40,6 +40,7 @@ CREATE TABLE responses (
     time_slot_ids UUID[] NOT NULL, -- Array of time slot IDs for scalability
     user_name VARCHAR(255) NOT NULL,
     user_email VARCHAR(255) NOT NULL,
+    metadata JSONB DEFAULT '{}', -- Additional data like phone, interview details, etc.
     created_at TIMESTAMPTZ DEFAULT NOW(),
     
     -- Prevent duplicate responses for the same event by same user

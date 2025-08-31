@@ -6,6 +6,9 @@ const pool = require('../db');
 router.post('/', async (req, res) => {
   try {
     console.log('Received participant response:', req.body);
+    console.log('Time slot IDs received:', timeSlotIds);
+    console.log('Time slot IDs type:', typeof timeSlotIds);
+    console.log('Time slot IDs is array:', Array.isArray(timeSlotIds));
     
     const {
       eventId,
@@ -59,6 +62,8 @@ router.post('/', async (req, res) => {
     `;
     
     const timeSlotsResult = await pool.query(timeSlotsQuery, [timeSlotIds, eventId]);
+    console.log('Found time slots:', timeSlotsResult.rows);
+    console.log('Expected count:', timeSlotIds.length, 'Actual count:', timeSlotsResult.rows.length);
     
     if (timeSlotsResult.rows.length !== timeSlotIds.length) {
       return res.status(400).json({
@@ -118,13 +123,23 @@ router.post('/', async (req, res) => {
       const newResponse = insertResponseResult.rows[0];
 
       // Mark time slots as unavailable
+      console.log('Updating time slots to unavailable:', timeSlotIds);
       const updateTimeSlotsQuery = `
         UPDATE time_slots 
         SET is_available = false 
         WHERE id = ANY($1)
       `;
 
-      await client.query(updateTimeSlotsQuery, [timeSlotIds]);
+      const updateResult = await client.query(updateTimeSlotsQuery, [timeSlotIds]);
+      console.log('Time slots updated:', updateResult.rowCount, 'rows affected');
+
+      // Verify the update worked
+      const verifyQuery = `
+        SELECT id, is_available FROM time_slots 
+        WHERE id = ANY($1)
+      `;
+      const verifyResult = await client.query(verifyQuery, [timeSlotIds]);
+      console.log('Verification - time slots after update:', verifyResult.rows);
 
       await client.query('COMMIT');
 

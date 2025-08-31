@@ -20,7 +20,7 @@ const pool = require('./db');
 // Routes
 
 app.use('/interviews', interviewsRoutes);
-app.use('/api/responses', responsesRoutes);
+app.use('/responses', responsesRoutes);
 
 
 app.get('/', (req, res) => {

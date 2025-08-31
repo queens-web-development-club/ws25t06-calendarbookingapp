@@ -111,6 +111,7 @@ const InterviewBookingPage = () => {
     
     console.log('Form submitted with data:', formData);
     console.log('Selected slot:', selectedSlot);
+    console.log('Interview data:', interview);
     
     if (!selectedSlot) {
       setError('Please select a time slot');
@@ -126,21 +127,32 @@ const InterviewBookingPage = () => {
     setError('');
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Update local state to mark slot as booked
-      const updatedSlots = interview.availableSlots.map(slot => {
-        if (slot.date === selectedSlot.date && slot.time === selectedSlot.time) {
-          return { ...slot, available: false, bookedBy: formData.email };
-        }
-        return slot;
+      // Prepare the response data
+      const responseData = {
+        eventId: interview.id,
+        timeSlotIds: [selectedSlot.id], // For interviews, only one slot can be selected
+        userName: `${formData.firstName} ${formData.lastName}`,
+        userEmail: formData.email
+      };
+
+      console.log('Sending response data to API:', responseData);
+
+      // Call the responses API
+      const response = await fetch('http://localhost:3000/responses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(responseData),
       });
 
-      setInterview(prev => ({
-        ...prev,
-        availableSlots: updatedSlots
-      }));
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to book interview');
+      }
+
+      const result = await response.json();
+      console.log('Booking successful:', result);
 
       // Redirect to verification page with booking details
       try {
@@ -155,7 +167,8 @@ const InterviewBookingPage = () => {
               date: selectedSlot.date,
               time: selectedSlot.time,
               duration: interview.duration,
-              type: interview.interviewType
+              type: interview.interviewType,
+              responseId: result.response.id
             }
           }
         });

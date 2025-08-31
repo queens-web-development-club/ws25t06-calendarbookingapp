@@ -332,4 +332,135 @@ router.get('/:token', async (req, res) => {
   }
 });
 
+// PATCH /api/interviews/:id/close - Close an interview (set status to 'closed')
+router.patch('/:id/close', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Check if interview exists
+    const checkQuery = `
+      SELECT id, title, status FROM events 
+      WHERE id = $1 AND type = 'interview'
+    `;
+    
+    const checkResult = await pool.query(checkQuery, [id]);
+    
+    if (checkResult.rows.length === 0) {
+      return res.status(404).json({
+        error: 'Interview not found'
+      });
+    }
+
+    const interview = checkResult.rows[0];
+    
+    if (interview.status === 'closed') {
+      return res.status(400).json({
+        error: 'Interview is already closed'
+      });
+    }
+
+    // Update the interview status to closed
+    const updateQuery = `
+      UPDATE events 
+      SET status = 'closed', updated_at = NOW()
+      WHERE id = $1 AND type = 'interview'
+      RETURNING id, title, status, updated_at
+    `;
+
+    const updateResult = await pool.query(updateQuery, [id]);
+
+    res.json({
+      message: 'Interview closed successfully',
+      interview: {
+        id: updateResult.rows[0].id,
+        title: updateResult.rows[0].title,
+        status: updateResult.rows[0].status,
+        updatedAt: updateResult.rows[0].updated_at
+      }
+    });
+
+  } catch (error) {
+    console.error('Error closing interview:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      details: error.message
+    });
+  }
+});
+
+// DELETE /api/interviews/:id - Delete an interview and all related data
+router.delete('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    // Check if interview exists
+    const checkQuery = `
+      SELECT id, title FROM events 
+      WHERE id = $1 AND type = 'interview'
+    `;
+    
+    const checkResult = await pool.query(checkQuery, [id]);
+    
+    if (checkResult.rows.length === 0) {
+      return res.status(404).json({
+        error: 'Interview not found'
+      });
+    }
+
+    const interview = checkResult.rows[0];
+
+    // Begin transaction
+    const client = await pool.connect();
+    
+    try {
+      await client.query('BEGIN');
+
+      // Delete related responses first (due to foreign key constraints)
+      const deleteResponsesQuery = `
+        DELETE FROM responses 
+        WHERE event_id = $1
+      `;
+      await client.query(deleteResponsesQuery, [id]);
+
+      // Delete related time slots
+      const deleteTimeSlotsQuery = `
+        DELETE FROM time_slots 
+        WHERE event_id = $1
+      `;
+      await client.query(deleteTimeSlotsQuery, [id]);
+
+      // Delete the interview
+      const deleteInterviewQuery = `
+        DELETE FROM events 
+        WHERE id = $1 AND type = 'interview'
+        RETURNING id, title
+      `;
+      const deleteResult = await client.query(deleteInterviewQuery, [id]);
+
+      await client.query('COMMIT');
+
+      res.json({
+        message: 'Interview deleted successfully',
+        interview: {
+          id: deleteResult.rows[0].id,
+          title: deleteResult.rows[0].title
+        }
+      });
+
+    } catch (error) {
+      await client.query('ROLLBACK');
+      throw error;
+    } finally {
+      client.release();
+    }
+
+  } catch (error) {
+    console.error('Error deleting interview:', error);
+    res.status(500).json({
+      error: 'Internal server error',
+      details: error.message
+    });
+  }
+});
+
 module.exports = router;

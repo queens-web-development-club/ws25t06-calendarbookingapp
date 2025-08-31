@@ -12,6 +12,8 @@ const EventList = ({
   primaryButtonLink,
   secondaryButtonText = 'Share',
   onSecondaryButtonClick,
+  onCloseClick,
+  onDeleteClick,
   getEventDetails,
   getEventLink
 }) => {
@@ -73,6 +75,8 @@ const EventList = ({
           primaryButtonLink={primaryButtonLink}
           secondaryButtonText={secondaryButtonText}
           onSecondaryButtonClick={onSecondaryButtonClick}
+          onCloseClick={onCloseClick}
+          onDeleteClick={onDeleteClick}
           getEventDetails={getEventDetails}
           getEventLink={getEventLink}
         />

@@ -68,6 +68,76 @@ const InterviewsPage = () => {
     }
   };
 
+  const handleCloseInterview = async (event) => {
+    if (!window.confirm(`Are you sure you want to close "${event.title}"? This will prevent new bookings.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/interviews/${event.id}/close`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to close interview');
+      }
+
+      const result = await response.json();
+      console.log('Interview closed successfully:', result);
+
+      // Update the local state to reflect the change
+      setInterviews(prevInterviews => 
+        prevInterviews.map(interview => 
+          interview.id === event.id 
+            ? { ...interview, status: 'closed' }
+            : interview
+        )
+      );
+
+      alert('Interview closed successfully!');
+    } catch (error) {
+      console.error('Error closing interview:', error);
+      alert(`Failed to close interview: ${error.message}`);
+    }
+  };
+
+  const handleDeleteInterview = async (event) => {
+    if (!window.confirm(`Are you sure you want to delete "${event.title}"? This action cannot be undone and will remove all related data.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/interviews/${event.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to delete interview');
+      }
+
+      const result = await response.json();
+      console.log('Interview deleted successfully:', result);
+
+      // Remove the interview from local state
+      setInterviews(prevInterviews => 
+        prevInterviews.filter(interview => interview.id !== event.id)
+      );
+
+      alert('Interview deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting interview:', error);
+      alert(`Failed to delete interview: ${error.message}`);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Form submission is now handled in handleCreateInterview after step 2
@@ -971,6 +1041,8 @@ const InterviewsPage = () => {
             eventType="interview"
             primaryButtonText="Manage"
             secondaryButtonText="Share"
+            onCloseClick={handleCloseInterview}
+            onDeleteClick={handleDeleteInterview}
           />
         </div>
       </div>

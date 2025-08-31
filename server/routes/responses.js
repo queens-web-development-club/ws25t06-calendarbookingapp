@@ -48,8 +48,22 @@ router.post('/', async (req, res) => {
     const eventResult = await pool.query(eventQuery, [eventId]);
     
     if (eventResult.rows.length === 0) {
+      // Check if the event exists but is closed
+      const closedEventQuery = `
+        SELECT id, status FROM events 
+        WHERE id = $1
+      `;
+      
+      const closedEventResult = await pool.query(closedEventQuery, [eventId]);
+      
+      if (closedEventResult.rows.length > 0) {
+        return res.status(400).json({
+          error: 'This interview has been closed and is no longer accepting bookings'
+        });
+      }
+      
       return res.status(404).json({
-        error: 'Event not found or not active'
+        error: 'Event not found'
       });
     }
 

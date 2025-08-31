@@ -7,6 +7,8 @@ const EventCard = ({
   primaryButtonLink,
   secondaryButtonText = 'Share',
   onSecondaryButtonClick,
+  onCloseClick,
+  onDeleteClick,
   getEventDetails,
   getEventLink
 }) => {
@@ -90,7 +92,14 @@ const EventCard = ({
     <div className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
       <div className="flex justify-between items-start">
         <div className="flex-1">
-          <h4 className="text-lg font-semibold text-gray-900 mb-2">{event.title}</h4>
+          <div className="flex items-center gap-2 mb-2">
+            <h4 className="text-lg font-semibold text-gray-900">{event.title}</h4>
+            {event.status === 'closed' && (
+              <span className="bg-yellow-100 text-yellow-800 text-xs font-medium px-2 py-1 rounded-full">
+                Closed
+              </span>
+            )}
+          </div>
           {event.description && (
             <p className="text-gray-600 mb-3">{event.description}</p>
           )}
@@ -101,12 +110,6 @@ const EventCard = ({
           </div>
         </div>
         <div className="flex space-x-2">
-          <Link
-            to={eventLink}
-            className={`${eventType === 'interview' ? 'bg-green-600 hover:bg-green-700' : 'bg-blue-600 hover:bg-blue-700'} text-white px-4 py-2 rounded-md text-sm font-medium transition-colors`}
-          >
-            {primaryButtonText}
-          </Link>
           <button
             onClick={handleSecondaryClick}
             className={`${eventType === 'interview' ? 'bg-blue-600 hover:bg-blue-700' : 'bg-green-600 hover:bg-green-700'} text-white px-4 py-2 rounded-md text-sm font-medium transition-colors`}
@@ -114,6 +117,29 @@ const EventCard = ({
           >
             {secondaryButtonText}
           </button>
+          {onCloseClick && (
+            <button
+              onClick={() => onCloseClick(event)}
+              disabled={event.status === 'closed'}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                event.status === 'closed'
+                  ? 'bg-gray-400 text-gray-200 cursor-not-allowed'
+                  : 'bg-yellow-600 hover:bg-yellow-700 text-white'
+              }`}
+              title={event.status === 'closed' ? `${eventType} is already closed` : `Close ${eventType}`}
+            >
+              Close
+            </button>
+          )}
+          {onDeleteClick && (
+            <button
+              onClick={() => onDeleteClick(event)}
+              className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+              title={`Delete ${eventType}`}
+            >
+              Delete
+            </button>
+          )}
         </div>
       </div>
     </div>

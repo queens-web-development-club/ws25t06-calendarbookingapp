@@ -60,6 +60,7 @@ const InterviewBookingPage = () => {
         location: data.interview.settings?.location || null,
         organizerName: data.interview.organizerName,
         organizerEmail: data.interview.organizerEmail,
+        status: data.interview.status, // Include the status field
         // Transform availableSlots to match the expected format
         availableSlots: data.availableSlots.map((slot, index) => ({
           key: slot.id,
@@ -245,6 +246,24 @@ const InterviewBookingPage = () => {
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Interview Not Found</h2>
           <p className="text-gray-600 mb-4">{error}</p>
           <p className="text-sm text-gray-500">Please check the link or contact the interviewer.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Check if interview is closed
+  if (interview && interview.status === 'closed') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Interview Closed</h2>
+          <p className="text-gray-600 mb-4">This interview has been closed and is no longer accepting bookings.</p>
+          <p className="text-sm text-gray-500">Please contact the interviewer if you have any questions.</p>
         </div>
       </div>
     );

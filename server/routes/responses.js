@@ -6,9 +6,6 @@ const pool = require('../db');
 router.post('/', async (req, res) => {
   try {
     console.log('Received participant response:', req.body);
-    console.log('Time slot IDs received:', timeSlotIds);
-    console.log('Time slot IDs type:', typeof timeSlotIds);
-    console.log('Time slot IDs is array:', Array.isArray(timeSlotIds));
     
     const {
       eventId,
@@ -16,6 +13,10 @@ router.post('/', async (req, res) => {
       userName,
       userEmail
     } = req.body;
+
+    console.log('Time slot IDs received:', timeSlotIds);
+    console.log('Time slot IDs type:', typeof timeSlotIds);
+    console.log('Time slot IDs is array:', Array.isArray(timeSlotIds));
 
     // Validate required fields
     if (!eventId || !timeSlotIds || !userName || !userEmail) {
